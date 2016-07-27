@@ -1,6 +1,6 @@
 package autopartner.service;
 
-import autopartner.domain.User;
+import autopartner.domain.entity.User;
 
 public interface UserService {
 
@@ -8,10 +8,11 @@ public interface UserService {
 
     User getUserById(Integer id);
 
-    User saveUser(User card);
+    User saveUser(User user);
 
     void deleteUser(Integer id);
 
-    boolean isEmailUnique(User card);
+    boolean isUsernameUnique(User user);
 
+    User getUserByUsername(String username);
 }

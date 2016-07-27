@@ -1,6 +1,6 @@
-package autopartner.controller;
+package autopartner.controller.rest;
 
-import autopartner.domain.User;
+import autopartner.domain.entity.User;
 import autopartner.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
