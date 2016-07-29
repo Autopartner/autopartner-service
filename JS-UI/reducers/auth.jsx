@@ -1,5 +1,5 @@
 import * as A from '../actions/auth';
-import {restAPI} from "../rest/restAPI";
+import {API} from "../rest/restAPI";
 import {Stack} from 'immutable';
 
 const authState = {
@@ -17,6 +17,9 @@ const authState = {
 };
 
 export default function auth(state = authState, action) {
+
+    console.log(action);
+
     switch (action.type) {
         case A.OPEN_LOGIN_DIALOG:
             return {
@@ -54,39 +57,38 @@ export default function auth(state = authState, action) {
                     isOpen: false
                 }
             };
-        /*case A.OPEN_PROFILE_POPOVER:
-         return {
-         ...state,
-         loginDialog: {
-         ...state.loginDialog,
-         isOpen: false
-         },
-         profileDialog: {
-         ...state.profileDialog,
-         isOpen: true
-         }
-         };
-         case A.CLOSE_PROFILE_POPOVER:
-         return {
-         ...state,
-         loginDialog: {
-         ...state.loginDialog,
-         isOpen: false
-         },
-         profileDialog: {
-         ...state.profileDialog,
-         isOpen: false
-         }
-         };*/
-        /*case restAPI.events.profile.actionSuccess:
-         return {
-         ...state,
-         profileDialog: {
-         ...state.profileDialog,
-         loggedUser: action.data.payload
-         }
-         };*/
-
+        case A.OPEN_PROFILE_POPOVER:
+            return {
+                ...state,
+                loginDialog: {
+                    ...state.loginDialog,
+                    isOpen: false
+                },
+                profileDialog: {
+                    ...state.profileDialog,
+                    isOpen: true
+                }
+            };
+        case A.CLOSE_PROFILE_POPOVER:
+            return {
+                ...state,
+                loginDialog: {
+                    ...state.loginDialog,
+                    isOpen: false
+                },
+                profileDialog: {
+                    ...state.profileDialog,
+                    isOpen: false
+                }
+            };
+        case API.events.profile.actionSuccess:
+            return {
+                ...state,
+                profileDialog: {
+                    ...state.profileDialog,
+                    loggedUser: action.data.payload
+                }
+            };
         case A.LOGIN_SUCCESS:
             return {
                 ...state,
@@ -108,24 +110,21 @@ export default function auth(state = authState, action) {
                 }
             };
 
-        /*
-         case restAPI.events.jwtUpdate.actionSuccess:
-         if(action.data.token) {
-         localStorage.setItem('WWW-Token', action.data.token);
-         localStorage.setItem('tm', action.data.timeout - 5000);
-         return {
-         ...state,
-         isAuthenticated: true
-         };
-         } else {
-         localStorage.clear();
-         return {
-         ...state,
-         isAuthenticated: false
-         };
-         }
-         */
-
+        case API.events.jwtUpdate.actionSuccess:
+            if (action.data.token) {
+                localStorage.setItem('WWW-Token', action.data.token);
+                localStorage.setItem('tm', 300000);
+                return {
+                    ...state,
+                    isAuthenticated: true
+                };
+            } else {
+                localStorage.clear();
+                return {
+                    ...state,
+                    isAuthenticated: false
+                };
+            }
         case A.LOGIN_REQUEST:
             return {
                 ...state,

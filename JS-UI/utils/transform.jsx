@@ -11,34 +11,11 @@ export function userTransformer(data, prevData, action) {
     return data
 }
 
-export function aircraftTransformer(data, prevData, action) {
+export function orderTransformer(data, prevData, action) {
     if(data && data.payload)
         return {
             ...data,
-            payload: data.payload.map(T.o2ac)
+            payload: data.payload.map(T.o2o)
         };
-    return data
-}
-
-export function airportTransformer(data, prevData, action) {
-    if(data && data.payload)
-        return {
-            ...data,
-            payload: data.payload.map(T.o2ap)
-        };
-    return data
-}
-
-export function flightTransformer(data, prevData, action) {
-    if(data && data.payload) {
-        const l = data.payload.data.map(T.o2f);
-        return {
-            ...data,
-            payload: {
-                ...data.payload,
-                data: l
-            }
-        }
-    }
     return data
 }

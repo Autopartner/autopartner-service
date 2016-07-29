@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 
 import LoginDialog from './LoginDialog';
-import ProfilePopover from './ProfilePopover';
+import ProfilePopover from './Profile';
 import AppBar from 'material-ui/AppBar';
 import AppComponent from './AppComponent';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -38,11 +38,10 @@ class Header extends AppComponent {
 
     render() {
         const u = this.auth().profileDialog.loggedUser;
-        const title = `${u ? u.company ? u.company.toString() + ':' : 'All' : 'All'} Flights`;
         return (this.auth().isAuthenticated) ?
             <header className="header" style={{minWidth: 607, width: '100%', position: 'static', top: 0}}>
                 {this.profileDialog()}
-                <AppBar title={title} onLeftIconButtonTouchTap={this.authActions().openProfilePopover}>                    
+                <AppBar title="Autopartner" onLeftIconButtonTouchTap={this.authActions().openProfilePopover}>
                 </AppBar>
             </header> :
             <header className="header">

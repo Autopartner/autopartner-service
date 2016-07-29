@@ -12,9 +12,9 @@ export const headers = {
 
 export const API = reduxApi({
     jwtUpdate: {
-        url: 'http://localhost:8888/api/auth',
+        url: 'http://localhost:8888/api/auth/refresh',
         options: {
-            method: "POST"
+            method: "GET"
         },
         postfetch: [
             function ({dispatch, actions, getState}) {
@@ -33,15 +33,19 @@ export const API = reduxApi({
         transformer: T.userTransformer,
         postfetch: [
             function ({dispatch, actions}) {
-                dispatch(actions.flights())
+                dispatch(actions.orders())
             }
         ]
+    },
+    orders: {
+        url: '/api/orders',
+        transformer: T.orderTransformer
     }
 }).use("fetch", adapterFetch(fetch))
     .use("options", function () {
         const h = {
             ...headers,
-            'Authorization': localStorage.getItem('WWW-Token')
+            'X-Auth-Token': localStorage.getItem('WWW-Token')
         };
         return {
             headers: h

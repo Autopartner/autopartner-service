@@ -1,12 +1,11 @@
-import * as GM from '../actions/globalMessaging';
 import {headers} from '../rest/restAPI';
 import * as V from '../utils/validation';
 
 export const OPEN_LOGIN_DIALOG = 'OPEN_LOGIN_DIALOG';
 export const UPDATE_LOGIN_DIALOG = 'UPDATE_LOGIN_DIALOG';
 export const CLOSE_LOGIN_DIALOG = 'CLOSE_LOGIN_DIALOG';
-//export const OPEN_PROFILE_POPOVER = 'OPEN_PROFILE_POPOVER';
-//export const CLOSE_PROFILE_POPOVER = 'CLOSE_PROFILE_POPOVER';
+export const OPEN_PROFILE_POPOVER = 'OPEN_PROFILE_POPOVER';
+export const CLOSE_PROFILE_POPOVER = 'CLOSE_PROFILE_POPOVER';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -15,7 +14,6 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
-// Authorization actions for UI
 export function openLoginDialog() {
     return {type: OPEN_LOGIN_DIALOG};
 }
@@ -36,9 +34,6 @@ export function closeProfilePopover() {
     return {type: CLOSE_PROFILE_POPOVER};
 }
 
-// Authorization actions - main logic
-
-// Login
 function requestLogin() {
     return {
         type: LOGIN_REQUEST,
@@ -70,7 +65,6 @@ function failedLogin(validations) {
     }
 }
 
-// Logout
 function requestLogout() {
     return {
         type: LOGOUT_REQUEST,
@@ -91,18 +85,16 @@ function receiveLogout() {
     }
 }
 
-// Calls the API to get a token and dispatches actions along the way
 export function loginAction() {
     return (dispatch, getState) => {
         const config = {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                ...getState().auth.loginDialog.credentialse
+                ...getState().auth.loginDialog.credentials
             })
         };
 
-        // We dispatch requestLogin to kickoff the call to the API
         dispatch(requestLogin());
 
         return fetch(`http://localhost:8888/api/auth`, config)
@@ -111,21 +103,14 @@ export function loginAction() {
             ).then(({msg, response}) => {
                 if (response.ok) {
                     if (msg.token) {
-                        // If login was successful, set the token in local storage
-                        const tm = msg.timeout ? msg.timeout : 300000;
-
                         console.log(msg);
-
                         localStorage.setItem('WWW-Token', msg.token);
-                        localStorage.setItem('tm', tm - 5000);
-
+                        localStorage.setItem('tm', msg.timeout ? msg.timeout : 300000);
                         dispatch(successLogin())
                     } else {
                         dispatch(failedLogin([V.error('error', msg.errorMessage)]));
                     }
                 } else {
-                    // If there was a problem, we want to
-                    // dispatch the error condition
                     dispatch(failedLogin())
                 }
             }).catch(err => {
@@ -134,7 +119,6 @@ export function loginAction() {
     }
 }
 
-// Logs the user out
 export function logoutAction() {
     return dispatch => {
         dispatch(requestLogout());

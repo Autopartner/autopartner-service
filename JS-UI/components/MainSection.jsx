@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-//import FlightsTable from './FlightsTable';
+import OrdersTable from './OrdersTable';
 import AppComponent from './AppComponent';
 
 
@@ -15,8 +15,8 @@ class MainSection extends AppComponent {
         if (this.auth().isAuthenticated)
             return (
                 <section className="main" style={defaultStyle}>
-                    <p>hello</p>
-                    <FlightsTable {...this.props}/>
+                    <p>hello!!!</p>
+                    {/*<OrdersTable {...this.props}/>*/}
                 </section>);
         else
             return (
