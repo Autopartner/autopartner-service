@@ -29,7 +29,7 @@ export const API = reduxApi({
         ]
     },
     profile: {
-        url: '/api/profile',
+        url: 'http://localhost:8888/api/profile',
         transformer: T.userTransformer,
         postfetch: [
             function ({dispatch, actions}) {
@@ -38,7 +38,7 @@ export const API = reduxApi({
         ]
     },
     orders: {
-        url: '/api/orders',
+        url: 'http://localhost:8888/api/orders',
         transformer: T.orderTransformer
     }
 }).use("fetch", adapterFetch(fetch))

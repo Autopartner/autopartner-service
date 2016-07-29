@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("${autopartner.route.profile}")
 public class ProfileController {
 
   @Value("${autopartner.token.header}")
@@ -26,7 +25,7 @@ public class ProfileController {
   @Autowired
   private UserDetailsService userDetailsService;
 
-  @RequestMapping(method = RequestMethod.GET)
+  @RequestMapping(path = "${autopartner.route.profile}", method = RequestMethod.GET)
   //@PreAuthorize("hasRole('ADMIN')")
   @PreAuthorize("@securityService.hasProtectedAccess()")
   public ResponseEntity<?> getProfile(HttpServletRequest request) {
