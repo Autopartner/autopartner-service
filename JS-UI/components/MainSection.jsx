@@ -16,7 +16,7 @@ class MainSection extends AppComponent {
             return (
                 <section className="main" style={defaultStyle}>
                     <p>hello</p>
-                    //<FlightsTable {...this.props}/>
+                    <FlightsTable {...this.props}/>
                 </section>);
         else
             return (

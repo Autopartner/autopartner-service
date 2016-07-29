@@ -98,41 +98,40 @@ export function loginAction() {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({
-                    ...getState().auth.loginDialog.credentials,
-                iss: "nreg"
-    })
-};
+                ...getState().auth.loginDialog.credentialse
+            })
+        };
 
-// We dispatch requestLogin to kickoff the call to the API
-dispatch(requestLogin());
+        // We dispatch requestLogin to kickoff the call to the API
+        dispatch(requestLogin());
 
-return fetch(`/api/auth/jwt`, config)
-    .then(response =>
-        response.json().then(msg => ({ msg, response }))
-).then(({ msg, response }) =>  {
-        if (response.ok) {
-            if (msg.token) {
-                // If login was successful, set the token in local storage
-                const tm = msg.timeout ? msg.timeout : 300000;
+        return fetch(`http://localhost:8888/api/auth`, config)
+            .then(response =>
+                response.json().then(msg => ({msg, response}))
+            ).then(({msg, response}) => {
+                if (response.ok) {
+                    if (msg.token) {
+                        // If login was successful, set the token in local storage
+                        const tm = msg.timeout ? msg.timeout : 300000;
 
-                localStorage.setItem('WWW-Token', msg.token);
-                localStorage.setItem('tm', tm - 5000);
+                        console.log(msg);
 
-                dispatch(successLogin())
-            } else {
-                dispatch(failedLogin([V.error('error', msg.errorMessage)]));
-            }
-        } else {
-            // If there was a problem, we want to
-            // dispatch the error condition
-            dispatch(GM.pushGlobalMessage({level: 'error', msg: "Unexpected error!"}));
-            dispatch(failedLogin())
-        }
-    }).catch(err => {
-        dispatch(GM.pushGlobalMessage({level: 'error', msg: "Application error: " + err}));
-        dispatch(failedLogin())
-    })
-}
+                        localStorage.setItem('WWW-Token', msg.token);
+                        localStorage.setItem('tm', tm - 5000);
+
+                        dispatch(successLogin())
+                    } else {
+                        dispatch(failedLogin([V.error('error', msg.errorMessage)]));
+                    }
+                } else {
+                    // If there was a problem, we want to
+                    // dispatch the error condition
+                    dispatch(failedLogin())
+                }
+            }).catch(err => {
+                dispatch(failedLogin())
+            })
+    }
 }
 
 // Logs the user out

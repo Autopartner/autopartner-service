@@ -1,11 +1,13 @@
-import { createStore } from 'redux';
-import rootReducer from '../reducers';
+import {createStore, applyMiddleware} from 'redux';
+import reducers from '../reducers/index';
+import thunk from 'redux-thunk'
+import {simpleLogger} from '../middleware/logging';
 
 export default function configureStore(initialState) {
   const store = createStore(
-    rootReducer,
-    initialState,
-    window.devToolsExtension ? window.devToolsExtension() : undefined
+      reducers,
+      initialState,
+      applyMiddleware(simpleLogger, thunk)
   );
 
   if (module.hot) {

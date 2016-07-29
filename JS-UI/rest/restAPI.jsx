@@ -12,7 +12,7 @@ export const headers = {
 
 export const API = reduxApi({
     jwtUpdate: {
-        url: '/api/auth',
+        url: 'http://localhost:8888/api/auth',
         options: {
             method: "POST"
         },

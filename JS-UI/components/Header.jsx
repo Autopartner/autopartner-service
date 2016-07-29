@@ -6,10 +6,6 @@ import AppBar from 'material-ui/AppBar';
 import AppComponent from './AppComponent';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import * as MyRawTheme from '../src/material_ui_raw_theme_file';
-import KeyboardArrowLeft from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import ExportIcon from 'material-ui/svg-icons/content/archive';
-import IconButton from 'material-ui/IconButton';
-import TextField from 'material-ui/TextField';
 
 class Header extends AppComponent {
 

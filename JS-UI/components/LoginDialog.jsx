@@ -7,7 +7,7 @@ class LoginDialog extends Component {
 
     handleLoginChange(e) {
         const v = e.target.value.substr(0, 48);
-        this.props.actions.updateLoginDialog('login', v);
+        this.props.actions.updateLoginDialog('username', v);
     }
 
     handlePasswordChange(e) {
@@ -15,12 +15,16 @@ class LoginDialog extends Component {
         this.props.actions.updateLoginDialog('password', v);
     }
 
+    handleLogin(e) {
+        this.props.actions.loginAction();
+    }
+
     loginFieldF(eText, eColor) {
         return (
             <TextField
-                hintText="Login"
+                hintText="Username"
                 fullWidth={true}
-                floatingLabelText="Login"
+                floatingLabelText="Username"
                 onChange={this.handleLoginChange.bind(this)}
                 onKeyDown={((e) => {
                     if (e.keyCode === 13 && this.passwordField)
@@ -30,7 +34,7 @@ class LoginDialog extends Component {
                 errorStyle={eColor}
                 floatingLabelStyle={eColor}
                 autoFocus={true}
-                value={this.props.properties.credentials.login}
+                value={this.props.properties.credentials.username}
             />
         )
     }
@@ -46,7 +50,7 @@ class LoginDialog extends Component {
                 value={this.props.properties.credentials.password}
                 onKeyDown={((e) => {
                     if (e.keyCode === 13)
-                        this.props.actions.loginAction()
+                    {this.handleLogin.bind(this)}
                 }).bind(this)}
                 errorText={eText}
                 errorStyle={eColor}
@@ -66,10 +70,11 @@ class LoginDialog extends Component {
                     marginBottom: 18
                   }}/>) :
             (<FlatButton
-                label="Login"
+                label="Sign in"
                 primary={true}
                 keyboardFocused={true}
                 onTouchTap={this.props.actions.loginAction}
+                onClick={this.handleLogin.bind(this)}
                 style={{
                     width: '100%',
                     marginTop: 56
@@ -83,7 +88,7 @@ class LoginDialog extends Component {
 
         return (
             <Dialog open={this.props.properties.isOpen} contentStyle={{width: 360}}>
-                <div class="loginGroup">
+                <div className="loginGroup">
                     {this.loginFieldF(eText, eColor)}
                     <br/>
                     {this.passwordFieldF(eText, eColor)}
