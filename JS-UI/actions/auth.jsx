@@ -4,8 +4,6 @@ import * as V from '../utils/validation';
 export const OPEN_LOGIN_DIALOG = 'OPEN_LOGIN_DIALOG';
 export const UPDATE_LOGIN_DIALOG = 'UPDATE_LOGIN_DIALOG';
 export const CLOSE_LOGIN_DIALOG = 'CLOSE_LOGIN_DIALOG';
-export const OPEN_PROFILE_POPOVER = 'OPEN_PROFILE_POPOVER';
-export const CLOSE_PROFILE_POPOVER = 'CLOSE_PROFILE_POPOVER';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -24,14 +22,6 @@ export function updateLoginDialog(fieldName, value) {
 
 export function closeLoginDialog() {
     return {type: CLOSE_LOGIN_DIALOG};
-}
-
-export function openProfilePopover() {
-    return {type: OPEN_PROFILE_POPOVER};
-}
-
-export function closeProfilePopover() {
-    return {type: CLOSE_PROFILE_POPOVER};
 }
 
 function requestLogin() {

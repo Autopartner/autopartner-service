@@ -65,7 +65,7 @@ class LoginDialog extends Component {
             (<LinearProgress
                 mode="indeterminate"
                 style={{
-                    marginTop: 66,
+                    marginTop: 26,
                     paddingBottom: 4,
                     marginBottom: 18
                   }}/>) :
@@ -77,7 +77,7 @@ class LoginDialog extends Component {
                 onClick={this.handleLogin.bind(this)}
                 style={{
                     width: '100%',
-                    marginTop: 56
+                    marginTop: 26
                   }}/>)
     }
 

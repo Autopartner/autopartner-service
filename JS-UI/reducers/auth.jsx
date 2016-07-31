@@ -17,9 +17,6 @@ const authState = {
 };
 
 export default function auth(state = authState, action) {
-
-    console.log(action);
-
     switch (action.type) {
         case A.OPEN_LOGIN_DIALOG:
             return {
@@ -46,30 +43,6 @@ export default function auth(state = authState, action) {
                 }
             };
         case A.CLOSE_LOGIN_DIALOG:
-            return {
-                ...state,
-                loginDialog: {
-                    ...state.loginDialog,
-                    isOpen: false
-                },
-                profileDialog: {
-                    ...state.profileDialog,
-                    isOpen: false
-                }
-            };
-        case A.OPEN_PROFILE_POPOVER:
-            return {
-                ...state,
-                loginDialog: {
-                    ...state.loginDialog,
-                    isOpen: false
-                },
-                profileDialog: {
-                    ...state.profileDialog,
-                    isOpen: true
-                }
-            };
-        case A.CLOSE_PROFILE_POPOVER:
             return {
                 ...state,
                 loginDialog: {

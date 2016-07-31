@@ -1,39 +1,26 @@
-import React, {Component} from "react";
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import Header from '../components/Header';
-import MainSection from '../components/MainSection';
-import Footer from '../components/Footer';
+import React from "react";
+import { Router, Route, IndexRoute} from 'react-router'
 
-import * as auth from '../actions/auth';
-import {API} from "../rest/restAPI";
+import Home from '../components/Page'
+import Order from '../components/Order'
+import Client from '../components/Client'
+import Material from '../components/Material'
+import NotFound from '../components/NotFound'
 
-class App extends Component {
+class App extends React.Component {
     render() {
         return (
-            <div>
-                <Header {...this.props}/>
-                <MainSection {...this.props}/>
-                <Footer/>
-            </div>
-        );
+            <Router history={this.props.history}>
+                <Route path='/' component={Home}>
+                    <IndexRoute component={Client} />
+                    <Route path='/client' component={Client} />
+                    <Route path='/order' component={Order} />
+                    <Route path='/material' component={Material} />
+                    <Route path='*' component={NotFound} />
+                </Route>
+            </Router>
+        )
     }
 }
 
-function mapStateToProps(state) {
-    return state;
-}
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: {
-            auth: bindActionCreators(auth, dispatch),
-            rest: bindActionCreators(API.actions, dispatch)
-        }
-    };
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
+export default App;
