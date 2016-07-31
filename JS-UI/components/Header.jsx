@@ -45,7 +45,7 @@ class Header extends AppComponent {
                 <div>
                     <DrawerLeft open={this.state.drawerOpen} onToggleDrawer={this.toggleDrawer.bind(this)} />
                     <header className="header" style={{minWidth: 607, width: '100%', position: 'static', top: 0}}>
-                        <AppBar title="Autopartner" onClick={this.toggleDrawer.bind(this)} />
+                        <AppBar title="Автопартнер" onClick={this.toggleDrawer.bind(this)} />
                     </header>
                 </div>
              :
