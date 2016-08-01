@@ -11,7 +11,6 @@ export default class DrawerLeft extends React.Component {
     route(path) {
         this.props.onToggleDrawer();
         hashHistory.push(path);
-        // TODO this.props.dispatch(push(path));
     }
 
     render() {
@@ -25,10 +24,10 @@ export default class DrawerLeft extends React.Component {
                     <AppBar
                         title="Автопартнер"
                         iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-                        onClick={this.props.onToggleDrawer}/>
-                    <MenuItem onClick={() => this.route("client")}>Клиенты</MenuItem>
-                    <MenuItem onClick={() => this.route("order")}>Заказы</MenuItem>
-                    <MenuItem onClick={() => this.route("material")}>Материалы</MenuItem>
+                        onLeftIconButtonTouchTap={this.props.onToggleDrawer}/>
+                    <MenuItem onTouchTap={() => this.route("client")}>Клиенты</MenuItem>
+                    <MenuItem onTouchTap={() => this.route("order")}>Заказы</MenuItem>
+                    <MenuItem onTouchTap={() => this.route("material")}>Материалы</MenuItem>
                 </Drawer>
             </div>
         );

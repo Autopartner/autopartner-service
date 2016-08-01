@@ -6,6 +6,10 @@ import AppComponent from './AppComponent';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import * as MyRawTheme from '../src/material_ui_raw_theme_file';
 import DrawerLeft from './DrawerLeft';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 class Header extends AppComponent {
 
@@ -31,6 +35,10 @@ class Header extends AppComponent {
         })
     }
 
+    handleLogout() {
+        this.authActions().logoutAction();
+    }
+
     loginDialog() {
         return (
             <LoginDialog key="LoginDialog"
@@ -42,12 +50,26 @@ class Header extends AppComponent {
     render() {
         return (
             (this.auth().isAuthenticated) ?
-                <div>
+                <section>
                     <DrawerLeft open={this.state.drawerOpen} onToggleDrawer={this.toggleDrawer.bind(this)} />
                     <header className="header" style={{minWidth: 607, width: '100%', position: 'static', top: 0}}>
-                        <AppBar title="Автопартнер" onClick={this.toggleDrawer.bind(this)} />
+                        <AppBar title="Автопартнер"
+                                onLeftIconButtonTouchTap={this.toggleDrawer.bind(this)}
+                                iconElementRight={
+                                    <IconMenu
+                                        iconButtonElement={
+                                            <IconButton><MoreVertIcon /></IconButton>
+                                        }
+                                        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                                        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                                    >
+                                        <MenuItem primaryText="Настройки" />
+                                        <MenuItem onTouchTap={this.handleLogout.bind(this)} primaryText="Выйти" />
+                                    </IconMenu>
+                                }
+                        />
                     </header>
-                </div>
+                </section>
              :
                 <header className="header">
                     {this.loginDialog()}

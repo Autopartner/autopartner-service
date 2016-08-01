@@ -22,14 +22,14 @@ class LoginDialog extends Component {
     loginFieldF(eText, eColor) {
         return (
             <TextField
-                hintText="Username"
+                hintText="Имя пользователя"
                 fullWidth={true}
-                floatingLabelText="Username"
+                floatingLabelText="Имя пользователя"
                 onChange={this.handleLoginChange.bind(this)}
                 onKeyDown={((e) => {
                     if (e.keyCode === 13 && this.passwordField)
                         this.passwordField.focus()
-                }).bind(this)}
+                })}
                 errorText={eText}
                 errorStyle={eColor}
                 floatingLabelStyle={eColor}
@@ -42,16 +42,16 @@ class LoginDialog extends Component {
     passwordFieldF(eText, eColor) {
         return (
             <TextField
-                hintText="Password"
+                hintText="Пароль"
                 fullWidth={true}
-                floatingLabelText="Password"
+                floatingLabelText="Пароль"
                 ref={(ref) => this.passwordField = ref}
                 onChange={this.handlePasswordChange.bind(this)}
                 value={this.props.properties.credentials.password}
                 onKeyDown={((e) => {
                     if (e.keyCode === 13)
-                    {this.handleLogin.bind(this)}
-                }).bind(this)}
+                    {this.handleLogin()}
+                })}
                 errorText={eText}
                 errorStyle={eColor}
                 floatingLabelStyle={eColor}
@@ -70,11 +70,10 @@ class LoginDialog extends Component {
                     marginBottom: 18
                   }}/>) :
             (<FlatButton
-                label="Sign in"
+                label="Войти"
                 primary={true}
                 keyboardFocused={true}
-                onTouchTap={this.props.actions.loginAction}
-                onClick={this.handleLogin.bind(this)}
+                onTouchTap={this.handleLogin.bind(this)}
                 style={{
                     width: '100%',
                     marginTop: 26
