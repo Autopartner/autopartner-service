@@ -87,7 +87,7 @@ export function loginAction() {
 
         dispatch(requestLogin());
 
-        return fetch(`http://localhost:8888/api/auth`, config)
+        return fetch(`http://localhost:8888/auth`, config)
             .then(response =>
                 response.json().then(msg => ({msg, response}))
             ).then(({msg, response}) => {

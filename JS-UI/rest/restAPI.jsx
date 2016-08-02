@@ -12,7 +12,7 @@ export const headers = {
 
 export const API = reduxApi({
     jwtUpdate: {
-        url: 'http://localhost:8888/api/auth/refresh',
+        url: 'http://localhost:8888/auth/refresh',
         options: {
             method: "GET"
         },

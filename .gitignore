@@ -4,3 +4,5 @@ gradle/
 gradlew.bat
 gradlew
 node_modules/*
+JS-UI/static/*
+REST/src/main/resources/public/bundle.js

@@ -23,7 +23,7 @@ public class UserController {
     private UserService userService;
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN",  "ROLE_SUPER"})
-    @RequestMapping(value = {"/user", "/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/user"}, method = RequestMethod.GET)
     public @ResponseBody Iterable<User> getAllUsers() {
         return userService.listAllUsers();
     }

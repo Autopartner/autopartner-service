@@ -24,7 +24,7 @@ export default class DrawerLeft extends React.Component {
                     <AppBar
                         title="Автопартнер"
                         iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-                        onLeftIconButtonTouchTap={this.props.onToggleDrawer}/>
+                        onClick={this.props.onToggleDrawer.bind(this)}/>
                     <MenuItem onTouchTap={() => this.route("client")}>Клиенты</MenuItem>
                     <MenuItem onTouchTap={() => this.route("order")}>Заказы</MenuItem>
                     <MenuItem onTouchTap={() => this.route("material")}>Материалы</MenuItem>
