@@ -1,4 +1,4 @@
-package autopartner.controller.rest;
+package autopartner.controller;
 
 import autopartner.model.json.request.AuthenticationRequest;
 import autopartner.model.json.response.AuthenticationResponse;

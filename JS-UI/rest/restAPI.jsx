@@ -1,9 +1,8 @@
 import reduxApi, {transformers} from "redux-api";
 import adapterFetch from "redux-api/lib/adapters/fetch";
 import * as T from '../utils/transform';
-import {normFiltersList} from '../utils/helpers';
 import fetch from "fbjs/lib/fetch";
-import ES6Promise from 'es6-promise';
+import {host} from '../constants/constants';
 
 export const headers = {
     'Accept': 'application/json',
@@ -12,7 +11,7 @@ export const headers = {
 
 export const API = reduxApi({
     jwtUpdate: {
-        url: 'http://localhost:8888/auth/refresh',
+        url: host + 'auth/refresh',
         options: {
             method: "GET"
         },
@@ -29,7 +28,7 @@ export const API = reduxApi({
         ]
     },
     profile: {
-        url: 'http://localhost:8888/api/profile',
+        url: host + 'api/profile',
         transformer: T.userTransformer,
         postfetch: [
             function ({dispatch, actions}) {
@@ -38,8 +37,48 @@ export const API = reduxApi({
         ]
     },
     orders: {
-        url: 'http://localhost:8888/api/orders',
+        url: host + 'api/orders',
         transformer: T.orderTransformer
+    },
+    clients: {
+        url: host + 'api/client',
+        transformer: T.clientTransformer
+    },
+    addClient: {
+        url: '/api/client',
+        options: function (url, params, getState) {
+            const client = getState().main.addClientForm.client.normalize();
+            return {
+                ...params,
+                method: "POST",
+                body: client.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().main.addClientForm.isOpen) {
+                    dispatch(actions.clients());
+                }
+            }
+        ]
+    },
+    editClient: {
+        url: '/api/client',
+        options: function (url, params, getState) {
+            const client = getState().main.editClientForm.client.normalize();
+            return {
+                ...params,
+                method: "POST",
+                body: client.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().main.editClientForm.isOpen) {
+                    dispatch(actions.clients());
+                }
+            }
+        ]
     }
 }).use("fetch", adapterFetch(fetch))
     .use("options", function () {

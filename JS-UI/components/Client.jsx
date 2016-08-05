@@ -1,9 +1,10 @@
 import React from 'react';
+import ClientsTable from './client/ClientsTable';
 
 class Client extends React.Component {
     render() {
         return (
-            <h2>Clients</h2>
+            <ClientsTable {...this.props}/>
         );
     }
 }

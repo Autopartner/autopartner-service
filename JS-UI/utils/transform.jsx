@@ -19,3 +19,12 @@ export function orderTransformer(data, prevData, action) {
         };
     return data
 }
+
+export function clientTransformer(data, prevData, action) {
+    if(data && data.payload)
+        return {
+            ...data,
+            payload: data.payload.map(T.c2o)
+        };
+    return data
+}

@@ -6,10 +6,9 @@ class AppComponent extends Component {
         return this.props.auth;
     }
 
-    main() {
-        return this.props.main;
+    client() {
+        return this.props.client;
     }
-
 
     actions() {
         return this.props.actions;
@@ -20,11 +19,31 @@ class AppComponent extends Component {
     }
 
     mainActions() {
-        return this.actions().main;
+        return this.actions().client;
     }
     
     rest() {
         return this.actions().rest;
+    }
+
+    addClientForm() {
+        return this.client().addClientForm;
+    }
+
+    editClientForm() {
+        return this.client().editClientForm;
+    }
+
+    addClientFormActions() {
+        return this.mainActions().addClientForm;
+    }
+
+    editClientFormActions() {
+        return this.mainActions().editClientForm;
+    }
+
+    clientsTable() {
+        return this.client().clientsTable;
     }
 }
 

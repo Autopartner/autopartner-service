@@ -1,5 +1,6 @@
 import {headers} from '../rest/restAPI';
 import * as V from '../utils/validation';
+import {host} from '../constants/constants';
 
 export const OPEN_LOGIN_DIALOG = 'OPEN_LOGIN_DIALOG';
 export const UPDATE_LOGIN_DIALOG = 'UPDATE_LOGIN_DIALOG';
@@ -87,7 +88,7 @@ export function loginAction() {
 
         dispatch(requestLogin());
 
-        return fetch(`http://localhost:8888/auth`, config)
+        return fetch(host + 'auth', config)
             .then(response =>
                 response.json().then(msg => ({msg, response}))
             ).then(({msg, response}) => {

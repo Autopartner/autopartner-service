@@ -1,17 +1,17 @@
 import React, {PropTypes} from 'react';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import * as MyRawTheme from '../src/material_ui_raw_theme_file';
+import * as MyRawTheme from '../../src/material_ui_raw_theme_file';
 import IconButton from 'material-ui/IconButton';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-//import OrderForm from './OrderForm';
-import AppComponent from './AppComponent';
+import ClientForm from './ClientForm';
+import AppComponent from '../AppComponent';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import FlatButton from 'material-ui/FlatButton';
 import Divider from 'material-ui/Divider';
-import * as H from '../utils/helpers';
+import * as H from '../../utils/helpers';
 import {
     Table,
     TableBody,
@@ -21,14 +21,13 @@ import {
     TableRow,
     TableRowColumn
 } from 'material-ui/Table';
-import {sortedFieldList, fieldDescriptionsMap, sortOrders} from '../constants/constants';
 
 const noDataStyle = {
     color: MyRawTheme.palette.accent2Color,
     textAlign: 'center'
 };
 
-class OrdersTable extends AppComponent {
+class ClientsTable extends AppComponent {
 
     state = {
         addButtonColor: "rgba(153, 153, 153, 0.5)"
@@ -45,11 +44,12 @@ class OrdersTable extends AppComponent {
         return (
             <TableRow key={row.id} selectable={false}>
                 <TableHeaderColumn style={{width: 40, paddingLeft: 10, paddingRight: 10}}>
-                    <IconButton tooltipPosition='bottom-right' tooltip='Edit Current Order' onTouchTap={() => this.editOrderFormActions().open(row)}>
+                    <IconButton tooltipPosition='bottom-right' tooltip='Edit Current Client' onTouchTap={() => this.editClientFormActions().open(row)}>
                         <ModeEdit/>
                     </IconButton>
                 </TableHeaderColumn>
-                {colCell(H.date2str(row.dof))}
+                {colCell(row.firtsName)}
+                {colCell(row.lastName)}
                 {colCell(H.date2str(row.dof))}
             </TableRow>
         )
@@ -59,50 +59,26 @@ class OrdersTable extends AppComponent {
         return {muiTheme: getMuiTheme(MyRawTheme)};
     }
 
-    iconOfSort(currentColumn) {
-        /*if (this.sorter().fieldName === currentColumn)
-            switch (this.sorter().order) {
-                case 'asc':
-                    return <ArrowDropDown/>;
-                case 'desc':
-                    return <ArrowDropUp/>;
-                default:
-                    return undefined;
-            }
-        else
-            return undefined*/
-    }
-
-    nextSortOrder(currentColumn) {
-        /*let res;
-        let currentSortOrderIndex = sortOrders.indexOf(this.sorter().order);
-        if (this.sorter().fieldName === currentColumn && currentSortOrderIndex + 1 < sortOrders.length)
-            res = sortOrders[currentSortOrderIndex + 1];
-        else
-            res = sortOrders[0];
-        return res;*/
-    }
-
     forms() {
         return (<div>
-            {/*<OrderForm
-                title="Add Order Dialog"
-                properties={this.addOrderForm()}
+            {<ClientForm
+                title="Add Client Dialog"
+                properties={this.addClientForm()}
                 actions={{
-                                ...this.addOrderFormActions(),
+                                ...this.addClientFormActions(),
                                 rest: {
-                                    push: this.rest().addOrder
+                                    push: this.rest().addClient
                                 }
-                            }}/>
-            <OrderForm
-                title="Edit Order Dialog"
-                properties={this.editOrderForm()}
+                            }}/>}
+            {<ClientForm
+                title="Edit Client Dialog"
+                properties={this.editClientForm()}
                 actions={{
-                ...this.editOrderFormActions(),
+                ...this.editClientFormActions(),
                         rest: {
-                            push: this.rest().editOrder
+                            push: this.rest().editClient
                     }
-                }}/>*/}
+                }}/>}
         </div>)
     }
 
@@ -112,7 +88,7 @@ class OrdersTable extends AppComponent {
                 <TableRow>
                     <TableHeaderColumn key={"colheader-edit"}
                                        style={{width: 40, paddingLeft: 10, paddingRight: 10}}/>
-                    {sortedFieldList.map((t, i) => {
+                    {/*{sortedFieldList.map((t, i) => {
                             const info = fieldDescriptionsMap.get(t);
                             return (
                                 <TableHeaderColumn key={"colheader-" + i} tooltip={info.longTitle}>
@@ -132,7 +108,7 @@ class OrdersTable extends AppComponent {
                                 </TableHeaderColumn>
                             )
                         }
-                    )}
+                    )}*/}
                 </TableRow>
             </TableHeader>
         )
@@ -142,7 +118,7 @@ class OrdersTable extends AppComponent {
         return (
             <div>
                 <IconButton
-                    onTouchTap={this.addOrderFormActions().open}
+                    onTouchTap={this.addClientFormActions().open}
                     style={{width: 56, height: 56, minWidth: 56, mimHeight: 56, borderRadius: '50%', lineHeight: 0,
                             right: 25,
                             marginTop: -100,
@@ -158,12 +134,6 @@ class OrdersTable extends AppComponent {
                 </IconButton>
                 <div style={{float: 'right', minWidth: 607, position: 'relative', bottom: 0, right: 0}}>
                     <Divider />
-                    <Pagination
-                        pagination={this.pagination()}
-                        actions={{
-                            ...this.paginationActions(),
-                            rest: this.rest()
-                        }}/>
                 </div>
             </div>
         )
@@ -179,7 +149,7 @@ class OrdersTable extends AppComponent {
                     className="dataTable">
                     {this.header()}
                     <TableBody displayRowCheckbox={false}>
-                        {/*{this.ordersTable().orders.map(this.row)}*/}
+                        {this.clientsTable().clients.map(this.row)}
                     </TableBody>
                 </Table>
                 {this.footer()}
@@ -188,4 +158,4 @@ class OrdersTable extends AppComponent {
     }
 }
 
-export default OrdersTable;
+export default ClientsTable;
