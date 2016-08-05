@@ -33,10 +33,10 @@ function clientsTable(state = defaultClientsTableState, action) {
     }
 }
 
-const main = combineReducers({
+const client = combineReducers({
     addClientForm,
     editClientForm,
     clientsTable
 });
 
-export default main;
+export default client;

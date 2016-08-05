@@ -121,13 +121,13 @@ class ClientsTable extends AppComponent {
                     onTouchTap={this.addClientFormActions().open}
                     style={{width: 56, height: 56, minWidth: 56, mimHeight: 56, borderRadius: '50%', lineHeight: 0,
                             right: 25,
-                            marginTop: -100,
+                            marginTop: 25,
                             position: 'absolute',
                             zIndex: 2,
                             backgroundColor: this.state.addButtonColor}}
                     onMouseEnter={() => this.setState({...this.state, addButtonColor: "rgba(153, 153, 153, 0.9)"})}
                     onMouseLeave={() => this.setState({...this.state, addButtonColor: "rgba(153, 153, 153, 0.5)"})}
-                    tooltip={"Add New Order"}
+                    tooltip={"Добавить Клиента"}
                     tooltipStyles={{top: 31, right: 70}}
                     tooltipPosition={"top-left"}>
                     <ContentAdd color={MyRawTheme.palette.canvasColor}/>

@@ -1,4 +1,6 @@
+import * as V from './validation';
 import {Record} from 'immutable';
+import {clientSortedFieldList} from '../constants/constants';
 
 const UserT = Record({
     id: -1,
@@ -42,6 +44,7 @@ const ClientT = Record({
 });
 
 class Client extends ClientT {
+
     constructor(o) {
         const no = {
             id: o.id ? parseInt(o.id) : -1,
@@ -58,7 +61,7 @@ class Client extends ClientT {
             note: o.note,
             isActive: o.isActive
         };
-        super(no)
+        super(no);
     }
 
     toString() {
@@ -69,6 +72,42 @@ class Client extends ClientT {
     isEqual(that) {
         return that && (that instanceof Client && this.id === that.id)
     }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    /*validate(fieldNames) {
+        const rules = clientSortedFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            })
+            .concat(
+                [
+                    V.notEqual("discountService", this.discountService, 0, "warn", "Вы уверены что этому клиенту не нужна скидка?")
+                ]);
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }*/
 }
 
 const OrderT = Record({
@@ -111,5 +150,8 @@ export function o2o(o) {
 }
 
 export function o2c(o) {
-    return o ? new Client(o) : o
+    console.log(o);
+    let client = Client = (o) => {};
+    console.log(client);
+    return new Client(o);
 }

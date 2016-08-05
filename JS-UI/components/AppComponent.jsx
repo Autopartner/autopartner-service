@@ -18,7 +18,7 @@ class AppComponent extends Component {
         return this.actions().auth;
     }
 
-    mainActions() {
+    clientActions() {
         return this.actions().client;
     }
     
@@ -35,11 +35,11 @@ class AppComponent extends Component {
     }
 
     addClientFormActions() {
-        return this.mainActions().addClientForm;
+        return this.clientActions().addClientForm;
     }
 
     editClientFormActions() {
-        return this.mainActions().editClientForm;
+        return this.clientActions().editClientForm;
     }
 
     clientsTable() {

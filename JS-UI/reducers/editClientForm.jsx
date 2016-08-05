@@ -11,7 +11,7 @@ const defaultEditClientFormState = {
     validations: Stack()
 };
 
-export default function editFlightForm(state = defaultEditClientFormState, action) {
+export default function editClientForm(state = defaultEditClientFormState, action) {
     switch (action.type) {
         case A.OPEN_EDIT_CLIENT_FORM:
             return {
@@ -36,7 +36,7 @@ export default function editFlightForm(state = defaultEditClientFormState, actio
             };
         case A.VALIDATIONS_EDIT_CLIENT:
             const c = action.payload.fieldNames;
-            const cl = state.flight.normalize();
+            const cl = state.client.normalize();
             const v = c && c.length > 0 ? state.validations.filter((v) => {
                 return c.indexOf(v.fieldName) === -1
             }).concat(cl.validate(action.payload.fieldNames)) : cl.validate(action.payload.fieldNames);

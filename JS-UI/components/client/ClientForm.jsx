@@ -24,7 +24,7 @@ import Backspace from 'material-ui/svg-icons/content/backspace';
 import {palette} from '../../src/material_ui_raw_theme_file';
 import * as V from '../../utils/validation';
 import * as H from '../../utils/helpers';
-import {fieldDescriptionsMap} from '../../constants/constants';
+import {clientFieldsMap} from '../../constants/constants';
 
 const getStyles = () => {
     return {
@@ -88,46 +88,9 @@ class ClientForm extends Component {
         f ? f.focus() : f
     }
 
-    /*autocomplete(fieldName, validateFields, hintText, data, toString, toLongString, rest) {
-        const filtered = this.getValidations(fieldName);
-        const info = fieldDescriptionsMap.get(fieldName);
-        const mc = V.getMainColor(filtered);
-        return (
-            <AutoComplete
-                ref={(ref) => this[fieldName] = ref}
-                hintText={hintText}
-                floatingLabelFixed={true}
-                floatingLabelText={info.shortTitle}
-                filter={AutoComplete.noFilter}
-                dataSource={data().map((r) => H.autoCompleteItem(toLongString, r))}
-                openOnFocus={true}
-                searchText={toLongString(this.properties().flight[fieldName])}
-                onFocus={() => rest(toString(this.properties().flight[fieldName]))}
-                onUpdateInput={(s) =>  {
-                    if(s === '')
-                        this.actions().update(fieldName, undefined);
-                    rest(s)
-                }}
-                onNewRequest={(choose, i) => {
-                    if(choose.row)
-                        this.actions().update(fieldName, choose.row);
-                }}
-                onBlur={((e) => {
-                    this.actions().validate(validateFields);
-                    rest(toString(this.properties().flight[fieldName]))
-                }).bind(this)}
-                errorText={V.errorText(filtered)}
-                errorStyle={mc}
-                floatingLabelStyle={mc}
-                hintStyle={V.getSecondaryColor(filtered)}
-                onMouseEnter={() => this.setInfoCard(info)}
-            />
-        )
-    }*/
-
     number(fieldName, validateFields, focusField) {
         const filtered = this.getValidations(fieldName);
-        const info = fieldDescriptionsMap.get(fieldName);
+        const info = clientFieldsMap.get(fieldName);
         const mc = V.getMainColor(filtered);
         const hintText = "0";
         return (
@@ -135,7 +98,7 @@ class ClientForm extends Component {
                 ref={(ref) => this[fieldName] = ref}
                 hintText={hintText}
                 floatingLabelFixed={true}
-                floatingLabelText={info.shortTitle}
+                floatingLabelText={info.title}
                 onChange={(e) => {
                     const v = e.target.value.substr(0, 8);
                     this.actions().update(fieldName, v)
@@ -145,7 +108,7 @@ class ClientForm extends Component {
                     if (e.keyCode === 13)
                          this.focus(focusField)
                 }).bind(this)}
-                value={this.properties().flight[fieldName]}
+                value={this.properties().client[fieldName]}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
                 floatingLabelStyle={mc}
@@ -156,27 +119,27 @@ class ClientForm extends Component {
         )
     }
 
-    datetime(fieldName, validateFields, focusField) {
+    text(fieldName, validateFields, focusField) {
         const filtered = this.getValidations(fieldName);
-        const info = fieldDescriptionsMap.get(fieldName);
+        const info = clientFieldsMap.get(fieldName);
         const mc = V.getMainColor(filtered);
-        const hintText = "00:00";
+        const hintText = "";
         return (
             <TextField
                 ref={(ref) => this[fieldName] = ref}
                 hintText={hintText}
                 floatingLabelFixed={true}
-                floatingLabelText={info.shortTitle}
+                floatingLabelText={info.title}
                 onChange={(e) => {
-                    const v = e.target.value.substr(0, 5);
+                    const v = e.target.value;
                     this.actions().update(fieldName, v)
                 }}
                 onBlur={(e) => this.actions().validate(validateFields)}
                 onKeyDown={((e) => {
                     if (e.keyCode === 13)
-                         this.focus(focusField)
+                        this.focus(focusField)
                 }).bind(this)}
-                value={H.hhmm2str(this.properties().flight[fieldName])}
+                value={this.properties().client[fieldName]}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
                 floatingLabelStyle={mc}
@@ -184,47 +147,6 @@ class ClientForm extends Component {
                 onMouseEnter={() => this.setInfoCard(info)}
                 onFocus={(e) => this.setInfoCard(info)}
             />
-        )
-    }
-
-    dateOfFlightField() {
-        const fieldName = "dof";
-        const filtered = this.getValidations(fieldName);
-        const info = fieldDescriptionsMap.get(fieldName);
-        const mc = V.getMainColor(filtered);
-        const hintText = H.date2str(new Date());
-        return (
-            <div>
-                <DatePicker
-                    ref={(ref) => this[fieldName] = ref}
-                    hintText={hintText}
-                    floatingLabelFixed={true}
-                    floatingLabelText={info.shortTitle}
-                    container="inline"
-                    mode="landscape"
-                    value={this.properties().flight[fieldName]}
-                    onChange={(n, date) => {
-                        this.actions().update(fieldName, date);
-                        this.actions().validate([fieldName])
-                    }}
-                    onDismiss={() => this.actions().validate([fieldName])}
-                    errorText={V.errorText(filtered)}
-                    style={{display: 'inline-block', float: 'left'}}
-                    errorStyle={mc}
-                    floatingLabelStyle={mc}
-                    hintStyle={V.getSecondaryColor(filtered)}
-                    onMouseEnter={() => this.setInfoCard(info)}
-                    onFocus={(e) => this.setInfoCard(info)}
-                />
-                <IconButton
-                    style={{display: this.properties().flight[fieldName] ? 'inline-block' : 'none', float: 'left', marginTop: '26px', marginLeft: '-40px'}}
-                    onTouchTap={(e) => {
-                        this.actions().update(fieldName, undefined);
-                        this.actions().validate([fieldName])
-                    }}>
-                    <Backspace color={palette.accent3Color} hoverColor={palette.primary2Color}/>
-                </IconButton>
-            </div>
         )
     }
 
@@ -235,7 +157,7 @@ class ClientForm extends Component {
                 { info ? (
                     <Card>
                         <CardHeader
-                            title={`${info.shortTitle} - ${info.longTitle}`}
+                            title={info.title}
                             actAsExpander={false}
                             showExpandableButton={false}
                         />
@@ -267,41 +189,32 @@ class ClientForm extends Component {
             case 0:
                 return (
                     <div>
-                        {/*{this.autocomplete("aircraft", ["aircraft"], "XX-XXX", () => {
-                            return this.properties().aircraftsData
-                        }, H.aircraft2str, H.aircraft2str, (s) => this.actions().rest.aircrafts({}, {search: s}))}
-                        {this.dateOfFlightField()}*/}
+                        {this.text("firstName", ["firstName"], "firstName")}<br/>
+                        {this.text("lastName", ["lastName"], "lastName")}<br/>
+                        {this.text("type", ["type"], "type")}
+                        {this.text("companyName", ["companyName"], "companyName")}
                     </div>
                 );
             case 1:
                 return (
                     <div>
-                        {this.datetime("blockOffTime", ["blockOffTime"], "takeOffTime")}<br/>
-                        {this.datetime("takeOffTime", ["takeOffTime"], "landingTime")}<br/>
-                        {this.datetime("landingTime", ["landingTime"], "blockOnTime")}<br/>
-                        {this.datetime("blockOnTime", ["blockOnTime"])}
+                        {this.text("address", ["address"], "address")}<br/>
+                        {this.text("phone", ["phone"], "phone")}<br/>
+                        {this.text("email", ["email"], "email")}
                     </div>
 
                 );
             case 2:
                 return (
                     <div>
-                        {/*{this.autocomplete("dep", ["dep", "arr"], "ICAO", () => {
-                            return this.properties().depData
-                        }, H.airport2str, H.airport2longStr, (s) => this.actions().rest.depData({search: s}))}<br/>
-                        {this.autocomplete("arr", ["dep", "arr"], "ICAO", () => {
-                            return this.properties().arrData
-                        }, H.airport2str, H.airport2longStr, (s) => this.actions().rest.arrData({search: s}))}<br/>
-                        {this.number("pax", ["pax"])}*/}
+                        {this.number("discountService", ["discountService"], "discountService")}<br/>
+                        {this.number("discountMaterial", ["discountMaterial"], "discountMaterial")}
                     </div>
                 );
             case 3:
                 return (
                     <div>
-                        {this.number("upliftedFuel", ["upliftedFuel"], "takeOffFuel")}<br/>
-                        {this.number("takeOffFuel", ["takeOffFuel", "landingFuel", "totalBurnedFuel"], "landingFuel")}<br/>
-                        {this.number("landingFuel", ["takeOffFuel", "landingFuel", "totalBurnedFuel"], "totalBurnedFuel")}<br/>
-                        {this.number("totalBurnedFuel", ["takeOffFuel", "landingFuel", "totalBurnedFuel"])}
+                        {this.text("note", ["note"], "note")}<br/>
                     </div>
                 );
             default:
@@ -355,14 +268,14 @@ class ClientForm extends Component {
         const actions = [
             <div onMouseEnter={() => this.resetInfoCard()}>
                 <FlatButton
-                    label="Reset"
+                    label="Сбросить"
                     secondary={true}
                     onTouchTap={(event) => {
                             event.preventDefault();
                             this.actions().reset()
                         }}/>
                 <FlatButton
-                    label="Submit"
+                    label="Сохранить"
                     primary={true}
                     keyboardFocused={true}
                     onTouchTap={() => {
@@ -384,14 +297,14 @@ class ClientForm extends Component {
                 open={this.properties().isOpen}
                 autoDetectWindowHeight={false}
                 onRequestClose={this.actions().close}>
-                <div class="flightGroup">
+                <div class="clientGroup">
                     <div style={styles.root}>
                         <div onMouseEnter={() => this.resetInfoCard()}>
                             <Stepper linear={false}>
-                                <Step>{this.getStepButton(0, ["aircraft", "dof"], "Flight Info")}</Step>
-                                <Step>{this.getStepButton(1, ["blockOffTime", "takeOffTime", "landingTime", "blockOnTime"], "Times")}</Step>
-                                <Step>{this.getStepButton(2, ["dep", "arr", "pax"], "Routing")}</Step>
-                                <Step>{this.getStepButton(3, ["upliftedFuel", "takeOffFuel", "landingFuel", "totalBurnedFuel"], "Fueling")}</Step>
+                                <Step>{this.getStepButton(0, ["firstName", "lastName", "type", "companyName"], "Инфо")}</Step>
+                                <Step>{this.getStepButton(1, ["address", "phone", "email"], "Контакты")}</Step>
+                                <Step>{this.getStepButton(2, ["discountService", "discountMaterial"], "Скидки")}</Step>
+                                <Step>{this.getStepButton(3, ["note"], "Дополнительно")}</Step>
                             </Stepper>
                         </div>
                         <div style={styles.content}>
@@ -404,8 +317,8 @@ class ClientForm extends Component {
                 </div>
                 {stepIndex !== null && (
                     <div style={styles.actions} onMouseEnter={() => this.resetInfoCard()}>
-                        <FlatButton label="Back" onTouchTap={this.handlePrev}/>
-                        <FlatButton ref={(ref) => this.nextButton = ref} label="Next" primary={true}
+                        <FlatButton label="Назад" onTouchTap={this.handlePrev}/>
+                        <FlatButton ref={(ref) => this.nextButton = ref} label="Вперед" primary={true}
                                     onTouchTap={this.handleNext}/>
                     </div>
                 )}

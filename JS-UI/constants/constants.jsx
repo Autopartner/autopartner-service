@@ -6,73 +6,49 @@ export const host = "http://localhost:8888/";
 
 export const emptyClient = o2c({});
 
-export const fieldDescriptionsMap = Map(
+export const clientFieldsMap = Map(
     {
-        "dof": {
-            shortTitle: "DOF",
-            longTitle: "Day Of Flight",
-            description: <div>Choose Date of Flight from Date Picker, this is mandatory field</div>
+        "firstName": {
+            title: "Имя",
+            description: <div>Введите имя клиента, это обязательное поле</div>
         },
-        "aircraft": {
-            shortTitle: "Reg No",
-            longTitle: "Aircraft Registration No",
-            description: <div>Type here Aircraft Registration No, this is mandatory field</div>
+        "lastName": {
+            title: "Фамилия",
+            description: <div>Введите фамилию клиента, это обязательное поле</div>
         },
-        "dep": {
-            shortTitle: "DEP",
-            longTitle: "Departure airport",
-            description: <div>This is mandatory field</div>
+        "companyName": {
+            title: "Название Компании",
+            description: <div>Это обязательное поле</div>
         },
-        "arr": {
-            shortTitle: "ARR",
-            longTitle: "Arrival airport",
-            description: <div>This is mandatory field</div>
+        "address": {
+            title: "Адрес",
+            description: <div></div>
         },
-        "pax": {
-            shortTitle: "PAX",
-            longTitle: "Number of Passengers",
-            description: <div>This is mandatory field</div>
+        "phone": {
+            title: "Номер телефона",
+            description: <div>Это обязательное поле</div>
         },
-        "blockOffTime": {
-            shortTitle: "Block Off",
-            longTitle: "Block Off Time",
-            description: <div>Type here Block Off Time, this is mandatory field</div>
+        "email": {
+            title: "E-mail",
+            description: <div></div>
         },
-        "takeOffTime": {
-            shortTitle: "Take Off",
-            longTitle: "Take Off Time",
-            description: <div>Type here Take Off Time, this is mandatory field</div>
+        "discountService": {
+            title: "Скидка на работы",
+            description: <div></div>
         },
-        "landingTime": {
-            shortTitle: "Landing",
-            longTitle: "Landing Time",
-            description: <div>Type here Landing Time, this is mandatory field</div>
-
+        "discountMaterial": {
+            title: "Скидка на материалы",
+            description: <div></div>
         },
-        "blockOnTime": {
-            shortTitle: "Block On",
-            longTitle: "Block On Time",
-            description: <div>Type here Block On Time, this is mandatory field</div>
+        "type": {
+            title: "Тип клиента",
+            description: <div>Это обязательное поле</div>
         },
-        "upliftedFuel": {
-            shortTitle: "Uplifted",
-            longTitle: "Uplifted Fuel",
-            description: <div>Type here Uplifted Fuel, this is mandatory field</div>
-        },
-        "takeOffFuel": {
-            shortTitle: "Take Off",
-            longTitle: "Take Off Fuel",
-            description: <div>Type here Take Off Fuel, this is mandatory field</div>
-        },
-        "landingFuel": {
-            shortTitle: "Landing",
-            longTitle: "Landing Fuel",
-            description: <div>Type here Landing Fuel, this is mandatory field</div>
-        },
-        "totalBurnedFuel": {
-            shortTitle: "Total Burned",
-            longTitle: "Total Burned Fuel",
-            description: <div>Type here Total Burned Fuel, this is mandatory field</div>
+        "note": {
+            title: "Примечание",
+            description: <div></div>
         }
     }
 );
+
+export const clientSortedFieldList = Stack(['firstName', 'lastName', 'companyName', 'address', 'phone', 'email', 'discountService', 'discountMaterial', 'type', 'note']);

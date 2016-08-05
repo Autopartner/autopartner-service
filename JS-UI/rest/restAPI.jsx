@@ -3,6 +3,7 @@ import adapterFetch from "redux-api/lib/adapters/fetch";
 import * as T from '../utils/transform';
 import fetch from "fbjs/lib/fetch";
 import {host} from '../constants/constants';
+import ES6Promise from 'es6-promise';
 
 export const headers = {
     'Accept': 'application/json',
@@ -47,7 +48,8 @@ export const API = reduxApi({
     addClient: {
         url: '/api/client',
         options: function (url, params, getState) {
-            const client = getState().main.addClientForm.client.normalize();
+            const client = getState().client.addClientForm.client;
+            console.log("CLIENT-----------------" + client);
             return {
                 ...params,
                 method: "POST",
@@ -56,7 +58,7 @@ export const API = reduxApi({
         },
         postfetch: [
             function ({actions, dispatch, getState}) {
-                if (!getState().main.addClientForm.isOpen) {
+                if (!getState().client.addClientForm.isOpen) {
                     dispatch(actions.clients());
                 }
             }
@@ -65,7 +67,7 @@ export const API = reduxApi({
     editClient: {
         url: '/api/client',
         options: function (url, params, getState) {
-            const client = getState().main.editClientForm.client.normalize();
+            const client = getState().client.editClientForm.client;
             return {
                 ...params,
                 method: "POST",
