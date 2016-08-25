@@ -22,9 +22,9 @@ import DirIcon from 'material-ui/svg-icons/maps/directions';
 import FuelIcon from 'material-ui/svg-icons/maps/local-gas-station';
 import Backspace from 'material-ui/svg-icons/content/backspace';
 import {palette} from '../../src/material_ui_raw_theme_file';
+import {clientFieldsMap} from '../../constants/constants';
 import * as V from '../../utils/validation';
 import * as H from '../../utils/helpers';
-import {clientFieldsMap} from '../../constants/constants';
 
 const getStyles = () => {
     return {

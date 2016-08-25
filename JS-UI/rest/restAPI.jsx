@@ -46,10 +46,10 @@ export const API = reduxApi({
         transformer: T.clientTransformer
     },
     addClient: {
-        url: '/api/client',
+        url: host + '/api/client',
         options: function (url, params, getState) {
             const client = getState().client.addClientForm.client;
-            console.log("CLIENT-----------------" + client);
+            console.log(client);
             return {
                 ...params,
                 method: "POST",
@@ -65,7 +65,7 @@ export const API = reduxApi({
         ]
     },
     editClient: {
-        url: '/api/client',
+        url: host + '/api/client',
         options: function (url, params, getState) {
             const client = getState().client.editClientForm.client;
             return {

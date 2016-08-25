@@ -4,11 +4,14 @@ import {connect} from 'react-redux';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AppComponent from './AppComponent';
+
+import * as auth from '../actions/auth';
+
 import * as addClientForm from '../actions/client/addClientForm';
 import * as editClientForm from '../actions/client/editClientForm';
 import * as clientsTable from '../actions/client/clientsTable';
 
-import * as auth from '../actions/auth';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -47,12 +50,12 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: {
             auth: bindActionCreators(auth, dispatch),
-            rest: bindActionCreators(API.actions, dispatch),
             client: {
                 addClientForm: bindActionCreators(addClientForm, dispatch),
                 editClientForm: bindActionCreators(editClientForm, dispatch),
                 clientsTable: bindActionCreators(clientsTable, dispatch)
-            }
+            },
+            rest: bindActionCreators(API.actions, dispatch)
         }
     };
 }

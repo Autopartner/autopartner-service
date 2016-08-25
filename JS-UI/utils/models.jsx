@@ -36,16 +36,16 @@ const ClientT = Record({
     phone: undefined,
     email: undefined,
     dateCreated: undefined,
-    discountService: 0,
-    discountMaterial: 0,
+    discountService: undefined,
+    discountMaterial: undefined,
     type: undefined,
     note: undefined,
-    isActive: false
+    isActive: undefined
 });
 
 class Client extends ClientT {
-
     constructor(o) {
+        console.log("in constructor");
         const no = {
             id: o.id ? parseInt(o.id) : -1,
             firstName: o.firstName,
@@ -85,7 +85,7 @@ class Client extends ClientT {
         return JSON.stringify(this.toObject())
     }
 
-    /*validate(fieldNames) {
+    validate(fieldNames) {
         const rules = clientSortedFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
@@ -107,7 +107,7 @@ class Client extends ClientT {
             .filter((vr) => {
                 return vr !== undefined
             })
-    }*/
+    }
 }
 
 const OrderT = Record({
@@ -150,8 +150,5 @@ export function o2o(o) {
 }
 
 export function o2c(o) {
-    console.log(o);
-    let client = Client = (o) => {};
-    console.log(client);
-    return new Client(o);
+    return o ? new Client(o) : o
 }

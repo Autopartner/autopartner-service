@@ -1,10 +1,7 @@
 import {Map, Stack} from 'immutable';
 import React from 'react';
-import {o2c} from '../utils/models';
 
 export const host = "http://localhost:8888/";
-
-export const emptyClient = o2c({});
 
 export const clientFieldsMap = Map(
     {

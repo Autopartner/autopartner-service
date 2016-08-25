@@ -13,6 +13,8 @@ export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
+//export const host = "http://localhost:8888/";
+
 export function openLoginDialog() {
     return {type: OPEN_LOGIN_DIALOG};
 }

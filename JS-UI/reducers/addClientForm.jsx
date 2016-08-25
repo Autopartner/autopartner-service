@@ -1,11 +1,11 @@
 import * as A from '../actions/client/addClientForm';
 import * as auth from '../actions/auth';
-import {emptyClient} from '../constants/constants';
+import {o2c} from '../utils/models';
 import {Stack} from 'immutable';
 
 const defaultAddClientFormState = {
     isOpen: false,
-    client: emptyClient,
+    client: o2c({}),
     validations: Stack()
 };
 

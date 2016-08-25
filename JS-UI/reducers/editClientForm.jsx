@@ -1,13 +1,14 @@
 import * as A from '../actions/client/editClientForm';
-import {emptyClient} from '../constants/constants';
+//import {emptyClient} from '../constants/constants';
 import {API} from "../rest/restAPI";
 import * as auth from '../actions/auth';
 import {Stack} from 'immutable';
+import {o2c} from '../utils/models';
 
 const defaultEditClientFormState = {
     isOpen: false,
-    initialClient: emptyClient,
-    client: emptyClient,
+    initialClient: o2c({}),
+    client: o2c({}),
     validations: Stack()
 };
 
