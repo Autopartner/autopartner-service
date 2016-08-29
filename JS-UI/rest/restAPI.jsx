@@ -2,6 +2,7 @@ import reduxApi, {transformers} from "redux-api";
 import adapterFetch from "redux-api/lib/adapters/fetch";
 import * as T from '../utils/transform';
 import fetch from "fbjs/lib/fetch";
+
 import {host} from '../constants/constants';
 import ES6Promise from 'es6-promise';
 
@@ -33,7 +34,7 @@ export const API = reduxApi({
         transformer: T.userTransformer,
         postfetch: [
             function ({dispatch, actions}) {
-                dispatch(actions.orders())
+                dispatch(actions.clients())
             }
         ]
     },
@@ -46,10 +47,9 @@ export const API = reduxApi({
         transformer: T.clientTransformer
     },
     addClient: {
-        url: host + '/api/client',
+        url: host + 'api/client',
         options: function (url, params, getState) {
             const client = getState().client.addClientForm.client;
-            console.log(client);
             return {
                 ...params,
                 method: "POST",
@@ -65,7 +65,7 @@ export const API = reduxApi({
         ]
     },
     editClient: {
-        url: host + '/api/client',
+        url: host + 'api/client',
         options: function (url, params, getState) {
             const client = getState().client.editClientForm.client;
             return {

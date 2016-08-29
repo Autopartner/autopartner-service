@@ -86,7 +86,7 @@ export default function auth(state = authState, action) {
         case API.events.jwtUpdate.actionSuccess:
             if (action.data.token) {
                 localStorage.setItem('WWW-Token', action.data.token);
-                localStorage.setItem('tm', 300000);
+                localStorage.setItem('tm', 5000);
                 return {
                     ...state,
                     isAuthenticated: true

@@ -98,7 +98,8 @@ export function loginAction() {
                     if (msg.token) {
                         console.log(msg);
                         localStorage.setItem('WWW-Token', msg.token);
-                        localStorage.setItem('tm', msg.timeout ? msg.timeout : 300000);
+                        localStorage.setItem('tm', msg.timeout ? msg.timeout : 5000);
+
                         dispatch(successLogin())
                     } else {
                         dispatch(failedLogin([V.error('error', msg.errorMessage)]));
