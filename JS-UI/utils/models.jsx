@@ -28,26 +28,26 @@ class User extends UserT {
 }
 
 const ClientT = Record({
-    id: -1,
+    id: null,
     firstName: undefined,
     lastName: undefined,
     companyName: undefined,
     address: undefined,
     phone: undefined,
     email: undefined,
-    dateCreated: undefined,
-    discountService: undefined,
-    discountMaterial: undefined,
-    type: undefined,
+    dateCreated: null,
+    discountService: 0,
+    discountMaterial: 0,
+    type: 'PERSON',
     note: undefined,
-    isActive: undefined
+    isActive: true
 });
 
 class Client extends ClientT {
     constructor(o) {
         console.log("in constructor");
         const no = {
-            id: o.id ? parseInt(o.id) : -1,
+            id: o.id ? parseInt(o.id) : null,
             firstName: o.firstName,
             lastName: o.lastName,
             companyName: o.companyName,

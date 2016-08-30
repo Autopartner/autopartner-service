@@ -1,6 +1,7 @@
 package autopartner.domain.entity;
 
 import autopartner.domain.base.DomainBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -9,7 +10,10 @@ import java.util.Date;
 @Table(name = "clients")
 public class Client extends DomainBase {
 
-    private static final long serialVersionUID = 2353528370345499815L;
+    @Version
+    @JsonIgnore
+    private Long version;
+
     private Long id;
     private String firstName;
     private String lastName;
@@ -169,6 +173,8 @@ public class Client extends DomainBase {
     public void setActive(Boolean active) {
         isActive = active;
     }
+
+
 
     public enum Type {
         PERSON,
