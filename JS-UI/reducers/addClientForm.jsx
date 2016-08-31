@@ -1,4 +1,5 @@
 import * as A from '../actions/client/addClientForm';
+import {API} from "../rest/restAPI";
 import * as auth from '../actions/auth';
 import {o2c} from '../utils/models';
 import {Stack} from 'immutable';
@@ -31,14 +32,20 @@ export default function addClientForm(state = defaultAddClientFormState, action)
         case A.VALIDATIONS_ADD_CLIENT:
             const c = action.payload.fieldNames;
             const cl = state.client;
-            /*const v = c && c.length > 0 ? state.validations.filter((v) => {
+            const v = c && c.length > 0 ? state.validations.filter((v) => {
                 return c.indexOf(v.fieldName) === -1
-            }).concat(cl.validate(action.payload.fieldNames)) : cl.validate(action.payload.fieldNames);*/
+            }).concat(cl.validate(action.payload.fieldNames)) : cl.validate(action.payload.fieldNames);
 
             return {
                 ...state,
-                client: cl/*,
-                validations: v*/
+                client: cl,
+                validations: v
+            };
+        case API.events.addClient.actionSuccess:
+            // TODO validation from server
+            return {
+                ...state,
+                isOpen: false
             };
         case auth.LOGOUT_SUCCESS:
             return defaultAddClientFormState;

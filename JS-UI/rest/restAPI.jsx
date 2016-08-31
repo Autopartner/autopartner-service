@@ -58,7 +58,9 @@ export const API = reduxApi({
         },
         postfetch: [
             function ({actions, dispatch, getState}) {
+                console.log(getState().client.addClientForm.isOpen);
                 if (!getState().client.addClientForm.isOpen) {
+                    getState().client.addClientForm.actions.close();
                     dispatch(actions.clients());
                 }
             }

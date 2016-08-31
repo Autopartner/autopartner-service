@@ -62,7 +62,7 @@ class ClientsTable extends AppComponent {
     forms() {
         return (<div>
             {<ClientForm
-                title="Add Client Dialog"
+                title="Добавить Клиента"
                 properties={this.addClientForm()}
                 actions={{
                                 ...this.addClientFormActions(),
@@ -71,7 +71,7 @@ class ClientsTable extends AppComponent {
                                 }
                             }}/>}
             {<ClientForm
-                title="Edit Client Dialog"
+                title="Редактировать Клиента"
                 properties={this.editClientForm()}
                 actions={{
                 ...this.editClientFormActions(),
