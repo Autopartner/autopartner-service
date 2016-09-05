@@ -48,4 +48,4 @@ export const clientFieldsMap = Map(
     }
 );
 
-export const clientSortedFieldList = Stack(['firstName', 'lastName', 'companyName', 'address', 'phone', 'email', 'discountService', 'discountMaterial', 'type', 'note']);
+export const clientRequiredFieldList = Stack(['firstName', 'phone', 'type']);

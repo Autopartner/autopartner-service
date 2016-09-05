@@ -66,7 +66,7 @@ export function required(fieldName, value) {
         return typeof value === 'undefined' || value.toString() === ""
     };
 
-    return new Validation(fieldName, vf, 'error', 'Required field');
+    return new Validation(fieldName, vf, 'error', 'Обязательное поле');
 }
 
 export function minLength(fieldName, value, minLength) {

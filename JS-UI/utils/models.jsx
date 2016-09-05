@@ -1,6 +1,6 @@
 import * as V from './validation';
 import {Record} from 'immutable';
-import {clientSortedFieldList} from '../constants/constants';
+import {clientRequiredFieldList} from '../constants/constants';
 
 const UserT = Record({
     id: -1,
@@ -35,17 +35,15 @@ const ClientT = Record({
     address: undefined,
     phone: undefined,
     email: undefined,
-    dateCreated: null,
     discountService: 0,
     discountMaterial: 0,
-    type: 'PERSON',
+    type: "PERSON",
     note: undefined,
-    isActive: true
+    active: true
 });
 
 class Client extends ClientT {
     constructor(o) {
-        console.log("in constructor");
         const no = {
             id: o.id ? parseInt(o.id) : null,
             firstName: o.firstName,
@@ -54,12 +52,11 @@ class Client extends ClientT {
             address: o.address,
             phone: o.phone,
             email: o.email,
-            dateCreated: o.dateCreated,
             discountService: o.discountService,
             discountMaterial: o.discountMaterial,
-            type: o.type,
+            type: o.type ? o.type : "PERSON",
             note: o.note,
-            isActive: o.isActive
+            active: o.active ? o.active : true
         };
         super(no);
     }
@@ -86,7 +83,7 @@ class Client extends ClientT {
     }
 
     validate(fieldNames) {
-        const rules = clientSortedFieldList
+        const rules = clientRequiredFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
             })

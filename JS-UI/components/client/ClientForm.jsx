@@ -2,28 +2,12 @@ import React, {Component, PropTypes} from 'react';
 import {
     FlatButton,
     Dialog,
-    TextField
+    TextField,
+    SelectField,
+    MenuItem
 } from 'material-ui';
 import {clientFieldsMap} from '../../constants/constants';
 import * as V from '../../utils/validation';
-
-const getStyles = () => {
-    return {
-        root: {
-            width: '100%',
-            margin: 'auto'
-        },
-        content: {
-            margin: '0 15px'
-        },
-        actions: {
-            width: '100%',
-            margin: '5% auto',
-            textAlign: 'center',
-            display: 'inline-block'
-        }
-    };
-};
 
 class ClientForm extends Component {
 
@@ -65,7 +49,7 @@ class ClientForm extends Component {
                 onKeyDown={((e) => {
                     if (e.keyCode === 13)
                          this.focus(focusField)
-                }).bind(this)}
+                })}
                 value={this.properties().client[fieldName]}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
@@ -94,13 +78,35 @@ class ClientForm extends Component {
                 onKeyDown={((e) => {
                     if (e.keyCode === 13)
                         this.focus(focusField)
-                }).bind(this)}
+                })}
                 value={this.properties().client[fieldName]}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
                 floatingLabelStyle={mc}
+                multiLine={true}
                 hintStyle={V.getSecondaryColor(filtered)}
             />
+        )
+    }
+
+    selector(fieldName, items) {
+        const filtered = this.getValidations(fieldName);
+        const info = clientFieldsMap.get(fieldName);
+        const mc = V.getMainColor(filtered);
+        return (
+            <SelectField
+                ref={(ref) => this[fieldName] = ref}
+                floatingLabelFixed={true}
+                floatingLabelText={info.title}
+                floatingLabelStyle={mc}
+                onChange={(event, index, value) => {
+                    this.actions().update(fieldName, value)
+                }}
+                value={this.properties().client[fieldName]}>
+                {items.map(el => {
+                    return <MenuItem value={el.id} primaryText={el.name} />;
+                })}
+            </SelectField>
         )
     }
 
@@ -120,33 +126,25 @@ class ClientForm extends Component {
             </div>
         ];
 
-        const styles = getStyles();
-
         return (
             <Dialog
                 title={this.props.title}
                 actions={actions}
                 open={this.properties().isOpen}
-                autoDetectWindowHeight={false}
+                autoDetectWindowHeight={true}
                 onRequestClose={this.actions().close}
                 autoScrollBodyContent={true}>
-                <div class="clientGroup">
-                    <div style={styles.root}>
-                        <div style={styles.content}>
-                            <div>
-                                {this.text("firstName", ["firstName"], "firstName")}<br/>
-                                {this.text("lastName", ["lastName"], "lastName")}<br/>
-                                {this.text("type", ["type"], "type")}<br/>
-                                {this.text("companyName", ["companyName"], "companyName")}<br/>
-                                {this.text("address", ["address"], "address")}<br/>
-                                {this.text("phone", ["phone"], "phone")}<br/>
-                                {this.text("email", ["email"], "email")}<br/>
-                                {this.number("discountService", ["discountService"], "discountService")}<br/>
-                                {this.number("discountMaterial", ["discountMaterial"], "discountMaterial")}<br/>
-                                {this.text("note", ["note"], "note")}
-                            </div>
-                        </div>
-                    </div>
+                <div>
+                    {this.selector("type", [{id: "PERSON", name: "Частное лицо"}, {id: "LEGAL", name: "Компания"}])}<br/>
+                    {this.text("firstName", ["firstName"], "firstName")}<br/>
+                    {this.text("lastName", ["lastName"], "lastName")}<br/>
+                    {this.text("companyName", ["companyName"], "companyName")}<br/>
+                    {this.text("address", ["address"], "address")}<br/>
+                    {this.text("phone", ["phone"], "phone")}<br/>
+                    {this.text("email", ["email"], "email")}<br/>
+                    {this.number("discountService", ["discountService"], "discountService")}<br/>
+                    {this.number("discountMaterial", ["discountMaterial"], "discountMaterial")}<br/>
+                    {this.text("note", ["note"], "note")}
                 </div>
             </Dialog>
         );
