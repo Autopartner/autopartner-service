@@ -104,7 +104,7 @@ class ClientForm extends Component {
                 }}
                 value={this.properties().client[fieldName]}>
                 {items.map(el => {
-                    return <MenuItem value={el.id} primaryText={el.name} />;
+                    return <MenuItem value={el.id} key={el.id} primaryText={el.name} />;
                 })}
             </SelectField>
         )

@@ -13,9 +13,6 @@ class App extends React.Component {
             <Router history={this.props.history}>
                 <Route path='/' component={Page}>
                     <IndexRoute component={Client} />
-{/*
-                    <Route path='/client' component={Client} {...this.props} handler={ (props,state,params) => <Client/> }/>
-*/}
                     <Route path='/client' component={Client} {...this.props}/>
                     <Route path='/order' component={Order} {...this.props}/>
                     <Route path='/material' component={Material} {...this.props}/>

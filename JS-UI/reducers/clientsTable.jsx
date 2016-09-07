@@ -20,13 +20,7 @@ function clientsTable(state = defaultClientsTableState, action) {
         case API.events.clients.actionSuccess:
             return {
                 ...state,
-                clients: action.data.payload.data
-            };
-        case A.CHANGE_HEIGHT_CLIENTS_TABLE:
-            const h = window.innerHeight - 212;
-            return {
-                ...state,
-                tableHeight: h
+                clients: action.data
             };
         default:
             return state;

@@ -23,26 +23,26 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-    @Secured({"ROLE_ADMIN",  "ROLE_ROOT"})
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = {"/api/client"}, method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(clientService.listAllClients());
     }
 
-    @Secured({"ROLE_ADMIN",  "ROLE_ROOT"})
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/client/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> get(@PathVariable Integer id) {
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
-    @Secured({"ROLE_ADMIN",  "ROLE_ROOT"})
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/client/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@PathVariable Integer id) {
         clientService.deleteClient(id);
         return ResponseEntity.ok(true);
     }
 
-    @Secured({"ROLE_ADMIN",  "ROLE_ROOT"})
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/client", method = RequestMethod.POST)
     public ResponseEntity<?> save(@Valid @RequestBody Client client) {
         return ResponseEntity.ok(clientService.saveClient(client));

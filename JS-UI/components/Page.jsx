@@ -29,7 +29,6 @@ class Page extends AppComponent {
             <div>
                 <Header {...this.props} />
                 <section className="main" style={defaultStyle}>
-                    {/*{this.props.children}*/}
                     {React.cloneElement(this.props.children, {...this.props})}
                 </section>
                 <Footer/>

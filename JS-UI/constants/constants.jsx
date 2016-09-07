@@ -14,7 +14,7 @@ export const clientFieldsMap = Map(
             description: <div>Введите фамилию клиента, это обязательное поле</div>
         },
         "companyName": {
-            title: "Название Компании",
+            title: "Компания",
             description: <div>Это обязательное поле</div>
         },
         "address": {
@@ -22,7 +22,7 @@ export const clientFieldsMap = Map(
             description: <div></div>
         },
         "phone": {
-            title: "Номер телефона",
+            title: "Телефона",
             description: <div>Это обязательное поле</div>
         },
         "email": {
@@ -30,15 +30,15 @@ export const clientFieldsMap = Map(
             description: <div></div>
         },
         "discountService": {
-            title: "Скидка на работы",
+            title: "Скидка (работы)",
             description: <div></div>
         },
         "discountMaterial": {
-            title: "Скидка на материалы",
+            title: "Скидка (материалы)",
             description: <div></div>
         },
         "type": {
-            title: "Тип клиента",
+            title: "Тип",
             description: <div>Это обязательное поле</div>
         },
         "note": {
@@ -49,3 +49,5 @@ export const clientFieldsMap = Map(
 );
 
 export const clientRequiredFieldList = Stack(['firstName', 'phone', 'type']);
+
+export const clientFieldList = Stack(['firstName', 'lastName', 'companyName', 'address', 'phone', 'email', 'discountService', 'discountMaterial', 'type', 'note']);
