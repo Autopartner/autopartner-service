@@ -25,8 +25,8 @@ public class ClientServiceImpl implements ClientService {
     private ClientRepository clientRepository;
 
     @Override
-    public Iterable<Client> listAllClients() {
-        return clientRepository.findAll();
+    public Iterable<Client> getByActiveTrue() {
+        return clientRepository.findByActiveTrue();
     }
 
     @Override

@@ -10,6 +10,7 @@ import * as auth from '../actions/auth';
 import * as addClientForm from '../actions/client/addClientForm';
 import * as editClientForm from '../actions/client/editClientForm';
 import * as clientsTable from '../actions/client/clientsTable';
+import * as deleteClientDialog from '../actions/client/deleteClientDialog';
 
 
 import {API} from "../rest/restAPI";
@@ -52,7 +53,8 @@ function mapDispatchToProps(dispatch) {
             client: {
                 addClientForm: bindActionCreators(addClientForm, dispatch),
                 editClientForm: bindActionCreators(editClientForm, dispatch),
-                clientsTable: bindActionCreators(clientsTable, dispatch)
+                clientsTable: bindActionCreators(clientsTable, dispatch),
+                deleteClientDialog: bindActionCreators(deleteClientDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

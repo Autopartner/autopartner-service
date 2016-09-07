@@ -81,7 +81,32 @@ export const API = reduxApi({
                 }
             }
         ]
+    },
+    deleteClient: {
+        url: host + 'api/client',
+        options: function (url, params, getState) {
+
+            const client = getState().client.deleteClientDialog.client;
+            client.set('active', false);
+
+            console.log("CLIENT::::::::::::::");
+            console.log(client);
+
+            return {
+                ...params,
+                method: "POST",
+                body: client.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().client.deleteClientDialog.isOpen) {
+                    dispatch(actions.clients());
+                }
+            }
+        ]
     }
+
 }).use("fetch", adapterFetch(fetch))
     .use("options", function () {
         const h = {

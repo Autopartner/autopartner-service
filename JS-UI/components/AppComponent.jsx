@@ -34,12 +34,20 @@ class AppComponent extends Component {
         return this.client().editClientForm;
     }
 
+    deleteClientDialog() {
+        return this.client().deleteClientDialog;
+    }
+
     addClientFormActions() {
         return this.clientActions().addClientForm;
     }
 
     editClientFormActions() {
         return this.clientActions().editClientForm;
+    }
+
+    deleteClientDialogActions() {
+        return this.clientActions().deleteClientDialog;
     }
 
     clientsTable() {

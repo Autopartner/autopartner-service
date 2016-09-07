@@ -4,7 +4,7 @@ import autopartner.domain.entity.Client;
 
 public interface ClientService {
 
-    Iterable<Client> listAllClients();
+    Iterable<Client> getByActiveTrue();
 
     Client getClientById(Integer id);
 

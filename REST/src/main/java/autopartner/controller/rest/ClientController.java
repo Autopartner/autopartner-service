@@ -26,7 +26,7 @@ public class ClientController {
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = {"/api/client"}, method = RequestMethod.GET)
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(clientService.listAllClients());
+        return ResponseEntity.ok(clientService.getByActiveTrue());
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})

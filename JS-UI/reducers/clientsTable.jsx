@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import addClientForm from './addClientForm';
 import editClientForm from './editClientForm';
+import deleteClientDialog from './deleteClientDialog';
 import {API} from "../rest/restAPI";
 import * as auth from '../actions/auth';
 import * as A from '../actions/client/clientsTable';
@@ -30,7 +31,8 @@ function clientsTable(state = defaultClientsTableState, action) {
 const client = combineReducers({
     addClientForm,
     editClientForm,
-    clientsTable
+    clientsTable,
+    deleteClientDialog
 });
 
 export default client;

@@ -5,8 +5,8 @@ import * as MyRawTheme from '../../src/material_ui_raw_theme_file';
 import IconButton from 'material-ui/IconButton';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
-import NoteAdd from 'material-ui/svg-icons/action/note-add';
 import ClientForm from './ClientForm';
+import ClientDeleteDialog from './ClientDeleteDialog';
 import AppComponent from '../AppComponent';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -37,7 +37,7 @@ class ClientsTable extends AppComponent {
                     <IconButton onTouchTap={() => this.editClientFormActions().open(o2c(row))}>
                         <ModeEdit/>
                     </IconButton>
-                    <IconButton onTouchTap={() => this.editClientFormActions().open(row)}>
+                    <IconButton onTouchTap={() => this.deleteClientDialogActions().open(o2c(row))}>
                         <DeleteForever/>
                     </IconButton>
                 </TableHeaderColumn>
@@ -62,6 +62,19 @@ class ClientsTable extends AppComponent {
 
     getChildContext() {
         return {muiTheme: getMuiTheme(MyRawTheme)};
+    }
+
+    deleteDialog() {
+        return (
+            <ClientDeleteDialog
+                properties={this.deleteClientDialog()}
+                actions={{
+                    ...this.deleteClientDialogActions(),
+                    rest: {
+                        delete: this.rest().deleteClient
+                    }}}
+            />
+        )
     }
 
     forms() {
@@ -111,6 +124,7 @@ class ClientsTable extends AppComponent {
     render() {
         return (
             <div>
+                {this.deleteDialog()}
                 {this.forms()}
                 <Table
                     className="dataTable"

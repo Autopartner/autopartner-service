@@ -105,6 +105,10 @@ class Client extends ClientT {
                 return vr !== undefined
             })
     }
+
+    setActive(active) {
+        this.active = active;
+    }
 }
 
 const OrderT = Record({
