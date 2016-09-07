@@ -59,7 +59,6 @@ export const API = reduxApi({
         postfetch: [
             function ({actions, dispatch, getState}) {
                 if (!getState().client.addClientForm.isOpen) {
-                    dispatch(getState().client.addClientForm.close);
                     dispatch(actions.clients());
                 }
             }
@@ -77,7 +76,7 @@ export const API = reduxApi({
         },
         postfetch: [
             function ({actions, dispatch, getState}) {
-                if (!getState().main.editClientForm.isOpen) {
+                if (!getState().client.editClientForm.isOpen) {
                     dispatch(actions.clients());
                 }
             }

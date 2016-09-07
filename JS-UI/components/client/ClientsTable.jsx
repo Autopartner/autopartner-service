@@ -11,6 +11,7 @@ import AppComponent from '../AppComponent';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {clientFieldList, clientFieldsMap} from '../../constants/constants';
+import {o2c} from '../../utils/models';
 import {
     Table,
     TableBody,
@@ -33,7 +34,7 @@ class ClientsTable extends AppComponent {
         return (
             <TableRow key={row.id} selectable={false}>
                 <TableHeaderColumn style={{width:'50px'}}>
-                    <IconButton onTouchTap={() => this.editClientFormActions().open(row)}>
+                    <IconButton onTouchTap={() => this.editClientFormActions().open(o2c(row))}>
                         <ModeEdit/>
                     </IconButton>
                     <IconButton onTouchTap={() => this.editClientFormActions().open(row)}>
@@ -98,7 +99,7 @@ class ClientsTable extends AppComponent {
                     {clientFieldList.map((t, i) => {
                             const info = clientFieldsMap.get(t);
                             return (
-                                <TableHeaderColumn>{info.title}</TableHeaderColumn>
+                                <TableHeaderColumn key={i}>{info.title}</TableHeaderColumn>
                             )
                         }
                     )}
@@ -113,8 +114,8 @@ class ClientsTable extends AppComponent {
                 {this.forms()}
                 <Table
                     className="dataTable"
-                    fixedHeader="true"
-                    style={{'min-width':'1350px'}}>
+                    fixedHeader={true}
+                    style={{'minWidth':'1350px'}}>
                     {this.header()}
                     <TableBody displayRowCheckbox={false}>
                         {this.clientsTable().clients.map(this.row)}

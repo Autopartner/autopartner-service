@@ -6,7 +6,7 @@ import {
     SelectField,
     MenuItem
 } from 'material-ui';
-import {clientFieldsMap} from '../../constants/constants';
+import {clientFieldsMap, clientRequiredFieldList} from '../../constants/constants';
 import * as V from '../../utils/validation';
 
 class ClientForm extends Component {
@@ -118,7 +118,7 @@ class ClientForm extends Component {
                     primary={true}
                     keyboardFocused={true}
                     onTouchTap={() => {
-                        this.actions().validate();
+                        this.actions().validate(clientRequiredFieldList.toArray());
                         if(!this.properties().validations.find((v) => {return v.level === 'error'}))
                             this.actions().rest.push();
                     }}

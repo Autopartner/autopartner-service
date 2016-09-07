@@ -1,5 +1,4 @@
 import * as A from '../actions/client/editClientForm';
-//import {emptyClient} from '../constants/constants';
 import {API} from "../rest/restAPI";
 import * as auth from '../actions/auth';
 import {Stack} from 'immutable';
@@ -37,7 +36,7 @@ export default function editClientForm(state = defaultEditClientFormState, actio
             };
         case A.VALIDATIONS_EDIT_CLIENT:
             const c = action.payload.fieldNames;
-            const cl = state.client.normalize();
+            const cl = state.client;
             const v = c && c.length > 0 ? state.validations.filter((v) => {
                 return c.indexOf(v.fieldName) === -1
             }).concat(cl.validate(action.payload.fieldNames)) : cl.validate(action.payload.fieldNames);
@@ -48,12 +47,10 @@ export default function editClientForm(state = defaultEditClientFormState, actio
                 validations: v
             };
         case API.events.editClient.actionSuccess:
-            const validations = state.validations.concat(action.data.payload.validations);
-            const fail = validations.find((v) => {return v.level === 'error'}) ? true : false;
+            // TODO validation from server
             return {
                 ...state,
-                validations: validations,
-                isOpen: fail
+                isOpen: false
             };
         case auth.LOGOUT_SUCCESS:
             return defaultEditClientFormState;

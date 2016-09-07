@@ -22,7 +22,7 @@ export const clientFieldsMap = Map(
             description: <div></div>
         },
         "phone": {
-            title: "Телефона",
+            title: "Телефон",
             description: <div>Это обязательное поле</div>
         },
         "email": {
@@ -48,6 +48,6 @@ export const clientFieldsMap = Map(
     }
 );
 
-export const clientRequiredFieldList = Stack(['firstName', 'phone', 'type']);
+export const clientRequiredFieldList = Stack(['firstName', 'type']);
 
 export const clientFieldList = Stack(['firstName', 'lastName', 'companyName', 'address', 'phone', 'email', 'discountService', 'discountMaterial', 'type', 'note']);
