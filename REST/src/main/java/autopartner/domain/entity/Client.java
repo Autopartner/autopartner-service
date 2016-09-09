@@ -7,12 +7,8 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "clients")
+@Table(name = "cl_clients")
 public class Client extends DomainBase {
-
-    @Version
-    @JsonIgnore
-    private Long version;
 
     private Long id;
     private String firstName;
