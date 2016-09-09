@@ -43,7 +43,7 @@ public class CarBrand extends DomainBase {
         return carType;
     }
 
-    public void setCarTypeId(CarType carType) {
+    public void setCarType(CarType carType) {
         this.carType = carType;
     }
 
