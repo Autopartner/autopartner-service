@@ -21,10 +21,11 @@ export function orderTransformer(data, prevData, action) {
 }
 
 export function clientTransformer(data, prevData, action) {
-    if(data && data.payload)
-        return {
-            ...data,
-            payload: data.payload.map(T.c2o)
-        };
-    return data
+    // TODO
+    return data;
+}
+
+export function carTypeTransformer(data, prevData, action) {
+    // TODO
+    return data;
 }

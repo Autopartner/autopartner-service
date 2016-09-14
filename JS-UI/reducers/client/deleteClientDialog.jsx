@@ -1,8 +1,8 @@
-import * as A from '../actions/client/deleteClientDialog';
-import {API} from "../rest/restAPI";
-import * as auth from '../actions/auth';
+import * as A from '../../actions/client/deleteClientDialog';
+import {API} from "../../rest/restAPI";
+import * as auth from '../../actions/auth';
 import {Stack} from 'immutable';
-import {o2c} from '../utils/models';
+import {o2c} from '../../utils/models';
 
 const defaultDeleteClientDialogState = {
     isOpen: false,

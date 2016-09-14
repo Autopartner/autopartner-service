@@ -1,7 +1,7 @@
-import * as A from '../actions/client/addClientForm';
-import {API} from "../rest/restAPI";
-import * as auth from '../actions/auth';
-import {o2c} from '../utils/models';
+import * as A from '../../actions/client/addClientForm';
+import {API} from "../../rest/restAPI";
+import * as auth from '../../actions/auth';
+import {o2c} from '../../utils/models';
 import {Stack} from 'immutable';
 
 const defaultAddClientFormState = {
@@ -19,11 +19,6 @@ export default function addClientForm(state = defaultAddClientFormState, action)
             };
         case A.CLOSE_ADD_CLIENT_FORM:
             return defaultAddClientFormState;
-        case A.RESET_ADD_CLIENT_FORM:
-            return {
-                ...defaultAddClientFormState,
-                isOpen: true
-            };
         case A.UPDATE_ADD_CLIENT:
             return {
                 ...state,

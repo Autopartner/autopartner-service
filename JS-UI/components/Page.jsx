@@ -9,9 +9,11 @@ import * as auth from '../actions/auth';
 
 import * as addClientForm from '../actions/client/addClientForm';
 import * as editClientForm from '../actions/client/editClientForm';
-import * as clientsTable from '../actions/client/clientsTable';
 import * as deleteClientDialog from '../actions/client/deleteClientDialog';
 
+import * as addCarTypeForm from '../actions/car/type/addCarTypeForm';
+import * as editCarTypeForm from '../actions/car/type/editCarTypeForm';
+import * as deleteCarTypeDialog from '../actions/car/type/deleteCarTypeDialog';
 
 import {API} from "../rest/restAPI";
 
@@ -53,8 +55,12 @@ function mapDispatchToProps(dispatch) {
             client: {
                 addClientForm: bindActionCreators(addClientForm, dispatch),
                 editClientForm: bindActionCreators(editClientForm, dispatch),
-                clientsTable: bindActionCreators(clientsTable, dispatch),
                 deleteClientDialog: bindActionCreators(deleteClientDialog, dispatch)
+            },
+            carType: {
+                addCarTypeForm: bindActionCreators(addCarTypeForm, dispatch),
+                editCarTypeForm: bindActionCreators(editCarTypeForm, dispatch),
+                deleteCarTypeDialog: bindActionCreators(deleteCarTypeDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

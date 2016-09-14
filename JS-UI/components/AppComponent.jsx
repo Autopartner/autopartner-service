@@ -10,6 +10,10 @@ class AppComponent extends Component {
         return this.props.client;
     }
 
+    carType() {
+        return this.props.carType;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -21,7 +25,11 @@ class AppComponent extends Component {
     clientActions() {
         return this.actions().client;
     }
-    
+
+    carTypeActions() {
+        return this.actions().carType;
+    }
+
     rest() {
         return this.actions().rest;
     }
@@ -52,6 +60,36 @@ class AppComponent extends Component {
 
     clientsTable() {
         return this.client().clientsTable;
+    }
+
+    ////////////////////////// Car Type
+
+    addCarTypeForm() {
+        return this.carType().addCarTypeForm;
+    }
+
+    editCarTypeForm() {
+        return this.carType().editCarTypeForm;
+    }
+
+    deleteCarTypeDialog() {
+        return this.carType().deleteCarTypeDialog;
+    }
+
+    addCarTypeFormActions() {
+        return this.carTypeActions().addCarTypeForm;
+    }
+
+    editCarTypeFormActions() {
+        return this.carTypeActions().editCarTypeForm;
+    }
+
+    deleteCarTypeDialogActions() {
+        return this.carTypeActions().deleteCarTypeDialog;
+    }
+
+    carTypesTable() {
+        return this.carType().carTypesTable;
     }
 }
 

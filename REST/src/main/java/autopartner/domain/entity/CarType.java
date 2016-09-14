@@ -12,15 +12,17 @@ public class CarType extends DomainBase {
     private Long id;
     private String name;
     private List<CarBrand> brands;
+    private Boolean active;
 
     public CarType() {
         super();
     }
 
-    public CarType(Long id, String name, List<CarBrand> brands) {
+    public CarType(Long id, String name, List<CarBrand> brands, Boolean active) {
         this.id = id;
         this.name = name;
         this.brands = brands;
+        this.active = active;
     }
 
     @Id
@@ -52,5 +54,14 @@ public class CarType extends DomainBase {
 
     public void setBrands(List<CarBrand> brands) {
         this.brands = brands;
+    }
+
+    @Column(name = "active")
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }

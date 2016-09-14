@@ -85,13 +85,8 @@ export const API = reduxApi({
     deleteClient: {
         url: host + 'api/client',
         options: function (url, params, getState) {
-
             const client = getState().client.deleteClientDialog.client;
             client.set('active', false);
-
-            console.log("CLIENT::::::::::::::");
-            console.log(client);
-
             return {
                 ...params,
                 method: "POST",
@@ -102,6 +97,71 @@ export const API = reduxApi({
             function ({actions, dispatch, getState}) {
                 if (!getState().client.deleteClientDialog.isOpen) {
                     dispatch(actions.clients());
+                }
+            }
+        ]
+    },
+
+
+    /////////////////////////// CAR TYPE REST ///////////////////////////
+
+    carTypes: {
+        url: host + 'api/car/type',
+        transformer: T.carTypeTransformer
+    },
+    addCarType: {
+        url: host + 'api/car/type',
+        options: function (url, params, getState) {
+            const carType = getState().carType.addCarTypeForm.carType;
+            return {
+                ...params,
+                method: "POST",
+                body: carType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carType.addCarTypeForm.isOpen) {
+                    dispatch(actions.carTypes());
+                }
+            }
+        ]
+    },
+    editCarType: {
+        url: host + 'api/car/type',
+        options: function (url, params, getState) {
+            const carType = getState().carType.editCarTypeForm.carType;
+            return {
+                ...params,
+                method: "POST",
+                body: carType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carType.editCarTypeForm.isOpen) {
+                    dispatch(actions.carTypes());
+                }
+            }
+        ]
+    },
+    deleteCarType: {
+        url: host + 'api/car/type',
+        options: function (url, params, getState) {
+
+            const carType = getState().carType.deleteCarTypeDialog.carType;
+            carType.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: carType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carType.deleteCarTypeDialog.isOpen) {
+                    dispatch(actions.carTypes());
                 }
             }
         ]

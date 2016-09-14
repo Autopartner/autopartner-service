@@ -63,7 +63,7 @@ class Client extends ClientT {
 
     toString() {
         return `${this.id} ${this.firstName} ${this.lastName} ${this.companyName} ${this.address} ${this.phone} 
-                ${this.email} ${this.dateCreated} ${this.discountService} ${this.discountMaterial} ${this.type} ${this.note} ${this.isActive}`
+                ${this.email} ${this.discountService} ${this.discountMaterial} ${this.type} ${this.note} ${this.active}`
     }
 
     isEqual(that) {
@@ -86,11 +86,7 @@ class Client extends ClientT {
         const rules = clientRequiredFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
-            })
-            .concat(
-                [
-                    V.notEqual("discountService", this.discountService, 0, "warn", "Вы уверены что этому клиенту не нужна скидка?")
-                ]);
+            });
 
         const rl = (fieldNames && fieldNames.length > 0) ? rules
             .filter((v) => {
@@ -105,9 +101,62 @@ class Client extends ClientT {
                 return vr !== undefined
             })
     }
+}
 
-    setActive(active) {
-        this.active = active;
+const CarTypeT = Record({
+    id: null,
+    name: undefined,
+    active: true
+});
+
+class CarType extends CarTypeT {
+    constructor(o) {
+        const no = {
+            id: o.id ? parseInt(o.id) : null,
+            name: o.name,
+            active: o.active ? o.active : true
+        };
+        super(no);
+    }
+
+    toString() {
+        return `${this.id} ${this.name} ${this.active}`
+    }
+
+    isEqual(that) {
+        return that && (that instanceof CarType && this.id === that.id)
+    }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    validate(fieldNames) {
+        const rules = clientRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
     }
 }
 
@@ -152,4 +201,8 @@ export function o2o(o) {
 
 export function o2c(o) {
     return o ? new Client(o) : o
+}
+
+export function o2ct(o) {
+    return o ? new CarType(o) : o
 }

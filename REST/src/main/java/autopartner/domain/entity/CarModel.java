@@ -12,6 +12,7 @@ public class CarModel extends DomainBase {
     private Long id;
     private CarBrand carBrand;
     private String name;
+    private Boolean active;
 
     public CarModel() {
         super();
@@ -53,5 +54,14 @@ public class CarModel extends DomainBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Column(name = "active")
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
