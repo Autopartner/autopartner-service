@@ -1,8 +1,12 @@
+.idea/*
 .gradle
 build
 gradle/
+REST/gradle/*
 gradlew.bat
+REST/gradlew.bat
 gradlew
+REST/gradlew
 node_modules/*
 JS-UI/static/*
 REST/src/main/resources/public/bundle.js

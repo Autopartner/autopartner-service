@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 
 @Controller
-public class CarController {
+public class CarTypeController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
