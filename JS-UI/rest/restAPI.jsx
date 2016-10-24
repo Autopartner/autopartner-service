@@ -165,6 +165,70 @@ export const API = reduxApi({
                 }
             }
         ]
+    },
+
+    /////////////////////////// CAR BRAND REST ///////////////////////////
+
+    carBrands: {
+        url: host + 'api/car/brand',
+        transformer: T.carBrandTransformer
+    },
+    addCarBrand: {
+        url: host + 'api/car/brand',
+        options: function (url, params, getState) {
+            const carBrand = getState().carBrand.addCarBrandForm.carBrand;
+            return {
+                ...params,
+                method: "POST",
+                body: carBrand.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carBrand.addCarBrandForm.isOpen) {
+                    dispatch(actions.carBrands());
+                }
+            }
+        ]
+    },
+    editCarBrand: {
+        url: host + 'api/car/brand',
+        options: function (url, params, getState) {
+            const carBrand = getState().carBrand.editCarBrandForm.carBrand;
+            return {
+                ...params,
+                method: "POST",
+                body: carBrand.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carBrand.editCarBrandForm.isOpen) {
+                    dispatch(actions.carBrands());
+                }
+            }
+        ]
+    },
+    deleteCarBrand: {
+        url: host + 'api/car/brand',
+        options: function (url, params, getState) {
+
+            const carBrand = getState().carBrand.deleteCarBrandDialog.carBrand;
+            carBrand.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: carBrand.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carBrand.deleteCarBrandDialog.isOpen) {
+                    dispatch(actions.carBrands());
+                }
+            }
+        ]
     }
 
 }).use("fetch", adapterFetch(fetch))

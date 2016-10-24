@@ -20,18 +20,6 @@ export function autoCompleteItem(transformer, row) {
     }
 }
 
-export function aircraft2str(a) {
-    return a ? a.toString() : a;
-}
-
-export function airport2str(a) {
-    return a ? a.toString() : a;
-}
-
-export function airport2longStr(a) {
-    return a ? a.toLongString() : a;
-}
-
 export function date2str(d) {
     if (d && d instanceof Date) {
         const dd = d.getDate();

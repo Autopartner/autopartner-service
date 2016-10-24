@@ -1,6 +1,6 @@
 import * as V from './validation';
 import {Record} from 'immutable';
-import {clientRequiredFieldList} from '../constants/constants';
+import {clientRequiredFieldList, carBrandRequiredFieldList, carTypeRequiredFieldList} from '../constants/constants';
 
 const UserT = Record({
     id: -1,
@@ -140,7 +140,64 @@ class CarType extends CarTypeT {
     }
 
     validate(fieldNames) {
-        const rules = clientRequiredFieldList
+        const rules = carTypeRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }
+}
+
+const CarBrandT = Record({
+    id: null,
+    name: undefined,
+    active: true
+});
+
+class CarBrand extends CarBrandT {
+    constructor(o) {
+        const no = {
+            id: o.id ? parseInt(o.id) : null,
+            name: o.name,
+            active: o.active ? o.active : true
+        };
+        super(no);
+    }
+
+    toString() {
+        return `${this.id} ${this.name} ${this.active}`
+    }
+
+    isEqual(that) {
+        return that && (that instanceof CarBrand && this.id === that.id)
+    }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    validate(fieldNames) {
+        const rules = carBrandRequiredFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
             });
@@ -205,4 +262,8 @@ export function o2c(o) {
 
 export function o2ct(o) {
     return o ? new CarType(o) : o
+}
+
+export function o2cb(o) {
+    return o ? new CarBrand(o) : o
 }

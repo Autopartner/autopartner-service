@@ -14,6 +14,10 @@ class AppComponent extends Component {
         return this.props.carType;
     }
 
+    carBrand() {
+        return this.props.carBrand;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -28,6 +32,10 @@ class AppComponent extends Component {
 
     carTypeActions() {
         return this.actions().carType;
+    }
+
+    carBrandActions() {
+        return this.actions().carBrand;
     }
 
     rest() {
@@ -90,6 +98,36 @@ class AppComponent extends Component {
 
     carTypesTable() {
         return this.carType().carTypesTable;
+    }
+
+    ////////////////////////// Car Brand
+
+    addCarBrandForm() {
+        return this.carBrand().addCarBrandForm;
+    }
+
+    editCarBrandForm() {
+        return this.carBrand().editCarBrandForm;
+    }
+
+    deleteCarBrandDialog() {
+        return this.carBrand().deleteCarBrandDialog;
+    }
+
+    addCarBrandFormActions() {
+        return this.carBrandActions().addCarBrandForm;
+    }
+
+    editCarBrandFormActions() {
+        return this.carBrandActions().editCarBrandForm;
+    }
+
+    deleteCarBrandDialogActions() {
+        return this.carBrandActions().deleteCarBrandDialog;
+    }
+
+    carBrandsTable() {
+        return this.carBrand().carBrandsTable;
     }
 }
 

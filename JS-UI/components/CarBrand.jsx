@@ -1,5 +1,4 @@
 import React from 'react';
-/*
 import CarBrandsTable from './car/brand/CarBrandsTable';
 
 class CarBrand extends React.Component {
@@ -10,4 +9,4 @@ class CarBrand extends React.Component {
     }
 }
 
-export default CarBrand;*/
+export default CarBrand;
