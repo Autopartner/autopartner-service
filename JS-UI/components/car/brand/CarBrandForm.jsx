@@ -60,6 +60,31 @@ class carBrandForm extends Component {
         )
     }
 
+    selector(fieldName, items) {
+        const filtered = this.getValidations(fieldName);
+        const info = carBrandFieldsMap.get(fieldName);
+        const mc = V.getMainColor(filtered);
+        //items = this.actions().rest.carTypes;
+        console.log('items');
+
+        console.log(items);
+        return (
+            <SelectField
+                ref={(ref) => this[fieldName] = ref}
+                floatingLabelFixed={true}
+                floatingLabelText={info.title}
+                floatingLabelStyle={mc}
+                onChange={(event, index, value) => {
+                    this.actions().update(fieldName, value)
+                }}
+                value={this.properties().carBrand[fieldName]}>
+                {items.map(el => {
+                    return <MenuItem value={el.id} key={el.id} primaryText={el.name} />;
+                })}
+            </SelectField>
+        )
+    }
+
     render() {
         const actions = [
             <div>
@@ -85,6 +110,11 @@ class carBrandForm extends Component {
                 onRequestClose={this.actions().close}
                 autoScrollBodyContent={true}>
                 <div>
+                    {this.selector(
+                        "type",
+                        [{id: "PERSON", name: "Частное лицо"}, {id: "LEGAL", name: "Компания"}]
+                        //this.actions().rest.carTypes
+                    )}<br/>
                     {this.text("name", ["name"], "name")}<br/>
                 </div>
             </Dialog>
