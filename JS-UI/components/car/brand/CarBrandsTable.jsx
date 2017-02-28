@@ -11,7 +11,7 @@ import AppComponent from '../../AppComponent';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import {carBrandRequiredFieldList, carBrandFieldsMap} from '../../../constants/constants';
-import {o2ct} from '../../../utils/models';
+import {o2cb} from '../../../utils/models';
 import {
     Table,
     TableBody,
@@ -42,6 +42,7 @@ class CarBrandsTable extends AppComponent {
                     </IconButton>
                 </TableHeaderColumn>
                 {colCell(row.name)}
+                {colCell(row.carType.name)}
             </TableRow>
         )
     };

@@ -1,6 +1,7 @@
 package autopartner.domain.entity;
 
 import autopartner.domain.base.DomainBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -48,6 +49,7 @@ public class CarType extends DomainBase {
 
     @OneToMany(mappedBy = "carType", cascade = CascadeType.ALL)
     @OrderBy("id asc")
+    @JsonIgnore
     public List<CarBrand> getBrands() {
         return brands;
     }
