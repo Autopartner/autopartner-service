@@ -8,7 +8,8 @@ const defaultEditCarBrandFormState = {
     isOpen: false,
     initialCarBrand: o2cb({}),
     carBrand: o2cb({}),
-    validations: Stack()
+    validations: Stack(),
+    carTypesData: []
 };
 
 export default function editCarBrandForm(state = defaultEditCarBrandFormState, action) {
@@ -51,6 +52,11 @@ export default function editCarBrandForm(state = defaultEditCarBrandFormState, a
             return {
                 ...state,
                 isOpen: false
+            };
+        case API.events.editFormCarTypes.actionSuccess:
+            return {
+                ...state,
+                carTypesData: action.data
             };
         case auth.LOGOUT_SUCCESS:
             return defaultEditCarBrandFormState;

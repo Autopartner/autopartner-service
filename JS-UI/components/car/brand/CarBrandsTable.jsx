@@ -81,18 +81,20 @@ class CarBrandsTable extends AppComponent {
                 title="Добавить Тип"
                 properties={this.addCarBrandForm()}
                 actions={{
-                                ...this.addCarBrandFormActions(),
-                                rest: {
-                                    push: this.rest().addCarBrand
-                                }
-                            }}/>}
+                    ...this.addCarBrandFormActions(),
+                    rest: {
+                        carTypes: this.rest().addFormCarTypes,
+                        push: this.rest().addCarBrand
+                    }
+                }}/>}
             {<CarBrandForm
                 title="Редактировать Тип"
                 properties={this.editCarBrandForm()}
                 actions={{
-                ...this.editCarBrandFormActions(),
-                        rest: {
-                            push: this.rest().editCarBrand
+                    ...this.editCarBrandFormActions(),
+                    rest: {
+                        carTypes: this.rest().editFormCarTypes,
+                        push: this.rest().editCarBrand
                     }
                 }}/>}
         </div>)

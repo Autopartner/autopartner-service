@@ -7,7 +7,8 @@ import {Stack} from 'immutable';
 const defaultAddCarBrandFormState = {
     isOpen: false,
     carBrand: o2cb({}),
-    validations: Stack()
+    validations: Stack(),
+    carTypesData: []
 };
 
 export default function addCarBrandForm(state = defaultAddCarBrandFormState, action) {
@@ -39,6 +40,11 @@ export default function addCarBrandForm(state = defaultAddCarBrandFormState, act
         case API.events.addCarBrand.actionSuccess:
             // TODO validation from server
             return defaultAddCarBrandFormState;
+        case API.events.addFormCarTypes.actionSuccess:
+            return {
+                ...state,
+                carTypesData: action.data
+            };
         case auth.LOGOUT_SUCCESS:
             return defaultAddCarBrandFormState;
         default:

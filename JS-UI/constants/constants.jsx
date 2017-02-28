@@ -69,11 +69,11 @@ export const carBrandFieldsMap = Map(
             title: "Название",
             description: <div></div>
         },
-        "type": {
+        "carType": {
             title: "Тип",
             description: <div></div>
         }
     }
 );
 
-export const carBrandRequiredFieldList = Stack(['name', 'type']);
+export const carBrandRequiredFieldList = Stack(['name', 'carType']);

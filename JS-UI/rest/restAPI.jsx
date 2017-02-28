@@ -173,6 +173,14 @@ export const API = reduxApi({
         url: host + 'api/car/brand',
         transformer: T.carBrandTransformer
     },
+    addFormCarTypes: {
+        url: host + 'api/car/type',
+        transformer: T.carTypeTransformer
+    },
+    editFormCarTypes: {
+        url: host + 'api/car/type',
+        transformer: T.carTypeTransformer
+    },
     addCarBrand: {
         url: host + 'api/car/brand',
         options: function (url, params, getState) {

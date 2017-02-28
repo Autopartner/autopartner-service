@@ -163,6 +163,7 @@ class CarType extends CarTypeT {
 const CarBrandT = Record({
     id: null,
     name: undefined,
+    carType: null,
     active: true
 });
 
@@ -171,13 +172,14 @@ class CarBrand extends CarBrandT {
         const no = {
             id: o.id ? parseInt(o.id) : null,
             name: o.name,
+            carType: o.carType,
             active: o.active ? o.active : true
         };
         super(no);
     }
 
     toString() {
-        return `${this.id} ${this.name} ${this.active}`
+        return `${this.id} ${this.name} ${this.carType} ${this.active}`
     }
 
     isEqual(that) {

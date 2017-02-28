@@ -4,10 +4,12 @@ import {
     Dialog,
     TextField,
     SelectField,
+    AutoComplete,
     MenuItem
 } from 'material-ui';
 import {carBrandFieldsMap, carBrandRequiredFieldList} from '../../../constants/constants';
 import * as V from '../../../utils/validation';
+import * as H from '../../../utils/helpers';
 
 class carBrandForm extends Component {
 
@@ -60,28 +62,39 @@ class carBrandForm extends Component {
         )
     }
 
-    selector(fieldName, items) {
+    autocomplete(fieldName, validateFields, hintText, data, toString, rest) {
         const filtered = this.getValidations(fieldName);
-        const info = carBrandFieldsMap.get(fieldName);
         const mc = V.getMainColor(filtered);
-        //items = this.actions().rest.carTypes;
-        console.log('items');
 
-        console.log(items);
         return (
-            <SelectField
+            <AutoComplete
                 ref={(ref) => this[fieldName] = ref}
                 floatingLabelFixed={true}
-                floatingLabelText={info.title}
-                floatingLabelStyle={mc}
-                onChange={(event, index, value) => {
-                    this.actions().update(fieldName, value)
+                floatingLabelText={hintText}
+                filter={AutoComplete.noFilter}
+                dataSource={data().map((r) => H.autoCompleteItem(toString, r))}
+                openOnFocus={true}
+                searchText={toString(this.properties().carBrand[fieldName])}
+                onFocus={() => rest()}
+                onUpdateInput={(s) =>  {
+                    if(s === '')
+                        this.actions().update(fieldName, undefined);
+                    rest(s)
                 }}
-                value={this.properties().carBrand[fieldName]}>
-                {items.map(el => {
-                    return <MenuItem value={el.id} key={el.id} primaryText={el.name} />;
-                })}
-            </SelectField>
+                onNewRequest={(choose, i) => {
+                    if(choose.row) {
+                        this.actions().update(fieldName, choose.row);
+                    }
+                }}
+                onBlur={((e) => {
+                    this.actions().validate(validateFields);
+                    rest()
+                }).bind(this)}
+                errorText={V.errorText(filtered)}
+                errorStyle={mc}
+                floatingLabelStyle={mc}
+                hintStyle={V.getSecondaryColor(filtered)}
+            />
         )
     }
 
@@ -110,11 +123,10 @@ class carBrandForm extends Component {
                 onRequestClose={this.actions().close}
                 autoScrollBodyContent={true}>
                 <div>
-                    {this.selector(
-                        "type",
-                        [{id: "PERSON", name: "Частное лицо"}, {id: "LEGAL", name: "Компания"}]
-                        //this.actions().rest.carTypes
-                    )}<br/>
+                    {this.autocomplete("carType", ["carType"], "Тип",
+                        () => {return this.properties().carTypesData},
+                        H.carType2str,
+                        (s) => this.actions().rest.carTypes())}<br/>
                     {this.text("name", ["name"], "name")}<br/>
                 </div>
             </Dialog>
