@@ -1,6 +1,6 @@
 import * as V from './validation';
 import {Record} from 'immutable';
-import {clientRequiredFieldList, carBrandRequiredFieldList, carTypeRequiredFieldList} from '../constants/constants';
+import {clientRequiredFieldList, carBrandRequiredFieldList, carTypeRequiredFieldList, carModelRequiredFieldList} from '../constants/constants';
 
 const UserT = Record({
     id: -1,
@@ -219,6 +219,65 @@ class CarBrand extends CarBrandT {
     }
 }
 
+const CarModelT = Record({
+    id: null,
+    name: undefined,
+    carBrand: null,
+    active: true
+});
+
+class CarModel extends CarModelT {
+    constructor(o) {
+        const no = {
+            id: o.id ? parseInt(o.id) : null,
+            name: o.name,
+            carBrand: o.carBrand,
+            active: o.active ? o.active : true
+        };
+        super(no);
+    }
+
+    toString() {
+        return `${this.id} ${this.name} ${this.carBrand} ${this.active}`
+    }
+
+    isEqual(that) {
+        return that && (that instanceof CarBrand && this.id === that.id)
+    }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    validate(fieldNames) {
+        const rules = carModelRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }
+}
+
 const OrderT = Record({
     id: -1,
     dof: undefined
@@ -268,4 +327,8 @@ export function o2ct(o) {
 
 export function o2cb(o) {
     return o ? new CarBrand(o) : o
+}
+
+export function o2cm(o) {
+    return o ? new CarModel(o) : o
 }

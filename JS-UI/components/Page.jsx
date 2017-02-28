@@ -19,6 +19,10 @@ import * as addCarBrandForm from '../actions/car/brand/addCarBrandForm';
 import * as editCarBrandForm from '../actions/car/brand/editCarBrandForm';
 import * as deleteCarBrandDialog from '../actions/car/brand/deleteCarBrandDialog';
 
+import * as addCarModelForm from '../actions/car/model/addCarModelForm';
+import * as editCarModelForm from '../actions/car/model/editCarModelForm';
+import * as deleteCarModelDialog from '../actions/car/model/deleteCarModelDialog';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -70,6 +74,11 @@ function mapDispatchToProps(dispatch) {
                 addCarBrandForm: bindActionCreators(addCarBrandForm, dispatch),
                 editCarBrandForm: bindActionCreators(editCarBrandForm, dispatch),
                 deleteCarBrandDialog: bindActionCreators(deleteCarBrandDialog, dispatch)
+            },
+            carModel: {
+                addCarModelForm: bindActionCreators(addCarModelForm, dispatch),
+                editCarModelForm: bindActionCreators(editCarModelForm, dispatch),
+                deleteCarModelDialog: bindActionCreators(deleteCarModelDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

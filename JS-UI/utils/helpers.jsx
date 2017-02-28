@@ -73,3 +73,7 @@ export function normFiltersList(filters) {
 export function carType2str(ct) {
     return ct && ct.name ? ct.name.toString() : ct;
 }
+
+export function carBrand2str(cb) {
+    return cb && cb.name ? cb.name.toString() : cb;
+}

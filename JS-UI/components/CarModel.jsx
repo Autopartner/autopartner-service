@@ -1,6 +1,5 @@
 import React from 'react';
-/*
-import CarModelsTable from './car/CarModelsTable';
+import CarModelsTable from './car/model/CarModelsTable';
 
 class CarModel extends React.Component {
     render() {
@@ -10,4 +9,4 @@ class CarModel extends React.Component {
     }
 }
 
-export default CarModel;*/
+export default CarModel;

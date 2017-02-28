@@ -55,7 +55,7 @@ export const clientFieldList = Stack(['firstName', 'lastName', 'companyName', 'a
 export const carTypeFieldsMap = Map(
     {
         "name": {
-            title: "Название",
+            title: "Тип",
             description: <div></div>
         }
     }
@@ -66,7 +66,7 @@ export const carTypeRequiredFieldList = Stack(['name']);
 export const carBrandFieldsMap = Map(
     {
         "name": {
-            title: "Название",
+            title: "Марка",
             description: <div></div>
         },
         "carType": {
@@ -77,3 +77,20 @@ export const carBrandFieldsMap = Map(
 );
 
 export const carBrandRequiredFieldList = Stack(['name', 'carType']);
+
+export const carModelFieldsMap = Map(
+    {
+        "name": {
+            title: "Модель",
+            description: <div></div>
+        },
+        "carBrand": {
+            title: "Марка",
+            description: <div></div>
+        }
+    }
+);
+
+export const carModelRequiredFieldList = Stack(['name', 'carBrand']);
+
+

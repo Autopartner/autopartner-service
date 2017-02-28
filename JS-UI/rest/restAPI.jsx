@@ -237,6 +237,78 @@ export const API = reduxApi({
                 }
             }
         ]
+    },
+
+    /////////////////////////// CAR MODEL REST ///////////////////////////
+
+    carModels: {
+        url: host + 'api/car/model',
+        transformer: T.carModelTransformer
+    },
+    addFormCarBrands: {
+        url: host + 'api/car/brand',
+        transformer: T.carBrandTransformer
+    },
+    editFormCarBrands: {
+        url: host + 'api/car/brand',
+        transformer: T.carBrandTransformer
+    },
+    addCarModel: {
+        url: host + 'api/car/model',
+        options: function (url, params, getState) {
+            const carModel = getState().carModel.addCarModelForm.carModel;
+            return {
+                ...params,
+                method: "POST",
+                body: carModel.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carModel.addCarModelForm.isOpen) {
+                    dispatch(actions.carModels());
+                }
+            }
+        ]
+    },
+    editCarModel: {
+        url: host + 'api/car/model',
+        options: function (url, params, getState) {
+            const carModel = getState().carModel.editCarModelForm.carModel;
+            return {
+                ...params,
+                method: "POST",
+                body: carModel.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carModel.editCarModelForm.isOpen) {
+                    dispatch(actions.carModels());
+                }
+            }
+        ]
+    },
+    deleteCarModel: {
+        url: host + 'api/car/model',
+        options: function (url, params, getState) {
+
+            const carModel = getState().carModel.deleteCarModelDialog.carModel;
+            carModel.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: carModel.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().carModel.deleteCarModelDialog.isOpen) {
+                    dispatch(actions.carModels());
+                }
+            }
+        ]
     }
 
 }).use("fetch", adapterFetch(fetch))

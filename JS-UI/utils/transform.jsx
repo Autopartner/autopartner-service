@@ -34,3 +34,7 @@ export function carBrandTransformer(data, prevData, action) {
     // TODO
     return data;
 }
+
+export function carModelTransformer(data, prevData, action) {
+    return data;
+}

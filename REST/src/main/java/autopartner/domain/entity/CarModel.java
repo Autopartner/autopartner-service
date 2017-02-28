@@ -1,7 +1,6 @@
 package autopartner.domain.entity;
 
 import autopartner.domain.base.DomainBase;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 

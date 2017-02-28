@@ -5,13 +5,13 @@ import * as MyRawTheme from '../../../src/material_ui_raw_theme_file';
 import IconButton from 'material-ui/IconButton';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
-import CarBrandForm from './CarBrandForm';
-import CarBrandDeleteDialog from './CarBrandDeleteDialog';
+import CarModelForm from './CarModelForm';
+import CarModelDeleteDialog from './CarModelDeleteDialog';
 import AppComponent from '../../AppComponent';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import {carBrandRequiredFieldList, carBrandFieldsMap} from '../../../constants/constants';
-import {o2cb} from '../../../utils/models';
+import {carModelRequiredFieldList, carModelFieldsMap} from '../../../constants/constants';
+import {o2cm} from '../../../utils/models';
 import {
     Table,
     TableBody,
@@ -21,7 +21,7 @@ import {
     TableRowColumn
 } from 'material-ui/Table';
 
-class CarBrandsTable extends AppComponent {
+class CarModelsTable extends AppComponent {
 
     static get childContextTypes() {
         return {muiTheme: PropTypes.object};
@@ -34,15 +34,15 @@ class CarBrandsTable extends AppComponent {
         return (
             <TableRow key={row.id} selectable={false}>
                 <TableHeaderColumn style={{width:'50px'}}>
-                    <IconButton onTouchTap={() => this.editCarBrandFormActions().open(o2cb(row))}>
+                    <IconButton onTouchTap={() => this.editCarModelFormActions().open(o2cm(row))}>
                         <ModeEdit/>
                     </IconButton>
-                    <IconButton onTouchTap={() => this.deleteCarBrandDialogActions().open(o2cb(row))}>
+                    <IconButton onTouchTap={() => this.deleteCarModelDialogActions().open(o2cm(row))}>
                         <DeleteForever/>
                     </IconButton>
                 </TableHeaderColumn>
                 {colCell(row.name)}
-                {colCell((row.carType) ? row.carType.name : '')}
+                {colCell((row.carBrand) ? row.carBrand.name : '')}
             </TableRow>
         )
     };
@@ -50,13 +50,13 @@ class CarBrandsTable extends AppComponent {
     constructor() {
         super();
         this.setState({
-            pageHeader: "Марки Автомобилей"
+            pageHeader: "Модели Автомобилей"
         })
     }
 
     componentDidMount() {
         // TODO
-        this.rest().carBrands();
+        this.rest().carModels();
     }
 
     getChildContext() {
@@ -65,12 +65,12 @@ class CarBrandsTable extends AppComponent {
 
     deleteDialog() {
         return (
-            <CarBrandDeleteDialog
-                properties={this.deleteCarBrandDialog()}
+            <CarModelDeleteDialog
+                properties={this.deleteCarModelDialog()}
                 actions={{
-                    ...this.deleteCarBrandDialogActions(),
+                    ...this.deleteCarModelDialogActions(),
                     rest: {
-                        delete: this.rest().deleteCarBrand
+                        delete: this.rest().deleteCarModel
                     }}}
             />
         )
@@ -78,24 +78,24 @@ class CarBrandsTable extends AppComponent {
 
     forms() {
         return (<div>
-            {<CarBrandForm
-                title="Добавить Тип"
-                properties={this.addCarBrandForm()}
+            {<CarModelForm
+                title="Добавить Модель"
+                properties={this.addCarModelForm()}
                 actions={{
-                    ...this.addCarBrandFormActions(),
+                    ...this.addCarModelFormActions(),
                     rest: {
-                        carTypes: this.rest().addFormCarTypes,
-                        push: this.rest().addCarBrand
+                        carBrands: this.rest().addFormCarBrands,
+                        push: this.rest().addCarModel
                     }
                 }}/>}
-            {<CarBrandForm
-                title="Редактировать Тип"
-                properties={this.editCarBrandForm()}
+            {<CarModelForm
+                title="Редактировать Модель"
+                properties={this.editCarModelForm()}
                 actions={{
-                    ...this.editCarBrandFormActions(),
+                    ...this.editCarModelFormActions(),
                     rest: {
-                        carTypes: this.rest().editFormCarTypes,
-                        push: this.rest().editCarBrand
+                        carBrands: this.rest().editFormCarBrands,
+                        push: this.rest().editCarModel
                     }
                 }}/>}
         </div>)
@@ -106,12 +106,12 @@ class CarBrandsTable extends AppComponent {
             <TableHeader selectable={false} displaySelectAll={false} enableSelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
                     <TableHeaderColumn style={{width:'50px'}}>
-                        <FloatingActionButton mini={true} onTouchTap={this.addCarBrandFormActions().open}>
+                        <FloatingActionButton mini={true} onTouchTap={this.addCarModelFormActions().open}>
                             <ContentAdd />
                         </FloatingActionButton>
                     </TableHeaderColumn>
-                    {carBrandRequiredFieldList.map((t, i) => {
-                            const info = carBrandFieldsMap.get(t);
+                    {carModelRequiredFieldList.map((t, i) => {
+                            const info = carModelFieldsMap.get(t);
                             return (
                                 <TableHeaderColumn key={i}>{info.title}</TableHeaderColumn>
                             )
@@ -132,7 +132,7 @@ class CarBrandsTable extends AppComponent {
                     fixedHeader={true}>
                     {this.header()}
                     <TableBody displayRowCheckbox={false}>
-                        {this.carBrandsTable().carBrands.map(this.row)}
+                        {this.carModelsTable().carModels.map(this.row)}
                     </TableBody>
                 </Table>
             </div>
@@ -140,4 +140,4 @@ class CarBrandsTable extends AppComponent {
     }
 }
 
-export default CarBrandsTable;
+export default CarModelsTable;
