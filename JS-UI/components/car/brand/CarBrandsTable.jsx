@@ -42,7 +42,7 @@ class CarBrandsTable extends AppComponent {
                     </IconButton>
                 </TableHeaderColumn>
                 {colCell(row.name)}
-                {colCell(row.carType.name)}
+                {colCell((row.carType) ? row.carType.name : '')}
             </TableRow>
         )
     };

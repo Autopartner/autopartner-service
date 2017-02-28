@@ -88,7 +88,6 @@ class carBrandForm extends Component {
                 }}
                 onBlur={((e) => {
                     this.actions().validate(validateFields);
-                    rest()
                 }).bind(this)}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
