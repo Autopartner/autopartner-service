@@ -26,12 +26,18 @@ export default class DrawerLeft extends React.Component {
                         iconElementLeft={<IconButton><NavigationClose /></IconButton>}
                         onClick={this.props.onToggleDrawer.bind(this)}/>
                     <MenuItem onTouchTap={() => this.route("client")}>Клиенты</MenuItem>
+                    <MenuItem onTouchTap={() => this.route("car")}>Машины</MenuItem>
                     <MenuItem onTouchTap={() => this.route("order")}>Заказы</MenuItem>
-                    <MenuItem onTouchTap={() => this.route("material")}>Материалы</MenuItem>
                     <Divider />
                     <MenuItem onTouchTap={() => this.route("carType")}>Типы Авто</MenuItem>
                     <MenuItem onTouchTap={() => this.route("carBrand")}>Бренды Авто</MenuItem>
                     <MenuItem onTouchTap={() => this.route("carModel")}>Модели Авто</MenuItem>
+                    <Divider />
+                    <MenuItem onTouchTap={() => this.route("materialType")}>Типы материалов</MenuItem>
+                    <MenuItem onTouchTap={() => this.route("material")}>Материалы</MenuItem>
+                    <Divider />
+                    <MenuItem onTouchTap={() => this.route("taskType")}>Типы работ</MenuItem>
+                    <MenuItem onTouchTap={() => this.route("task")}>Работы</MenuItem>
                 </Drawer>
             </div>
         );
