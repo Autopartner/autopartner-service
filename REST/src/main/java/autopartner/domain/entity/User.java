@@ -1,13 +1,8 @@
 package autopartner.domain.entity;
 
 import autopartner.domain.base.DomainBase;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity

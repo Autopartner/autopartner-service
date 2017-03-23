@@ -1,8 +1,10 @@
 package autopartner.domain.entity;
 
 import autopartner.domain.base.DomainBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "car_models")
@@ -11,18 +13,18 @@ public class CarModel extends DomainBase {
     private Long id;
     private CarBrand carBrand;
     private String name;
+    private List<Car> cars;
     private Boolean active;
 
     public CarModel() {
         super();
     }
 
-    public CarModel(Long id, CarBrand carBrand, String name) {
-        this.id = id;
+    public CarModel(CarBrand carBrand, String name, List<Car> cars) {
         this.carBrand = carBrand;
         this.name = name;
+        this.cars = cars;
     }
-
 
     @Id
     @Column(name = "id")
@@ -53,6 +55,17 @@ public class CarModel extends DomainBase {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @OneToMany(mappedBy = "carModel", cascade = CascadeType.ALL)
+    @OrderBy("id asc")
+    @JsonIgnore
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
     }
 
     @Column(name = "active")

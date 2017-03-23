@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "cl_clients")
@@ -22,6 +23,7 @@ public class Client extends DomainBase {
     private Double discountMaterial;
     private Type type;
     private String note;
+    private List<Car> cars;
     private Boolean isActive;
 
     @PrePersist
@@ -33,8 +35,8 @@ public class Client extends DomainBase {
         super();
     }
 
-    public Client(String firstName, String lastName, String companyName, String address, String phone, String email,
-                  Date dateCreated, Double discountService, Double discountMaterial, Type type, String note, Boolean isActive) {
+    public Client(String firstName, String lastName, String companyName, String address, String phone,
+                  String email, Date dateCreated, Double discountService, Double discountMaterial, Type type, String note, List<Car> cars) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.companyName = companyName;
@@ -46,13 +48,13 @@ public class Client extends DomainBase {
         this.discountMaterial = discountMaterial;
         this.type = type;
         this.note = note;
-        this.isActive = isActive;
+        this.cars = cars;
     }
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_seq")
+    @SequenceGenerator(name = "clients_seq", sequenceName = "clients_seq", allocationSize = 1)
     public Long getId() {
         return this.id;
     }
@@ -170,7 +172,16 @@ public class Client extends DomainBase {
         isActive = active;
     }
 
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OrderBy("id asc")
+    @JsonIgnore
+    public List<Car> getCars() {
+        return cars;
+    }
 
+    public void setCars(List<Car> cars) {
+        this.cars = cars;
+    }
 
     public enum Type {
         PERSON,
