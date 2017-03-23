@@ -1,6 +1,6 @@
 import * as V from './validation';
 import {Record} from 'immutable';
-import {clientRequiredFieldList, carBrandRequiredFieldList, carTypeRequiredFieldList, carModelRequiredFieldList} from '../constants/constants';
+import {clientRequiredFieldList, carBrandRequiredFieldList, carTypeRequiredFieldList, carModelRequiredFieldList, carRequiredFieldList} from '../constants/constants';
 
 const UserT = Record({
     id: -1,
@@ -242,7 +242,7 @@ class CarModel extends CarModelT {
     }
 
     isEqual(that) {
-        return that && (that instanceof CarBrand && this.id === that.id)
+        return that && (that instanceof CarModel && this.id === that.id)
     }
 
     toObject() {
@@ -259,6 +259,75 @@ class CarModel extends CarModelT {
 
     validate(fieldNames) {
         const rules = carModelRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }
+}
+
+const CarT = Record({
+    id: null,
+    carModel: null,
+    client: null,
+    regNumber: null,
+    vinCode: null,
+    passportNumber: null,
+    mileage: null,
+    notes: null,
+    active: true
+});
+
+class Car extends CarT {
+    constructor(o) {
+        const no = {
+            id: o.id ? parseInt(o.id) : null,
+            carModel: o.carModel,
+            client: o.client,
+            regNumber: o.regNumber,
+            vinCode: o.vinCode,
+            passportNumber: o.passportNumber,
+            mileage: o.mileage,
+            notes: o.notes,
+            active: o.active ? o.active : true
+        };
+        super(no);
+    }
+
+    toString() {
+        return `${this.id} ${this.carModel} ${this.client} ${this.regNumber} ${this.vinCode} ${this.passportNumber} ${this.mileage} ${this.notes} ${this.active}`
+    }
+
+    isEqual(that) {
+        return that && (that instanceof Car && this.id === that.id)
+    }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    validate(fieldNames) {
+        const rules = carRequiredFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
             });
@@ -331,4 +400,8 @@ export function o2cb(o) {
 
 export function o2cm(o) {
     return o ? new CarModel(o) : o
+}
+
+export function o2car(o) {
+    return o ? new Car(o) : o
 }

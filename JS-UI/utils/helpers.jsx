@@ -77,3 +77,13 @@ export function carType2str(ct) {
 export function carBrand2str(cb) {
     return cb && cb.name ? cb.name.toString() : cb;
 }
+
+export function carModel2str(cm) {
+    return cm && cm.name && cm.carBrand && cm.carBrand.name
+        ? cm.carBrand.name.toString() + " " + cm.name.toString()
+        : cm;
+}
+
+export function client2str(cl) {
+    return cl && cl.firstName && cl.lastName ? cl.firstName.toString() + " " + cl.lastName.toString() : cl;
+}

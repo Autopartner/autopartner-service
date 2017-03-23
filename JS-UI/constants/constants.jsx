@@ -93,4 +93,39 @@ export const carModelFieldsMap = Map(
 
 export const carModelRequiredFieldList = Stack(['name', 'carBrand']);
 
+export const carFieldsMap = Map(
+    {
+        "client": {
+            title: "Клиент",
+            description: <div></div>
+        },
+        "carModel": {
+            title: "Модель",
+            description: <div></div>
+        },
+        "regNumber": {
+            title: "Госномер",
+            description: <div></div>
+        },
+        "vinCode": {
+            title: "Винкод",
+            description: <div></div>
+        },
+        "passportNumber": {
+            title: "Номер техпаспорта",
+            description: <div></div>
+        },
+        "mileage": {
+            title: "Пробег",
+            description: <div></div>
+        },
+        "notes": {
+            title: "Заметки",
+            description: <div></div>
+        }
+    }
+);
+
+export const carRequiredFieldList = Stack(['client', 'carModel', 'regNumber', 'vinCode', 'passportNumber', 'mileage', 'notes']);
+
 

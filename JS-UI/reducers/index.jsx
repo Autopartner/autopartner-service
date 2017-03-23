@@ -5,6 +5,7 @@ import client from './client/clientsTable';
 import carType from './car/type/carTypesTable';
 import carBrand from './car/brand/carBrandTable';
 import carModel from './car/model/carModelTable';
+import car from './car/carsTable';
 import { API } from '../rest/restAPI';
 
 export default combineReducers({
@@ -13,5 +14,6 @@ export default combineReducers({
     carType,
     carBrand,
     carModel,
+    car,
     routing: routerReducer
 }, API.reducers);
