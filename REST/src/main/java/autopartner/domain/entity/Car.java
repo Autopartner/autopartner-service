@@ -14,7 +14,6 @@ public class Car extends DomainBase {
     private CarModel carModel;
     private String regNumber;
     private String vinCode;
-    private String passportNumber;
     private String notes;
     private Double mileage;
     private Date regDate;
@@ -25,13 +24,12 @@ public class Car extends DomainBase {
     }
 
     public Car(Client client, CarModel carModel,
-               String regNumber, String vinCode, String passportNumber,
+               String regNumber, String vinCode,
                String notes, Double mileage, Date regDate) {
         this.client = client;
         this.carModel = carModel;
         this.regNumber = regNumber;
         this.vinCode = vinCode;
-        this.passportNumber = passportNumber;
         this.notes = notes;
         this.mileage = mileage;
         this.regDate = regDate;
@@ -90,15 +88,6 @@ public class Car extends DomainBase {
 
     public void setVinCode(String vinCode) {
         this.vinCode = vinCode;
-    }
-
-    @Column(name = "passport_number")
-    public String getPassportNumber() {
-        return passportNumber;
-    }
-
-    public void setPassportNumber(String passportNumber) {
-        this.passportNumber = passportNumber;
     }
 
     @Column(name = "notes")

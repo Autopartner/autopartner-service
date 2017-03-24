@@ -45,7 +45,6 @@ class CarsTable extends AppComponent {
                 {colCell((row.carModel) ? row.carModel.carBrand.name + " " + row.carModel.name : '')}
                 {colCell(row.regNumber)}
                 {colCell(row.vinCode)}
-                {colCell(row.passportNumber)}
                 {colCell(row.mileage)}
                 {colCell(row.notes)}
             </TableRow>

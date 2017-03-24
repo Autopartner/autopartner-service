@@ -284,7 +284,6 @@ const CarT = Record({
     client: null,
     regNumber: null,
     vinCode: null,
-    passportNumber: null,
     mileage: null,
     notes: null,
     active: true
@@ -298,7 +297,6 @@ class Car extends CarT {
             client: o.client,
             regNumber: o.regNumber,
             vinCode: o.vinCode,
-            passportNumber: o.passportNumber,
             mileage: o.mileage,
             notes: o.notes,
             active: o.active ? o.active : true
@@ -307,7 +305,7 @@ class Car extends CarT {
     }
 
     toString() {
-        return `${this.id} ${this.carModel} ${this.client} ${this.regNumber} ${this.vinCode} ${this.passportNumber} ${this.mileage} ${this.notes} ${this.active}`
+        return `${this.id} ${this.carModel} ${this.client} ${this.regNumber} ${this.vinCode} ${this.mileage} ${this.notes} ${this.active}`
     }
 
     isEqual(that) {

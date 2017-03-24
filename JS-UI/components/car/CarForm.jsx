@@ -130,7 +130,6 @@ class carForm extends Component {
                         (s) => this.actions().rest.clients())}<br/>
                     {this.text("regNumber", ["regNumber"], "regNumber")}<br/>
                     {this.text("vinCode", ["vinCode"], "vinCode")}<br/>
-                    {this.text("passportNumber", ["passportNumber"], "passportNumber")}<br/>
                     {this.text("mileage", ["mileage"], "mileage")}<br/>
                     {this.text("notes", ["notes"], "notes")}<br/>
                 </div>
