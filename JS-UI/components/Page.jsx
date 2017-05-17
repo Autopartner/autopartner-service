@@ -35,6 +35,14 @@ import * as addTaskForm from '../actions/order/task/addTaskForm';
 import * as editTaskForm from '../actions/order/task/editTaskForm';
 import * as deleteTaskDialog from '../actions/order/task/deleteTaskDialog';
 
+import * as addMaterialTypeForm from '../actions/order/material/addMaterialTypeForm';
+import * as editMaterialTypeForm from '../actions/order/material/editMaterialTypeForm';
+import * as deleteMaterialTypeDialog from '../actions/order/material/deleteMaterialTypeDialog';
+
+import * as addMaterialForm from '../actions/order/material/addMaterialForm';
+import * as editMaterialForm from '../actions/order/material/editMaterialForm';
+import * as deleteMaterialDialog from '../actions/order/material/deleteMaterialDialog';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -106,6 +114,16 @@ function mapDispatchToProps(dispatch) {
                 addTaskForm: bindActionCreators(addTaskForm, dispatch),
                 editTaskForm: bindActionCreators(editTaskForm, dispatch),
                 deleteTaskDialog: bindActionCreators(deleteTaskDialog, dispatch)
+            },
+            materialType: {
+                addMaterialTypeForm: bindActionCreators(addMaterialTypeForm, dispatch),
+                editMaterialTypeForm: bindActionCreators(editMaterialTypeForm, dispatch),
+                deleteMaterialTypeDialog: bindActionCreators(deleteMaterialTypeDialog, dispatch)
+            },
+            material: {
+                addMaterialForm: bindActionCreators(addMaterialForm, dispatch),
+                editMaterialForm: bindActionCreators(editMaterialForm, dispatch),
+                deleteMaterialDialog: bindActionCreators(deleteMaterialDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

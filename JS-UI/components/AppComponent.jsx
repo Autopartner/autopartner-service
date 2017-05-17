@@ -34,6 +34,14 @@ class AppComponent extends Component {
         return this.props.task;
     }
 
+    materialType() {
+        return this.props.materialType;
+    }
+
+    material() {
+        return this.props.material;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -68,6 +76,14 @@ class AppComponent extends Component {
 
     taskActions() {
         return this.actions().task;
+    }
+
+    materialTypeActions() {
+        return this.actions().materialType;
+    }
+
+    materialActions() {
+        return this.actions().material;
     }
 
     rest() {
@@ -282,6 +298,66 @@ class AppComponent extends Component {
 
     tasksTable() {
         return this.task().tasksTable;
+    }
+
+    ////////////////////////// Material Type
+
+    addMaterialTypeForm() {
+        return this.materialType().addMaterialTypeForm;
+    }
+
+    editMaterialTypeForm() {
+        return this.materialType().editMaterialTypeForm;
+    }
+
+    deleteMaterialTypeDialog() {
+        return this.materialType().deleteMaterialTypeDialog;
+    }
+
+    addMaterialTypeFormActions() {
+        return this.materialTypeActions().addMaterialTypeForm;
+    }
+
+    editMaterialTypeFormActions() {
+        return this.materialTypeActions().editMaterialTypeForm;
+    }
+
+    deleteMaterialTypeDialogActions() {
+        return this.materialTypeActions().deleteMaterialTypeDialog;
+    }
+
+    materialTypesTable() {
+        return this.materialType().materialTypesTable;
+    }
+
+    ////////////////////////// Material
+
+    addMaterialForm() {
+        return this.material().addMaterialForm;
+    }
+
+    editMaterialForm() {
+        return this.material().editMaterialForm;
+    }
+
+    deleteMaterialDialog() {
+        return this.material().deleteMaterialDialog;
+    }
+
+    addMaterialFormActions() {
+        return this.materialActions().addMaterialForm;
+    }
+
+    editMaterialFormActions() {
+        return this.materialActions().editMaterialForm;
+    }
+
+    deleteMaterialDialogActions() {
+        return this.materialActions().deleteMaterialDialog;
+    }
+
+    materialsTable() {
+        return this.material().materialsTable;
     }
 
 

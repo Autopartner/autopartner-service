@@ -40,11 +40,11 @@ export const API = reduxApi({
     },
     orders: {
         url: host + 'api/orders',
-        transformer: T.orderTransformer
+        transformer: T.defaultTransformer
     },
     clients: {
         url: host + 'api/client',
-        transformer: T.clientTransformer
+        transformer: T.defaultTransformer
     },
     addClient: {
         url: host + 'api/client',
@@ -107,7 +107,7 @@ export const API = reduxApi({
 
     carTypes: {
         url: host + 'api/car/type',
-        transformer: T.carTypeTransformer
+        transformer: T.defaultTransformer
     },
     addCarType: {
         url: host + 'api/car/type',
@@ -171,15 +171,15 @@ export const API = reduxApi({
 
     carBrands: {
         url: host + 'api/car/brand',
-        transformer: T.carBrandTransformer
+        transformer: T.defaultTransformer
     },
     addFormCarTypes: {
         url: host + 'api/car/type',
-        transformer: T.carTypeTransformer
+        transformer: T.defaultTransformer
     },
     editFormCarTypes: {
         url: host + 'api/car/type',
-        transformer: T.carTypeTransformer
+        transformer: T.defaultTransformer
     },
     addCarBrand: {
         url: host + 'api/car/brand',
@@ -243,15 +243,15 @@ export const API = reduxApi({
 
     carModels: {
         url: host + 'api/car/model',
-        transformer: T.carModelTransformer
+        transformer: T.defaultTransformer
     },
     addFormCarBrands: {
         url: host + 'api/car/brand',
-        transformer: T.carBrandTransformer
+        transformer: T.defaultTransformer
     },
     editFormCarBrands: {
         url: host + 'api/car/brand',
-        transformer: T.carBrandTransformer
+        transformer: T.defaultTransformer
     },
     addCarModel: {
         url: host + 'api/car/model',
@@ -315,23 +315,23 @@ export const API = reduxApi({
 
     cars: {
         url: host + 'api/car',
-        transformer: T.carTransformer
+        transformer: T.defaultTransformer
     },
     addFormCarModels: {
         url: host + 'api/car/model',
-        transformer: T.carModelTransformer
+        transformer: T.defaultTransformer
     },
     addFormClients: {
         url: host + 'api/client',
-        transformer: T.clientTransformer
+        transformer: T.defaultTransformer
     },
     editFormCarModels: {
         url: host + 'api/car/model',
-        transformer: T.carModelTransformer
+        transformer: T.defaultTransformer
     },
     editFormClients: {
         url: host + 'api/client',
-        transformer: T.clientTransformer
+        transformer: T.defaultTransformer
     },
     addCar: {
         url: host + 'api/car',
@@ -391,9 +391,11 @@ export const API = reduxApi({
         ]
     },
 
+    ///////////////////////////  TASK TYPE REST ///////////////////////////
+
     taskTypes: {
         url: host + 'api/task/type',
-        transformer: T.taskTypeTransformer
+        transformer: T.defaultTransformer
     },
     addTaskType: {
         url: host + 'api/task/type',
@@ -457,15 +459,15 @@ export const API = reduxApi({
 
     tasks: {
         url: host + 'api/task',
-        transformer: T.taskTransformer
+        transformer: T.defaultTransformer
     },
     addFormTaskTypes: {
         url: host + 'api/task/type',
-        transformer: T.taskTypeTransformer
+        transformer: T.defaultTransformer
     },
     editFormTaskTypes: {
         url: host + 'api/task/type',
-        transformer: T.taskTypeTransformer
+        transformer: T.defaultTransformer
     },
     addTask: {
         url: host + 'api/task',
@@ -520,6 +522,142 @@ export const API = reduxApi({
             function ({actions, dispatch, getState}) {
                 if (!getState().task.deleteTaskDialog.isOpen) {
                     dispatch(actions.tasks());
+                }
+            }
+        ]
+    },
+
+    ///////////////////////////  MATERIAL TYPE REST ///////////////////////////
+
+    materialTypes: {
+        url: host + 'api/material/type',
+        transformer: T.defaultTransformer
+    },
+    addMaterialType: {
+        url: host + 'api/material/type',
+        options: function (url, params, getState) {
+            const materialType = getState().materialType.addMaterialTypeForm.materialType;
+            return {
+                ...params,
+                method: "POST",
+                body: materialType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().materialType.addMaterialTypeForm.isOpen) {
+                    dispatch(actions.materialTypes());
+                }
+            }
+        ]
+    },
+    editMaterialType: {
+        url: host + 'api/material/type',
+        options: function (url, params, getState) {
+            const materialType = getState().materialType.editMaterialTypeForm.materialType;
+            return {
+                ...params,
+                method: "POST",
+                body: materialType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().materialType.editMaterialTypeForm.isOpen) {
+                    dispatch(actions.materialTypes());
+                }
+            }
+        ]
+    },
+    deleteMaterialType: {
+        url: host + 'api/material/type',
+        options: function (url, params, getState) {
+
+            const materialType = getState().materialType.deleteMaterialTypeDialog.materialType;
+            materialType.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: materialType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().materialType.deleteMaterialTypeDialog.isOpen) {
+                    dispatch(actions.materialTypes());
+                }
+            }
+        ]
+    },
+
+    /////////////////////////// MATERIAL REST ///////////////////////////
+
+    materials: {
+        url: host + 'api/material',
+        transformer: T.defaultTransformer
+    },
+    addFormMaterialTypes: {
+        url: host + 'api/material/type',
+        transformer: T.defaultTransformer
+    },
+    editFormMaterialTypes: {
+        url: host + 'api/material/type',
+        transformer: T.defaultTransformer
+    },
+    addMaterial: {
+        url: host + 'api/material',
+        options: function (url, params, getState) {
+            const material = getState().material.addMaterialForm.material;
+            return {
+                ...params,
+                method: "POST",
+                body: material.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().material.addMaterialForm.isOpen) {
+                    dispatch(actions.materials());
+                }
+            }
+        ]
+    },
+    editMaterial: {
+        url: host + 'api/material',
+        options: function (url, params, getState) {
+            const material = getState().material.editMaterialForm.material;
+            return {
+                ...params,
+                method: "POST",
+                body: material.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().material.editMaterialForm.isOpen) {
+                    dispatch(actions.materials());
+                }
+            }
+        ]
+    },
+    deleteMaterial: {
+        url: host + 'api/material',
+        options: function (url, params, getState) {
+
+            const material = getState().material.deleteMaterialDialog.material;
+            material.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: material.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().material.deleteMaterialDialog.isOpen) {
+                    dispatch(actions.materials());
                 }
             }
         ]

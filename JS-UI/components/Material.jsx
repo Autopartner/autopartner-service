@@ -1,9 +1,10 @@
 import React from 'react';
+import MaterialsTable from './order/material/MaterialsTable';
 
 class Material extends React.Component {
     render() {
         return (
-            <h2>Materials</h2>
+            <MaterialsTable {...this.props}/>
         );
     }
 }

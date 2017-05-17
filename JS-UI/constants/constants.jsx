@@ -150,4 +150,30 @@ export const taskFieldsMap = Map(
 
 export const taskRequiredFieldList = Stack(['name', 'taskType']);
 
+export const materialTypeFieldsMap = Map(
+    {
+        "name": {
+            title: "Тип",
+            description: <div></div>
+        }
+    }
+);
+
+export const materialTypeRequiredFieldList = Stack(['name']);
+
+export const materialFieldsMap = Map(
+    {
+        "name": {
+            title: "Название",
+            description: <div></div>
+        },
+        "materialType": {
+            title: "Тип",
+            description: <div></div>
+        }
+    }
+);
+
+export const materialRequiredFieldList = Stack(['name', 'materialType']);
+
 

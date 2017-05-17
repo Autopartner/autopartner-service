@@ -11,42 +11,6 @@ export function userTransformer(data, prevData, action) {
     return data
 }
 
-export function orderTransformer(data, prevData, action) {
-    if(data && data.payload)
-        return {
-            ...data,
-            payload: data.payload.map(T.o2o)
-        };
-    return data
-}
-
-export function clientTransformer(data, prevData, action) {
-    // TODO
-    return data;
-}
-
-export function carTypeTransformer(data, prevData, action) {
-    // TODO
-    return data;
-}
-
-export function carBrandTransformer(data, prevData, action) {
-    // TODO
-    return data;
-}
-
-export function carModelTransformer(data, prevData, action) {
-    return data;
-}
-
-export function carTransformer(data, prevData, action) {
-    return data;
-}
-
-export function taskTypeTransformer(data, prevData, action) {
-    return data;
-}
-
-export function taskTransformer(data, prevData, action) {
+export function defaultTransformer(data, prevData, action) {
     return data;
 }

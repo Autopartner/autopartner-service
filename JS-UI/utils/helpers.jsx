@@ -91,3 +91,7 @@ export function client2str(cl) {
 export function taskType2str(tt) {
     return tt && tt.name ? tt.name.toString() : tt;
 }
+
+export function materialType2str(mt) {
+    return mt && mt.name ? mt.name.toString() : mt;
+}
