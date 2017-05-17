@@ -124,4 +124,15 @@ export const carFieldsMap = Map(
 
 export const carRequiredFieldList = Stack(['client', 'carModel', 'regNumber', 'vinCode', 'mileage', 'notes']);
 
+export const taskTypeFieldsMap = Map(
+    {
+        "name": {
+            title: "Тип",
+            description: <div></div>
+        }
+    }
+);
+
+export const taskTypeRequiredFieldList = Stack(['name']);
+
 

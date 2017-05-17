@@ -26,6 +26,10 @@ class AppComponent extends Component {
         return this.props.car;
     }
 
+    taskType() {
+        return this.props.taskType;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -52,6 +56,10 @@ class AppComponent extends Component {
 
     carActions() {
         return this.actions().car;
+    }
+
+    taskTypeActions() {
+        return this.actions().taskType;
     }
 
     rest() {
@@ -207,6 +215,37 @@ class AppComponent extends Component {
     carsTable() {
         return this.car().carsTable;
     }
+
+    ////////////////////////// Task Type
+
+    addTaskTypeForm() {
+        return this.taskType().addTaskTypeForm;
+    }
+
+    editTaskTypeForm() {
+        return this.taskType().editTaskTypeForm;
+    }
+
+    deleteTaskTypeDialog() {
+        return this.taskType().deleteTaskTypeDialog;
+    }
+
+    addTaskTypeFormActions() {
+        return this.taskTypeActions().addTaskTypeForm;
+    }
+
+    editTaskTypeFormActions() {
+        return this.taskTypeActions().editTaskTypeForm;
+    }
+
+    deleteTaskTypeDialogActions() {
+        return this.taskTypeActions().deleteTaskTypeDialog;
+    }
+
+    taskTypesTable() {
+        return this.taskType().taskTypesTable;
+    }
+
 }
 
 export default AppComponent;

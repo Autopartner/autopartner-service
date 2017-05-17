@@ -27,6 +27,10 @@ import * as addCarForm from '../actions/car/addCarForm';
 import * as editCarForm from '../actions/car/editCarForm';
 import * as deleteCarDialog from '../actions/car/deleteCarDialog';
 
+import * as addTaskTypeForm from '../actions/order/task/addTaskTypeForm';
+import * as editTaskTypeForm from '../actions/order/task/editTaskTypeForm';
+import * as deleteTaskTypeDialog from '../actions/order/task/deleteTaskTypeDialog';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -88,6 +92,11 @@ function mapDispatchToProps(dispatch) {
                 addCarForm: bindActionCreators(addCarForm, dispatch),
                 editCarForm: bindActionCreators(editCarForm, dispatch),
                 deleteCarDialog: bindActionCreators(deleteCarDialog, dispatch)
+            },
+            taskType: {
+                addTaskTypeForm: bindActionCreators(addTaskTypeForm, dispatch),
+                editTaskTypeForm: bindActionCreators(editTaskTypeForm, dispatch),
+                deleteTaskTypeDialog: bindActionCreators(deleteTaskTypeDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

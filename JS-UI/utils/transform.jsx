@@ -42,3 +42,7 @@ export function carModelTransformer(data, prevData, action) {
 export function carTransformer(data, prevData, action) {
     return data;
 }
+
+export function taskTypeTransformer(data, prevData, action) {
+    return data;
+}

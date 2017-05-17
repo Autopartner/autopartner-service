@@ -389,6 +389,68 @@ export const API = reduxApi({
                 }
             }
         ]
+    },
+
+    taskTypes: {
+        url: host + 'api/task/type',
+        transformer: T.taskTypeTransformer
+    },
+    addTaskType: {
+        url: host + 'api/task/type',
+        options: function (url, params, getState) {
+            const taskType = getState().taskType.addTaskTypeForm.taskType;
+            return {
+                ...params,
+                method: "POST",
+                body: taskType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().taskType.addTaskTypeForm.isOpen) {
+                    dispatch(actions.taskTypes());
+                }
+            }
+        ]
+    },
+    editTaskType: {
+        url: host + 'api/task/type',
+        options: function (url, params, getState) {
+            const taskType = getState().taskType.editTaskTypeForm.taskType;
+            return {
+                ...params,
+                method: "POST",
+                body: taskType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().taskType.editTaskTypeForm.isOpen) {
+                    dispatch(actions.taskTypes());
+                }
+            }
+        ]
+    },
+    deleteTaskType: {
+        url: host + 'api/task/type',
+        options: function (url, params, getState) {
+
+            const taskType = getState().taskType.deleteTaskTypeDialog.taskType;
+            taskType.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: taskType.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().taskType.deleteTaskTypeDialog.isOpen) {
+                    dispatch(actions.taskTypes());
+                }
+            }
+        ]
     }
 
 }).use("fetch", adapterFetch(fetch))
