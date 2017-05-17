@@ -31,6 +31,10 @@ import * as addTaskTypeForm from '../actions/order/task/addTaskTypeForm';
 import * as editTaskTypeForm from '../actions/order/task/editTaskTypeForm';
 import * as deleteTaskTypeDialog from '../actions/order/task/deleteTaskTypeDialog';
 
+import * as addTaskForm from '../actions/order/task/addTaskForm';
+import * as editTaskForm from '../actions/order/task/editTaskForm';
+import * as deleteTaskDialog from '../actions/order/task/deleteTaskDialog';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -97,6 +101,11 @@ function mapDispatchToProps(dispatch) {
                 addTaskTypeForm: bindActionCreators(addTaskTypeForm, dispatch),
                 editTaskTypeForm: bindActionCreators(editTaskTypeForm, dispatch),
                 deleteTaskTypeDialog: bindActionCreators(deleteTaskTypeDialog, dispatch)
+            },
+            task: {
+                addTaskForm: bindActionCreators(addTaskForm, dispatch),
+                editTaskForm: bindActionCreators(editTaskForm, dispatch),
+                deleteTaskDialog: bindActionCreators(deleteTaskDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

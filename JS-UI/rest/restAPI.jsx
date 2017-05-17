@@ -451,6 +451,78 @@ export const API = reduxApi({
                 }
             }
         ]
+    },
+
+    /////////////////////////// TASK REST ///////////////////////////
+
+    tasks: {
+        url: host + 'api/task',
+        transformer: T.taskTransformer
+    },
+    addFormTaskTypes: {
+        url: host + 'api/task/type',
+        transformer: T.taskTypeTransformer
+    },
+    editFormTaskTypes: {
+        url: host + 'api/task/type',
+        transformer: T.taskTypeTransformer
+    },
+    addTask: {
+        url: host + 'api/task',
+        options: function (url, params, getState) {
+            const task = getState().task.addTaskForm.task;
+            return {
+                ...params,
+                method: "POST",
+                body: task.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().task.addTaskForm.isOpen) {
+                    dispatch(actions.tasks());
+                }
+            }
+        ]
+    },
+    editTask: {
+        url: host + 'api/task',
+        options: function (url, params, getState) {
+            const task = getState().task.editTaskForm.task;
+            return {
+                ...params,
+                method: "POST",
+                body: task.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().task.editTaskForm.isOpen) {
+                    dispatch(actions.tasks());
+                }
+            }
+        ]
+    },
+    deleteTask: {
+        url: host + 'api/task',
+        options: function (url, params, getState) {
+
+            const task = getState().task.deleteTaskDialog.task;
+            task.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: task.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().task.deleteTaskDialog.isOpen) {
+                    dispatch(actions.tasks());
+                }
+            }
+        ]
     }
 
 }).use("fetch", adapterFetch(fetch))

@@ -30,6 +30,10 @@ class AppComponent extends Component {
         return this.props.taskType;
     }
 
+    task() {
+        return this.props.task;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -60,6 +64,10 @@ class AppComponent extends Component {
 
     taskTypeActions() {
         return this.actions().taskType;
+    }
+
+    taskActions() {
+        return this.actions().task;
     }
 
     rest() {
@@ -245,6 +253,37 @@ class AppComponent extends Component {
     taskTypesTable() {
         return this.taskType().taskTypesTable;
     }
+
+    ////////////////////////// Task
+
+    addTaskForm() {
+        return this.task().addTaskForm;
+    }
+
+    editTaskForm() {
+        return this.task().editTaskForm;
+    }
+
+    deleteTaskDialog() {
+        return this.task().deleteTaskDialog;
+    }
+
+    addTaskFormActions() {
+        return this.taskActions().addTaskForm;
+    }
+
+    editTaskFormActions() {
+        return this.taskActions().editTaskForm;
+    }
+
+    deleteTaskDialogActions() {
+        return this.taskActions().deleteTaskDialog;
+    }
+
+    tasksTable() {
+        return this.task().tasksTable;
+    }
+
 
 }
 

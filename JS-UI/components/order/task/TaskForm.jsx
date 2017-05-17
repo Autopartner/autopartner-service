@@ -2,12 +2,14 @@ import React, {Component, PropTypes} from 'react';
 import {
     FlatButton,
     Dialog,
-    TextField
+    TextField,
+    AutoComplete
 } from 'material-ui';
-import {taskTypeFieldsMap, taskTypeRequiredFieldList} from '../../../constants/constants';
+import {taskFieldsMap, taskRequiredFieldList} from '../../../constants/constants';
 import * as V from '../../../utils/validation';
+import * as H from '../../../utils/helpers';
 
-class TaskTypeForm extends Component {
+class taskForm extends Component {
 
     properties() {
         return this.props.properties;
@@ -30,7 +32,7 @@ class TaskTypeForm extends Component {
 
     text(fieldName, validateFields, focusField) {
         const filtered = this.getValidations(fieldName);
-        const info = taskTypeFieldsMap.get(fieldName);
+        const info = taskFieldsMap.get(fieldName);
         const mc = V.getMainColor(filtered);
         const hintText = "";
         return (
@@ -48,11 +50,46 @@ class TaskTypeForm extends Component {
                     if (e.keyCode === 13)
                         this.focus(focusField)
                 })}
-                value={this.properties().taskType[fieldName]}
+                value={this.properties().task[fieldName]}
                 errorText={V.errorText(filtered)}
                 errorStyle={mc}
                 floatingLabelStyle={mc}
                 multiLine={true}
+                hintStyle={V.getSecondaryColor(filtered)}
+            />
+        )
+    }
+
+    autocomplete(fieldName, validateFields, hintText, data, toString, rest) {
+        const filtered = this.getValidations(fieldName);
+        const mc = V.getMainColor(filtered);
+
+        return (
+            <AutoComplete
+                ref={(ref) => this[fieldName] = ref}
+                floatingLabelFixed={true}
+                floatingLabelText={hintText}
+                filter={AutoComplete.noFilter}
+                dataSource={data().map((r) => H.autoCompleteItem(toString, r))}
+                openOnFocus={true}
+                searchText={toString(this.properties().task[fieldName])}
+                onFocus={() => rest()}
+                onUpdateInput={(s) =>  {
+                    if(s === '')
+                        this.actions().update(fieldName, undefined);
+                    rest(s)
+                }}
+                onNewRequest={(choose, i) => {
+                    if(choose.row) {
+                        this.actions().update(fieldName, choose.row);
+                    }
+                }}
+                onBlur={((e) => {
+                    this.actions().validate(validateFields);
+                }).bind(this)}
+                errorText={V.errorText(filtered)}
+                errorStyle={mc}
+                floatingLabelStyle={mc}
                 hintStyle={V.getSecondaryColor(filtered)}
             />
         )
@@ -66,7 +103,7 @@ class TaskTypeForm extends Component {
                     primary={true}
                     keyboardFocused={true}
                     onTouchTap={() => {
-                        this.actions().validate(taskTypeRequiredFieldList.toArray());
+                        this.actions().validate(taskRequiredFieldList.toArray());
                         if(!this.properties().validations.find((v) => {return v.level === 'error'}))
                             this.actions().rest.push();
                     }}
@@ -83,6 +120,10 @@ class TaskTypeForm extends Component {
                 onRequestClose={this.actions().close}
                 autoScrollBodyContent={true}>
                 <div>
+                    {this.autocomplete("taskType", ["taskType"], "Тип",
+                        () => {return this.properties().taskTypesData},
+                        H.taskType2str,
+                        (s) => this.actions().rest.taskTypes())}<br/>
                     {this.text("name", ["name"], "name")}<br/>
                 </div>
             </Dialog>
@@ -90,10 +131,10 @@ class TaskTypeForm extends Component {
     }
 }
 
-TaskTypeForm.propTypes = {
+taskForm.propTypes = {
     title: PropTypes.string.isRequired,
     properties: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 
-export default TaskTypeForm;
+export default taskForm;

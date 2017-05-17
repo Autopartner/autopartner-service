@@ -9,6 +9,7 @@ import CarType from '../components/CarType'
 import CarBrand from '../components/CarBrand'
 import CarModel from '../components/CarModel'
 import TaskType from '../components/TaskType'
+import Task from '../components/Task'
 import Car from '../components/Car'
 import NotFound from '../components/NotFound'
 
@@ -25,6 +26,7 @@ class App extends React.Component {
                     <Route path='/carBrand' component={CarBrand} {...this.props}/>
                     <Route path='/carModel' component={CarModel} {...this.props}/>
                     <Route path='/taskType' component={TaskType} {...this.props}/>
+                    <Route path='/task' component={Task} {...this.props}/>
                     <Route path='/car' component={Car} {...this.props}/>
                     <Route path='*' component={NotFound} {...this.props}/>
                 </Route>

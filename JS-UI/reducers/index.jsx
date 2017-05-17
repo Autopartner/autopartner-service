@@ -7,6 +7,7 @@ import carBrand from './car/brand/carBrandTable';
 import carModel from './car/model/carModelTable';
 import car from './car/carsTable';
 import taskType from './order/task/taskTypesTable';
+import task from './order/task/TaskTable';
 import { API } from '../rest/restAPI';
 
 export default combineReducers({
@@ -17,5 +18,6 @@ export default combineReducers({
     carModel,
     car,
     taskType,
+    task,
     routing: routerReducer
 }, API.reducers);

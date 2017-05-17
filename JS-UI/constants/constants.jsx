@@ -135,4 +135,19 @@ export const taskTypeFieldsMap = Map(
 
 export const taskTypeRequiredFieldList = Stack(['name']);
 
+export const taskFieldsMap = Map(
+    {
+        "name": {
+            title: "Название",
+            description: <div></div>
+        },
+        "taskType": {
+            title: "Тип",
+            description: <div></div>
+        }
+    }
+);
+
+export const taskRequiredFieldList = Stack(['name', 'taskType']);
+
 

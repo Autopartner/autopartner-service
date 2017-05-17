@@ -6,7 +6,8 @@ import {
     carTypeRequiredFieldList,
     carModelRequiredFieldList,
     carRequiredFieldList,
-    taskTypeRequiredFieldList
+    taskTypeRequiredFieldList,
+    taskRequiredFieldList
 } from '../constants/constants';
 
 const UserT = Record({
@@ -409,6 +410,65 @@ class TaskType extends TaskTypeT {
     }
 }
 
+const TaskT = Record({
+    id: null,
+    name: undefined,
+    taskType: null,
+    active: true
+});
+
+class Task extends TaskT {
+    constructor(o) {
+        const no = {
+            id: o.id ? parseInt(o.id) : null,
+            name: o.name,
+            taskType: o.taskType,
+            active: o.active ? o.active : true
+        };
+        super(no);
+    }
+
+    toString() {
+        return `${this.id} ${this.name} ${this.taskType} ${this.active}`
+    }
+
+    isEqual(that) {
+        return that && (that instanceof Task && this.id === that.id)
+    }
+
+    toObject() {
+        let ret = {};
+        this.toMap().forEach((v, k) => {
+            ret[k] = v
+        });
+        return ret
+    }
+
+    toJSON() {
+        return JSON.stringify(this.toObject())
+    }
+
+    validate(fieldNames) {
+        const rules = taskRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }
+}
+
 const OrderT = Record({
     id: -1,
     dof: undefined
@@ -470,4 +530,8 @@ export function o2car(o) {
 
 export function o2tt(o) {
     return o ? new TaskType(o) : o
+}
+
+export function o2task(o) {
+    return o ? new Task(o) : o
 }

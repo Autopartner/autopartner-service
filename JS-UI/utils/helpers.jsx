@@ -87,3 +87,7 @@ export function carModel2str(cm) {
 export function client2str(cl) {
     return cl && cl.firstName && cl.lastName ? cl.firstName.toString() + " " + cl.lastName.toString() : cl;
 }
+
+export function taskType2str(tt) {
+    return tt && tt.name ? tt.name.toString() : tt;
+}
