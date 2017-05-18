@@ -28,6 +28,12 @@ public class OrderTaskController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+    @RequestMapping(value = {"/api/order/{id}/task"}, method = RequestMethod.GET)
+    public ResponseEntity<Iterable<OrderTask>> getByOrder(@PathVariable Long id) {
+        return ResponseEntity.ok(orderTaskService.getByOrderAndActiveTrue(id));
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/order/task/{id}", method = RequestMethod.GET)
     public ResponseEntity<OrderTask> get(@PathVariable Integer id) {
         return ResponseEntity.ok(orderTaskService.getOrderTaskById(id));

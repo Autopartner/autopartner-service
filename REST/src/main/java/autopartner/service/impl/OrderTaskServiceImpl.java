@@ -25,6 +25,11 @@ public class OrderTaskServiceImpl implements OrderTaskService {
     }
 
     @Override
+    public Iterable<OrderTask> getByOrderAndActiveTrue(Long orderId) {
+        return orderTaskRepository.findByOrderAndActiveTrue(orderId);
+    }
+
+    @Override
     public OrderTask getOrderTaskById(Integer id) {
         return orderTaskRepository.findOne(id);
     }
