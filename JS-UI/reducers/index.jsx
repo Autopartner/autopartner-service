@@ -10,6 +10,7 @@ import taskType from './order/task/taskTypesTable';
 import task from './order/task/TaskTable';
 import materialType from './order/material/materialTypesTable';
 import material from './order/material/materialTable';
+import order from './order/ordersTable';
 import { API } from '../rest/restAPI';
 
 export default combineReducers({
@@ -23,5 +24,6 @@ export default combineReducers({
     task,
     materialType,
     material,
+    order,
     routing: routerReducer
 }, API.reducers);

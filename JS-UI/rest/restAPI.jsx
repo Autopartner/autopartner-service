@@ -38,10 +38,6 @@ export const API = reduxApi({
             }
         ]
     },
-    orders: {
-        url: host + 'api/orders',
-        transformer: T.defaultTransformer
-    },
     clients: {
         url: host + 'api/client',
         transformer: T.defaultTransformer
@@ -658,6 +654,78 @@ export const API = reduxApi({
             function ({actions, dispatch, getState}) {
                 if (!getState().material.deleteMaterialDialog.isOpen) {
                     dispatch(actions.materials());
+                }
+            }
+        ]
+    },
+
+    /////////////////////////// ORDER REST ///////////////////////////
+
+    orders: {
+        url: host + 'api/order',
+        transformer: T.defaultTransformer
+    },
+    addFormOrderCars: {
+        url: host + 'api/car',
+        transformer: T.defaultTransformer
+    },
+    editFormOrderCars: {
+        url: host + 'api/car',
+        transformer: T.defaultTransformer
+    },
+    addOrder: {
+        url: host + 'api/order',
+        options: function (url, params, getState) {
+            const order = getState().order.addOrderForm.order;
+            return {
+                ...params,
+                method: "POST",
+                body: order.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().order.addOrderForm.isOpen) {
+                    dispatch(actions.orders());
+                }
+            }
+        ]
+    },
+    editOrder: {
+        url: host + 'api/order',
+        options: function (url, params, getState) {
+            const order = getState().order.editOrderForm.order;
+            return {
+                ...params,
+                method: "POST",
+                body: order.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().order.editOrderForm.isOpen) {
+                    dispatch(actions.orders());
+                }
+            }
+        ]
+    },
+    deleteOrder: {
+        url: host + 'api/order',
+        options: function (url, params, getState) {
+
+            const order = getState().order.deleteOrderDialog.order;
+            order.set('active', false);
+
+            return {
+                ...params,
+                method: "POST",
+                body: order.toJSON()
+            };
+        },
+        postfetch: [
+            function ({actions, dispatch, getState}) {
+                if (!getState().order.deleteOrderDialog.isOpen) {
+                    dispatch(actions.orders());
                 }
             }
         ]

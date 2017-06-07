@@ -2,7 +2,6 @@ import React from "react";
 import { Router, Route, IndexRoute} from 'react-router'
 
 import Page from '../components/Page'
-import Order from '../components/Order'
 import Client from '../components/Client'
 import CarType from '../components/CarType'
 import CarBrand from '../components/CarBrand'
@@ -12,6 +11,7 @@ import Task from '../components/Task'
 import MaterialType from '../components/MaterialType'
 import Material from '../components/Material'
 import Car from '../components/Car'
+import Order from '../components/Order'
 import NotFound from '../components/NotFound'
 
 class App extends React.Component {

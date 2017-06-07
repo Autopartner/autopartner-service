@@ -43,6 +43,10 @@ import * as addMaterialForm from '../actions/order/material/addMaterialForm';
 import * as editMaterialForm from '../actions/order/material/editMaterialForm';
 import * as deleteMaterialDialog from '../actions/order/material/deleteMaterialDialog';
 
+import * as addOrderForm from '../actions/order/addOrderForm';
+import * as editOrderForm from '../actions/order/editOrderForm';
+import * as deleteOrderDialog from '../actions/order/deleteOrderDialog';
+
 import {API} from "../rest/restAPI";
 
 const defaultStyle = {
@@ -124,6 +128,11 @@ function mapDispatchToProps(dispatch) {
                 addMaterialForm: bindActionCreators(addMaterialForm, dispatch),
                 editMaterialForm: bindActionCreators(editMaterialForm, dispatch),
                 deleteMaterialDialog: bindActionCreators(deleteMaterialDialog, dispatch)
+            },
+            order: {
+                addOrderForm: bindActionCreators(addOrderForm, dispatch),
+                editOrderForm: bindActionCreators(editOrderForm, dispatch),
+                deleteOrderDialog: bindActionCreators(deleteOrderDialog, dispatch)
             },
             rest: bindActionCreators(API.actions, dispatch)
         }

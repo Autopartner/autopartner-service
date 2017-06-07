@@ -176,4 +176,34 @@ export const materialFieldsMap = Map(
 
 export const materialRequiredFieldList = Stack(['name', 'materialType']);
 
+export const orderRequiredFieldList = Stack(['orderNumber', 'car', 'mileage', 'paymentType', 'status', 'note']);
+
+export const orderFieldsMap = Map(
+    {
+        "orderNumber": {
+            title: "Номер заказа",
+            description: <div></div>
+        },
+        "car": {
+            title: "Машина",
+            description: <div></div>
+        },
+        "mileage": {
+            title: "Пробег",
+            description: <div></div>
+        },
+        "paymentType": {
+            title: "Тип оплаты",
+            description: <div></div>
+        },
+        "status": {
+            title: "Статус",
+            description: <div></div>
+        },
+        "note": {
+            title: "Примечание",
+            description: <div></div>
+        }
+    }
+);
 

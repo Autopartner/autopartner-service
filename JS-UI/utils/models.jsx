@@ -9,7 +9,8 @@ import {
     taskTypeRequiredFieldList,
     taskRequiredFieldList,
     materialTypeRequiredFieldList,
-    materialRequiredFieldList
+    materialRequiredFieldList,
+    orderRequiredFieldList
 } from '../constants/constants';
 
 const UserT = Record({
@@ -508,7 +509,7 @@ class MaterialType extends MaterialTypeT {
     }
 
     validate(fieldNames) {
-        const rules = taskTypeRequiredFieldList
+        const rules = materialTypeRequiredFieldList
             .map((fn) => {
                 return V.required(fn, this[fn])
             });
@@ -589,14 +590,26 @@ class Material extends MaterialT {
 
 const OrderT = Record({
     id: -1,
-    dof: undefined
+    orderNumber: undefined,
+    car: undefined,
+    mileage: undefined,
+    paymentType: undefined,
+    status: undefined,
+    note: undefined,
+    active: true
 });
 
 class Order extends OrderT {
-    constructor(f) {
+    constructor(o) {
         const m = {
-            id: f.id ? parseInt(f.id) : -1,
-            dof: f.dof ? new Date(Date.parse(f.dof)) : undefined
+            id: o.id ? parseInt(o.id) : null,
+            orderNumber: o.orderNumber,
+            car: o.car,
+            mileage: o.mileage,
+            paymentType: o.paymentType,
+            status: o.status,
+            note: o.note,
+            active: o.active ? o.active : true
         };
         super(m)
     }
@@ -616,6 +629,27 @@ class Order extends OrderT {
     toJSON() {
         return JSON.stringify(this.toObject())
     }
+
+    validate(fieldNames) {
+        const rules = orderRequiredFieldList
+            .map((fn) => {
+                return V.required(fn, this[fn])
+            });
+
+        const rl = (fieldNames && fieldNames.length > 0) ? rules
+            .filter((v) => {
+                return !fieldNames || fieldNames.indexOf(v.fieldName) > -1
+            }) : rules;
+
+        return rl
+            .map((v) => {
+                return v.validate()
+            })
+            .filter((vr) => {
+                return vr !== undefined
+            })
+    }
+
 }
 
 export function o2u(o) {
@@ -656,4 +690,8 @@ export function o2task(o) {
 
 export function o2material(o) {
     return o ? new Material(o) : o
+}
+
+export function o2order(o) {
+    return o ? new Order(o) : o
 }

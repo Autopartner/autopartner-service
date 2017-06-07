@@ -42,6 +42,10 @@ class AppComponent extends Component {
         return this.props.material;
     }
 
+    order() {
+        return this.props.order;
+    }
+
     actions() {
         return this.props.actions;
     }
@@ -84,6 +88,10 @@ class AppComponent extends Component {
 
     materialActions() {
         return this.actions().material;
+    }
+
+    orderActions() {
+        return this.actions().order;
     }
 
     rest() {
@@ -360,6 +368,35 @@ class AppComponent extends Component {
         return this.material().materialsTable;
     }
 
+    ////////////////////////// Order
+
+    addOrderForm() {
+        return this.order().addOrderForm;
+    }
+
+    editOrderForm() {
+        return this.order().editOrderForm;
+    }
+
+    deleteOrderDialog() {
+        return this.order().deleteOrderDialog;
+    }
+
+    addOrderFormActions() {
+        return this.orderActions().addOrderForm;
+    }
+
+    editOrderFormActions() {
+        return this.orderActions().editOrderForm;
+    }
+
+    deleteOrderDialogActions() {
+        return this.orderActions().deleteOrderDialog;
+    }
+
+    ordersTable() {
+        return this.order().ordersTable;
+    }
 
 }
 

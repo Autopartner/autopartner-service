@@ -1,11 +1,10 @@
 import React from 'react';
+import OrdersTable from './order/OrdersTable';
 
 class Order extends React.Component {
     render() {
         return (
-            <div>
-                <div>Orders</div>
-            </div>
+            <OrdersTable {...this.props}/>
         );
     }
 }
