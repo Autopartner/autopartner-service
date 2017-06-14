@@ -1,9 +1,13 @@
 import React, {Component, PropTypes} from 'react';
 import {
     FlatButton,
+    RaisedButton,
     Dialog,
     TextField,
-    AutoComplete
+    AutoComplete,
+    Step,
+    Stepper,
+    StepLabel
 } from 'material-ui';
 import {orderFieldsMap, orderRequiredFieldList} from '../../constants/constants';
 import * as V from '../../utils/validation';
@@ -17,6 +21,58 @@ class orderForm extends Component {
 
     actions() {
         return this.props.actions;
+    }
+
+    state = {
+        finished: false,
+        stepIndex: 0
+    };
+
+    handleNext = () => {
+        const {stepIndex} = this.state;
+
+        if (stepIndex >= 2) {
+            this.actions().validate(orderRequiredFieldList.toArray());
+            if (!this.properties().validations.find((v) => {
+                    return v.level === 'error'
+                }))
+                this.actions().rest.push();
+        }
+
+        this.setState({
+            stepIndex: stepIndex + 1,
+            finished: stepIndex >= 2
+        });
+    };
+
+    handlePrev = () => {
+        const {stepIndex} = this.state;
+        if (stepIndex > 0) {
+            this.setState({stepIndex: stepIndex - 1});
+        }
+    };
+
+    getStepContent(stepIndex) {
+        switch (stepIndex) {
+            case 0:
+                return (
+                    <div>
+                        {this.autocomplete("car", ["car"], "Машина",
+                        () => {return this.properties().carsData},
+                        H.car2str,
+                        (s) => this.actions().rest.cars())}<br/>
+                        {this.text("orderNumber", ["orderNumber"], "orderNumber")}<br/>
+                        {this.text("mileage", ["mileage"], "mileage")}<br/>
+                        {this.text("paymentType", ["paymentType"], "paymentType")}<br/>
+                        {this.text("status", ["status"], "status")}<br/>
+                        {this.text("note", ["note"], "note")}<br/>
+                    </div>
+                );
+            case 1:
+                return 'Таблица работ';
+            case 2:
+                return 'Таблица материалов';
+        }
     }
 
     getValidations = (fieldName) => {
@@ -96,17 +152,21 @@ class orderForm extends Component {
     }
 
     render() {
+
+        const {finished, stepIndex} = this.state;
+
         const actions = [
             <div>
                 <FlatButton
-                    label="Сохранить"
+                    label="Назад"
+                    disabled={stepIndex === 0}
+                    onTouchTap={this.handlePrev}
+                    style={{marginRight: 12}}
+                />
+                <RaisedButton
+                    label={stepIndex === 2 ? 'Сохранить' : 'Далее'}
                     primary={true}
-                    keyboardFocused={true}
-                    onTouchTap={() => {
-                        this.actions().validate(orderRequiredFieldList.toArray());
-                        if(!this.properties().validations.find((v) => {return v.level === 'error'}))
-                            this.actions().rest.push();
-                    }}
+                    onTouchTap={this.handleNext}
                 />
             </div>
         ];
@@ -120,15 +180,19 @@ class orderForm extends Component {
                 onRequestClose={this.actions().close}
                 autoScrollBodyContent={true}>
                 <div>
-                    {this.autocomplete("car", ["car"], "Машина",
-                        () => {return this.properties().carsData},
-                        H.car2str,
-                        (s) => this.actions().rest.cars())}<br/>
-                    {this.text("orderNumber", ["orderNumber"], "orderNumber")}<br/>
-                    {this.text("mileage", ["mileage"], "mileage")}<br/>
-                    {this.text("paymentType", ["paymentType"], "paymentType")}<br/>
-                    {this.text("status", ["status"], "status")}<br/>
-                    {this.text("note", ["note"], "note")}<br/>
+                    <Stepper activeStep={stepIndex}>
+                        <Step>
+                            <StepLabel>Данные заказа</StepLabel>
+                        </Step>
+                        <Step>
+                            <StepLabel>Работы</StepLabel>
+                        </Step>
+                        <Step>
+                            <StepLabel>Материалы</StepLabel>
+                        </Step>
+                    </Stepper>
+
+                    {this.getStepContent(stepIndex)}
                 </div>
             </Dialog>
         );
