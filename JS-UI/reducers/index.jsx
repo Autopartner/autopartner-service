@@ -7,7 +7,7 @@ import carBrand from './car/brand/carBrandTable';
 import carModel from './car/model/carModelTable';
 import car from './car/carsTable';
 import taskType from './order/task/taskTypesTable';
-import task from './order/task/TaskTable';
+//import task from './order/task/TaskTable';
 import materialType from './order/material/materialTypesTable';
 import material from './order/material/materialTable';
 import order from './order/ordersTable';
@@ -21,7 +21,7 @@ export default combineReducers({
     carModel,
     car,
     taskType,
-    task,
+    //task,
     materialType,
     material,
     order,

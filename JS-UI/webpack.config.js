@@ -1,30 +1,51 @@
-module.exports = {
-  context: __dirname,
-  entry: {
-    jsx: "./src/index.jsx",
-    css: "./src/main.css",
-    html: "./src/index.html"
-  },
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 
+const htmlWebpackPlugin = new HtmlWebPackPlugin({
+  template: './src/index.html',
+  filename: './index.html',
+});
+
+module.exports = {
   output: {
     path: __dirname + "/static",
     filename: "bundle.js"
   },
   module: {
-    preLoaders: [
-        //Eslint loader
-      { test: /\.jsx?$/, exclude: /node_modules/, loader: "eslint-loader"},
-    ],
-    loaders: [
-      { test: /\.html$/, loader: "file?name=[name].[ext]" },
-      { test: /\.css$/, loader: "file?name=[name].[ext]" },
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: ["react-hot","babel-loader"]},
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015', 'react', 'stage-1'],
+        },
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.(svg|woff|woff2|eot|ttf)$/i,
+        exclude: /node_modules/,
+        loader: 'url-loader',
+      },
+
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+          },
+        ],
+      }
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
-  eslint: {
-    configFile: './.eslintrc'
-  }
+  plugins: [htmlWebpackPlugin],
 };
