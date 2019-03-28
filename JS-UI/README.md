@@ -1,13 +1,3 @@
-# react-redux-material_ui
-React + Redux + Material UI + ES6 syntax applications. This project includes following tools and frameworks.
-
-* [React](https://facebook.github.io/react/)
-* [Redux](http://rackt.org/redux/index.html)
-* [Material UI](http://material-ui.com/#/)
-* [webpack](https://webpack.github.io/)
-* [Babel](https://babeljs.io/)
-* [ESLint](http://eslint.org/)
-
 ## Package installation
 ```bash
 $ npm install

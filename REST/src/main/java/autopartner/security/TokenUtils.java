@@ -4,7 +4,8 @@ import autopartner.model.security.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mobile.device.Device;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +18,7 @@ import java.util.Map;
 @Component
 public class TokenUtils {
 
-  private final Logger logger = Logger.getLogger(this.getClass());
+  private final Log logger = LogFactory.getLog(this.getClass());
 
   private final String AUDIENCE_UNKNOWN   = "unknown";
   private final String AUDIENCE_WEB       = "web";

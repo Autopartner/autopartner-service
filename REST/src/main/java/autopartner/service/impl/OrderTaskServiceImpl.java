@@ -31,7 +31,7 @@ public class OrderTaskServiceImpl implements OrderTaskService {
 
     @Override
     public OrderTask getOrderTaskById(Integer id) {
-        return orderTaskRepository.findOne(id);
+        return orderTaskRepository.findById(id).get();
     }
 
     @Override

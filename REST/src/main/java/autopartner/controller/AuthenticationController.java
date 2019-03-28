@@ -4,7 +4,8 @@ import autopartner.model.json.request.AuthenticationRequest;
 import autopartner.model.json.response.AuthenticationResponse;
 import autopartner.model.security.AppUser;
 import autopartner.security.TokenUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("${autopartner.route.authentication}")
 public class AuthenticationController {
 
-  private final Logger logger = Logger.getLogger(this.getClass());
+  private final Log logger = LogFactory.getLog(this.getClass());
 
   @Value("${autopartner.token.header}")
   private String tokenHeader;

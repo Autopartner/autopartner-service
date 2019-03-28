@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTaskById(Integer id) {
-        return taskRepository.findOne(id);
+        return taskRepository.findById(id).get();
     }
 
     @Override

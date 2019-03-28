@@ -26,7 +26,7 @@ public class OrderMaterialServiceImpl implements OrderMaterialService {
 
     @Override
     public OrderMaterial getOrderMaterialById(Integer id) {
-        return orderMaterialRepository.findOne(id);
+        return orderMaterialRepository.findById(id).get();
     }
 
     @Override

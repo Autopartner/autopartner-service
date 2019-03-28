@@ -28,7 +28,7 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Override
     public Material getMaterialById(Integer id) {
-        return materialRepository.findOne(id);
+        return materialRepository.findById(id).get();
     }
 
     @Override
