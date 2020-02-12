@@ -12,18 +12,18 @@
 
 - https://www.pgadmin.org/download/
 
-##### Execute queries from REST/config/
+##### Execute queries from /config
 
 - initDB.sql
 - import.sql
 
 ### Setup backend
 
-##### Import gradle project REST
+##### Import gradle project
 
 - https://www.jetbrains.com/help/idea/gradle.html
 
-#####  Build REST project 
+#####  Build project 
 
 in the terminal
   ```bash
@@ -34,39 +34,8 @@ or in the gradle tool window
 - clean
 - build
 
-##### Run REST project by click RUN on class
+##### Run project by click RUN on class
 
 ```bash
   autopartner.Application
 ```
-
-### Setup frontend
-
-##### Package installation
-
-```bash
-$ cd JS-UI
-$ npm install
-```
-
-#### Use development server
-
-```bash
-$ npm start
-```
-
-#### Build assets
-To put compiled files into `static` directory, type the following command.
-
-```bash
-$ npm run build
-```
-
-  
-
-  
-
-
-
-
-
