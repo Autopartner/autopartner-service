@@ -15,7 +15,6 @@
 ##### Execute queries from /config
 
 - initDB.sql
-- import.sql
 
 ### Setup backend
 
@@ -39,3 +38,7 @@ or in the gradle tool window
 ```bash
   autopartner.Application
 ```
+
+##### Run user import to DB
+
+- import.sql
