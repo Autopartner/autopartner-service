@@ -31,13 +31,13 @@ public class ClientController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/client/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@PathVariable Integer id) {
+    public ResponseEntity<?> get(@PathVariable Long id) {
         return ResponseEntity.ok(clientService.getClientById(id));
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/client/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) {
         clientService.deleteClient(id);
         return ResponseEntity.ok(true);
     }

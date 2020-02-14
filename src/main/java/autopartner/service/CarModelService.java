@@ -6,7 +6,7 @@ public interface CarModelService {
 
     Iterable<CarModel> getByActiveTrue();
 
-    CarModel getCarModelById(Integer id);
+    CarModel getCarModelById(Long id);
 
     CarModel saveCarModel(CarModel carModel);
 

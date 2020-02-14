@@ -27,7 +27,7 @@ public class CarBrandServiceImpl implements CarBrandService {
     }
 
     @Override
-    public CarBrand getCarBrandById(Integer id) {
+    public CarBrand getCarBrandById(Long id) {
         return carBrandRepository.findById(id).get();
     }
 

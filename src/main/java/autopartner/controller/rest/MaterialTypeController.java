@@ -31,7 +31,7 @@ public class MaterialTypeController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/material/type/{id}", method = RequestMethod.GET)
-    public ResponseEntity<MaterialType> get(@PathVariable Integer id) {
+    public ResponseEntity<MaterialType> get(@PathVariable Long id) {
         return ResponseEntity.ok(materialTypeService.getMaterialTypeById(id));
     }
 

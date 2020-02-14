@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).get();
     }
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Integer id) {
+    public void deleteUser(Long id) {
         User user = getUserById(id);
         if (user != null) {
             user.setIsActive(false);

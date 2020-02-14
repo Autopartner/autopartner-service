@@ -6,7 +6,7 @@ public interface TaskService {
 
     Iterable<Task> getByActiveTrue();
 
-    Task getTaskById(Integer id);
+    Task getTaskById(Long id);
 
     Task saveTask(Task task);
 

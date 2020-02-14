@@ -6,7 +6,7 @@ public interface CarBrandService {
 
     Iterable<CarBrand> getByActiveTrue();
 
-    CarBrand getCarBrandById(Integer id);
+    CarBrand getCarBrandById(Long id);
 
     CarBrand saveCarBrand(CarBrand carBrand);
 

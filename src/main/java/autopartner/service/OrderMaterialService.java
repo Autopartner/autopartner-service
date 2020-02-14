@@ -6,7 +6,7 @@ public interface OrderMaterialService {
 
     Iterable<OrderMaterial> getByActiveTrue();
 
-    OrderMaterial getOrderMaterialById(Integer id);
+    OrderMaterial getOrderMaterialById(Long id);
 
     OrderMaterial saveOrderMaterial(OrderMaterial orderMaterial);
 

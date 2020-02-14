@@ -6,11 +6,11 @@ public interface UserService {
 
     Iterable<User> listAllUsers();
 
-    User getUserById(Integer id);
+    User getUserById(Long id);
 
     User saveUser(User user);
 
-    void deleteUser(Integer id);
+    void deleteUser(Long id);
 
     boolean isUsernameUnique(User user);
 

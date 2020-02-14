@@ -27,7 +27,7 @@ public class CarTypeServiceImpl implements CarTypeService {
     }
 
     @Override
-    public CarType getCarTypeById(Integer id) {
+    public CarType getCarTypeById(Long id) {
         return carTypeRepository.findById(id).get();
     }
 

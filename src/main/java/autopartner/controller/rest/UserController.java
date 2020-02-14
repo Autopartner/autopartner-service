@@ -30,13 +30,13 @@ public class UserController {
 
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public @ResponseBody User getUser(@PathVariable Integer id) {
+    public @ResponseBody User getUser(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
-    public void deleteUser(@PathVariable Integer id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 
