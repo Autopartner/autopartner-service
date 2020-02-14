@@ -8,7 +8,7 @@ public interface OrderTaskService {
 
     Iterable<OrderTask> getByOrderAndActiveTrue(Long orderId);
 
-    OrderTask getOrderTaskById(Integer id);
+    OrderTask getOrderTaskById(Long id);
 
     OrderTask saveOrderTask(OrderTask orderTask);
 

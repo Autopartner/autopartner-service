@@ -6,10 +6,10 @@ public interface ClientService {
 
     Iterable<Client> getByActiveTrue();
 
-    Client getClientById(Integer id);
+    Client getClientById(Long id);
 
     Client saveClient(Client client);
 
-    void deleteClient(Integer id);
+    void deleteClient(Long id);
 
 }

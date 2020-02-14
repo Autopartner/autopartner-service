@@ -31,7 +31,7 @@ public class MaterialController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/material/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Material> get(@PathVariable Integer id) {
+    public ResponseEntity<Material> get(@PathVariable Long id) {
         return ResponseEntity.ok(materialService.getMaterialById(id));
     }
 

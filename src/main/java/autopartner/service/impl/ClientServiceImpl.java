@@ -30,7 +30,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client getClientById(Integer id) {
+    public Client getClientById(Long id) {
         return clientRepository.findById(id).get();
     }
 
@@ -40,7 +40,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClient(Integer id) {
+    public void deleteClient(Long id) {
         Client client = getClientById(id);
         if (client != null) {
             client.setActive(false);

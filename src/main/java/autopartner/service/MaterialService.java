@@ -6,7 +6,7 @@ public interface MaterialService {
 
     Iterable<Material> getByActiveTrue();
 
-    Material getMaterialById(Integer id);
+    Material getMaterialById(Long id);
 
     Material saveMaterial(Material material);
 

@@ -31,7 +31,7 @@ public class TaskController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/task/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Task> get(@PathVariable Integer id) {
+    public ResponseEntity<Task> get(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
 

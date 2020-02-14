@@ -27,7 +27,7 @@ public class MaterialTypeServiceImpl implements MaterialTypeService {
     }
 
     @Override
-    public MaterialType getMaterialTypeById(Integer id) {
+    public MaterialType getMaterialTypeById(Long id) {
         return materialTypeRepository.findById(id).get();
     }
 

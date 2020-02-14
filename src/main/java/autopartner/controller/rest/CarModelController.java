@@ -31,7 +31,7 @@ public class CarModelController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/car/model/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> get(@PathVariable Integer id) {
+    public ResponseEntity<?> get(@PathVariable Long id) {
         return ResponseEntity.ok(carModelService.getCarModelById(id));
     }
 
