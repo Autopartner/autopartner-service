@@ -6,7 +6,7 @@ public interface OrderService {
 
     Iterable<Order> getByActiveTrue();
 
-    Order getOrderById(Integer id);
+    Order getOrderById(Long id);
 
     Order saveOrder(Order order);
 

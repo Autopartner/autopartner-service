@@ -29,7 +29,7 @@ public class OrderController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @RequestMapping(value = "/api/order/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Order> get(@PathVariable Integer id) {
+    public ResponseEntity<Order> get(@PathVariable Long id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
