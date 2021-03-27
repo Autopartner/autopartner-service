@@ -5,15 +5,11 @@ import static lombok.AccessLevel.PRIVATE;
 import com.autopartner.domain.Task;
 import com.autopartner.repository.TaskRepository;
 import com.autopartner.service.TaskService;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 @Repository
-@Transactional
-@Service("taskService")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class TaskServiceImpl implements TaskService {

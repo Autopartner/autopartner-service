@@ -8,10 +8,8 @@ import com.autopartner.service.CarBrandService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 @Repository
-@Service("carBrandService")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarBrandServiceImpl implements CarBrandService {

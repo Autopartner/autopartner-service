@@ -2,7 +2,7 @@ package com.autopartner.domain;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,19 +25,15 @@ import lombok.experimental.FieldDefaults;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "order_materials")
+@Table(name = "input_materials")
 @FieldDefaults(level = PRIVATE)
-public class OrderMaterial {
+public class InputMaterial {
 
   @Id
   @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_materials_seq")
-  @SequenceGenerator(name = "order_materials_seq", sequenceName = "order_materials_seq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "input_materials_seq")
+  @SequenceGenerator(name = "input_materials_seq", sequenceName = "input_materials_seq", allocationSize = 1)
   Long id;
-
-  @JoinColumn(name = "order_id")
-  @ManyToOne
-  Order order;
 
   @JoinColumn(name = "material_id")
   @ManyToOne
@@ -46,13 +42,13 @@ public class OrderMaterial {
   @Column(name = "count")
   Integer count;
 
-  @Column(name = "price")
-  BigDecimal price;
-
   @Column(name = "note")
   String note;
 
   @Column(name = "active")
   Boolean active;
+
+  @Column(name = "created_at")
+  LocalDateTime createdAt;
 
 }

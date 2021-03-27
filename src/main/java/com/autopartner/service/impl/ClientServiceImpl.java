@@ -8,13 +8,11 @@ import com.autopartner.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 /**
  * Created by User on 8/2/2016.
  */
 @Repository
-@Service("clientService")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ClientServiceImpl implements ClientService {

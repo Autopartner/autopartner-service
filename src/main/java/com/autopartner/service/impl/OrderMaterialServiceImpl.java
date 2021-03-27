@@ -5,15 +5,11 @@ import static lombok.AccessLevel.PRIVATE;
 import com.autopartner.domain.OrderMaterial;
 import com.autopartner.repository.OrderMaterialRepository;
 import com.autopartner.service.OrderMaterialService;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 @Repository
-@Transactional
-@Service("orderMaterialService")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class OrderMaterialServiceImpl implements OrderMaterialService {
