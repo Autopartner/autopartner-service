@@ -36,7 +36,7 @@ or in the gradle tool window
 ##### Run project by click RUN on class
 
 ```bash
-  autopartner.Application
+  Application
 ```
 
 ##### Run user import to DB
