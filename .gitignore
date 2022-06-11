@@ -1,7 +1,4 @@
 .idea/*
 .gradle
 build
-gradle/
-gradlew.bat
-gradlew
 /src/main/resources/public/bundle.js
