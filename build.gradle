@@ -1,11 +1,13 @@
 plugins {
+    id 'com.google.cloud.tools.jib' version '3.2.1'
     id 'org.springframework.boot' version '2.6.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'jacoco'
     id 'java'
 }
 
-group = 'com.autopartner'
-version = '0.0.2-SNAPSHOT'
+group 'com.autopartner'
+version '0.0.2-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -31,7 +33,11 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
+}
+
+jib {
+    container.mainClass = "com.autopartner.Application"
 }
 
