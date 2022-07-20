@@ -14,8 +14,8 @@ deploy: &deploy
         gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
         gcloud auth configure-docker
         docker load --input build/jib-image.tar
-        docker tag auto-partner-service gcr.io/ap-dev/auto-partner-service
-        docker images
+        docker tag ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
+        docker push ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
 
 jobs:
   build:
