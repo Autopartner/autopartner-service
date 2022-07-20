@@ -1,5 +1,19 @@
 version: 2.1
 
+deploy: &deploy
+  docker:
+    - image: google/cloud-sdk
+  working_directory: ~/repo
+  steps:
+    - setup_remote_docker:
+        docker_layer_caching: true
+    - attach_workspace:
+        at: .
+    - run: |
+        docker load --input build/jib-image.tar
+        docker tag auto-partner-service gcr.io/ap-dev/auto-partner-service
+        docker images
+
 jobs:
   build:
     docker:
@@ -9,13 +23,38 @@ jobs:
       - checkout
       - restore_cache:
           key: jdk-dependencies-{{ checksum "build.gradle" }}
-      - run: ./gradlew build --console plain --info
+      - run: ./gradlew test jacocoTestReport jibBuildTar --image=auto-partner-service:latest --console plain --info
       - save_cache:
           paths:
             - ~/.gradle
           key: jdk-dependencies-{{ checksum "build.gradle" }}
+      - store_artifacts:
+          path: build/reports/jacoco/test/html
+          destination: code-coverage
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/jib-image.tar
+  deploy_to_dev:
+    <<: *deploy
+  deploy_to_prod:
+    <<: *deploy
 
 workflows:
   build-and-deploy:
     jobs:
       - build
+      - deploy_to_dev:
+          context: "AP Dev"
+          requires:
+            - build
+#          filters:
+#            branches:
+#              only: develop
+#      - deploy_to_prod:
+#          context: "AP Prod"
+#          requires:
+#            - build
+#          filters:
+#            branches:
+#              only: master
