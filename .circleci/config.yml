@@ -15,7 +15,7 @@ deploy: &deploy
         gcloud auth configure-docker
         docker load --input build/jib-image.tar
         docker tag auto-partner-service gcr.io/ap-dev/auto-partner-service
-        docker images
+        docker push ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/ap-docker/auto-partner-service
 
 jobs:
   build:
