@@ -10,6 +10,9 @@ deploy: &deploy
     - attach_workspace:
         at: .
     - run: |
+        echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+        gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+        gcloud auth configure-docker
         docker load --input build/jib-image.tar
         docker tag auto-partner-service gcr.io/ap-dev/auto-partner-service
         docker images
