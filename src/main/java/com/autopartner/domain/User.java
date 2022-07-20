@@ -10,11 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
+import com.autopartner.DTO.CompanyRegistrationRequest;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
@@ -25,6 +23,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Table(name = "users")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class User {
 
   @Id
@@ -35,6 +34,12 @@ public class User {
 
   @Column(name = "username")
   String username;
+
+  @Column(name = "first_name")
+  String firstName;
+
+  @Column(name = "last_name")
+  String lastName;
 
   @Column(name = "password")
   String password;
@@ -51,4 +56,15 @@ public class User {
   @Column(name = "active")
   Boolean active;
 
+  @Column(name = "company_id")
+  Integer companyId;
+
+  public static User createUser(CompanyRegistrationRequest request) {
+    return User.builder()
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .password(request.getPassword())
+            .email(request.getEmail())
+            .build();
+  }
 }
