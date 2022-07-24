@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.autopartner.DTO.CompanyRegistrationRequest;
+import com.autopartner.controller.DTO.CompanyRegistrationRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -32,7 +32,7 @@ public class User {
   @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
   Long id;
 
-  @Column(name = "username")
+  @Column(unique = true)
   String username;
 
   @Column(name = "first_name")
@@ -41,30 +41,21 @@ public class User {
   @Column(name = "last_name")
   String lastName;
 
-  @Column(name = "password")
+  @Column
   String password;
 
-  @Column(name = "email")
+  @Column(unique = true)
   String email;
 
   @Column(name = "last_password_reset")
   Date lastPasswordReset;
 
-  @Column(name = "authorities")
+  @Column
   String authorities;
 
-  @Column(name = "active")
+  @Column
   Boolean active;
 
   @Column(name = "company_id")
-  Integer companyId;
-
-  public static User createUser(CompanyRegistrationRequest request) {
-    return User.builder()
-            .firstName(request.getFirstName())
-            .lastName(request.getLastName())
-            .password(request.getPassword())
-            .email(request.getEmail())
-            .build();
-  }
+  Long companyId;
 }

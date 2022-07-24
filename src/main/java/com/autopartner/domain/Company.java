@@ -1,6 +1,5 @@
 package com.autopartner.domain;
 
-import com.autopartner.DTO.CompanyRegistrationRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Company {
 
     @Id
-    @Column(name = "id")
+    @Column
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
     @SequenceGenerator(name = "company_seq", sequenceName = "company_seq", allocationSize = 1)
     Long id;
@@ -29,20 +28,12 @@ public class Company {
     @Column(name = "company_name")
     String companyName;
 
-    @Column(name = "country")
+    @Column
     String country;
 
-    @Column(name = "city")
+    @Column
     String city;
 
-    @Column(name = "active")
+    @Column
     Boolean active;
-
-    public static Company createCompany(CompanyRegistrationRequest request) {
-        return Company.builder()
-                .companyName(request.getCompanyName())
-                .country(request.getCountry())
-                .city(request.getCity())
-                .build();
-    }
 }

@@ -1,5 +1,6 @@
 package com.autopartner.service;
 
+import com.autopartner.controller.DTO.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 
 public interface CompanyService {
@@ -13,4 +14,6 @@ public interface CompanyService {
     Company saveCompany(Company company);
 
     void deleteCompany(Long id);
+
+    void createCompany(CompanyRegistrationRequest request);
 }

@@ -1,6 +1,8 @@
 package com.autopartner.service;
 
+import com.autopartner.controller.DTO.CompanyRegistrationRequest;
 import com.autopartner.domain.User;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
 
