@@ -1,6 +1,6 @@
 package com.autopartner.service;
 
-import com.autopartner.controller.DTO.CompanyRegistrationRequest;
+import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 
 public interface CompanyService {

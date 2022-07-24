@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.autopartner.controller.DTO.CompanyRegistrationRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

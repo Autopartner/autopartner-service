@@ -1,7 +1,7 @@
 package com.autopartner.service.impl;
 
 import com.autopartner.configuration.WebSecurityConfiguration;
-import com.autopartner.controller.DTO.CompanyRegistrationRequest;
+import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
 import com.autopartner.repository.CompanyRepository;

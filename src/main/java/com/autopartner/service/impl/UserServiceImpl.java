@@ -2,8 +2,6 @@ package com.autopartner.service.impl;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.autopartner.configuration.WebSecurityConfiguration;
-import com.autopartner.controller.DTO.CompanyRegistrationRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
@@ -11,8 +9,6 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 @Repository
