@@ -35,10 +35,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
   @Autowired
   public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder)
-      throws Exception {
+          throws Exception {
     authenticationManagerBuilder
-        .userDetailsService(this.userDetailsService)
-        .passwordEncoder(passwordEncoder());
+            .userDetailsService(this.userDetailsService)
+            .passwordEncoder(passwordEncoder());
   }
 
   @Bean
@@ -67,22 +67,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity httpSecurity) throws Exception {
     httpSecurity
-        .csrf()
-        .disable()
-        .exceptionHandling()
-        .authenticationEntryPoint(this.unauthorizedHandler)
-        .and()
-        .sessionManagement()
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .authorizeRequests()
-        .antMatchers("/auth/**").permitAll()
-        .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
-        .antMatchers("/api/**").authenticated();
+            .csrf()
+            .disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(this.unauthorizedHandler)
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers("/auth/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/company").permitAll()
+            .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+            .antMatchers("/api/**").authenticated();
 
     // Custom JWT based authentication
     httpSecurity
-        .addFilterBefore(authenticationTokenFilterBean(),
-            UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(authenticationTokenFilterBean(),
+                    UsernamePasswordAuthenticationFilter.class);
   }
 }
