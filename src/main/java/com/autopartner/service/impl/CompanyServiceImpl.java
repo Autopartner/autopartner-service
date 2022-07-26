@@ -4,9 +4,9 @@ import com.autopartner.configuration.WebSecurityConfiguration;
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
+import com.autopartner.service.UserService;
 import com.autopartner.repository.CompanyRepository;
 import com.autopartner.service.CompanyService;
-import com.autopartner.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,8 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public void deleteCompany(Long id) {
-    companyRepository.deleteById(id);
+    Company company = getCompanyById(id);
+    companyRepository.delete(company);
   }
 
   @Override
