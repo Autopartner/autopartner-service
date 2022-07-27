@@ -39,8 +39,8 @@ public class CompanyController {
       throw new UserAlreadyExistsException("User already exists with email: " + request.getEmail());
     }
 
-    companyService.createCompany(request);
-    return CompanyRegistrationResponse.createResponse(request);
+    Company company = companyService.createCompany(request);
+    return CompanyRegistrationResponse.createResponse(company);
   }
 
   @Secured("ROLE_ADMIN")

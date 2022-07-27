@@ -19,23 +19,20 @@ import static lombok.AccessLevel.PRIVATE;
 @Builder
 public class CompanyRegistrationResponse {
 
-  @NotEmpty
-  @Size(min = 3, max = 256)
+  Long id;
+
   String companyName;
 
-  @NotEmpty
-  @Size(min = 3, max = 256)
   String country;
 
-  @NotEmpty
-  @Size(min = 3, max = 256)
   String city;
 
-  public static CompanyRegistrationResponse createResponse(CompanyRegistrationRequest request) {
+  public static CompanyRegistrationResponse createResponse(Company company) {
     return CompanyRegistrationResponse.builder()
-            .companyName(request.getCompanyName())
-            .country(request.getCountry())
-            .city(request.getCity())
+            .id(company.getId())
+            .companyName(company.getCompanyName())
+            .country(company.getCountry())
+            .city(company.getCity())
             .build();
   }
 }
