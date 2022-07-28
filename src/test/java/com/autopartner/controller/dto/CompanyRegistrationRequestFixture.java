@@ -1,4 +1,4 @@
-package com.autopartner.domain;
+package com.autopartner.controller.dto;
 
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
 

@@ -3,7 +3,7 @@ package com.autopartner.service;
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.CompanyFixture;
-import com.autopartner.domain.CompanyRegistrationRequestFixture;
+import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.repository.CompanyRepository;
 import com.autopartner.service.impl.CompanyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

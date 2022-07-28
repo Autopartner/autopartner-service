@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     User user = getUserById(id);
     if (user != null) {
       user.setActive(false);
-      saveUser(user);
+      userRepository.delete(user);
     }
   }
 
