@@ -56,7 +56,7 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   @Transactional
-  public void createCompany(CompanyRegistrationRequest request) {
+  public Company createCompany(CompanyRegistrationRequest request) {
     Company company = Company.builder()
             .companyName(request.getCompanyName())
             .country(request.getCountry())
@@ -72,5 +72,6 @@ public class CompanyServiceImpl implements CompanyService {
             .companyId(company.getId())
             .build();
     userService.saveUser(user);
+    return company;
   }
 }

@@ -1,6 +1,7 @@
 package com.autopartner.controller.rest;
 
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
+import com.autopartner.controller.dto.CompanyRegistrationResponse;
 import com.autopartner.domain.Company;
 import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.CompanyService;
@@ -32,14 +33,14 @@ public class CompanyController {
   }
 
   @PostMapping
-  public CompanyRegistrationRequest create(@Valid @RequestBody CompanyRegistrationRequest companyRegistrationRequest) {
+  public CompanyRegistrationResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
 
-    if (nonNull(userService.getUserByUsername(companyRegistrationRequest.getEmail()))) {
-      throw new UserAlreadyExistsException("User already exists with email: " + companyRegistrationRequest.getEmail());
+    if (nonNull(userService.getUserByUsername(request.getEmail()))) {
+      throw new UserAlreadyExistsException("User already exists with email: " + request.getEmail());
     }
 
-    companyService.createCompany(companyRegistrationRequest);
-    return companyRegistrationRequest;
+    Company company = companyService.createCompany(request);
+    return CompanyRegistrationResponse.createResponse(company);
   }
 
   @Secured("ROLE_ADMIN")

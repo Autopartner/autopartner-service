@@ -15,5 +15,5 @@ public interface CompanyService {
 
     void deleteCompany(Long id);
 
-    void createCompany(CompanyRegistrationRequest request);
+    Company createCompany(CompanyRegistrationRequest request);
 }
