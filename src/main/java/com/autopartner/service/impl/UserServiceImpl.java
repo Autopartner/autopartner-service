@@ -27,10 +27,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User getUserById(Long id) {
-    if (userRepository.findByIdAndActiveTrue(id) == null) {
+    User user = userRepository.findByIdAndActiveTrue(id);
+    if (user == null) {
       throw new NotActiveException("User does not active");
     }
-    return userRepository.findByIdAndActiveTrue(id);
+    return user;
   }
 
   @Override

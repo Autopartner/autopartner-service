@@ -34,10 +34,11 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public Company getCompanyById(Long id) {
-    if (companyRepository.findCompanyByIdAndActiveTrue(id) == null) {
+    Company company = companyRepository.findCompanyByIdAndActiveTrue(id);
+    if (company == null) {
       throw new NotActiveException("Company does not active");
     }
-    return companyRepository.findCompanyByIdAndActiveTrue(id);
+    return company;
   }
 
   @Override
