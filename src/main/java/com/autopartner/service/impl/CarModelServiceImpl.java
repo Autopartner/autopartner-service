@@ -3,8 +3,8 @@ package com.autopartner.service.impl;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.domain.CarModel;
-import com.autopartner.repository.CarModelRepository;
 import com.autopartner.service.CarModelService;
+import com.autopartner.repository.CarModelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
