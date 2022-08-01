@@ -4,6 +4,7 @@ import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +17,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -52,7 +55,7 @@ class UserServiceTest {
 
   @Test
   void listAllUsers() {
-    when(userRepository.findAll()).thenReturn(users);
+    when(userRepository.findByActiveTrue()).thenReturn(users);
     Iterable<User> userIterable = userService.listAllUsers();
     List<User> userList = StreamSupport.stream(userIterable.spliterator(), false).toList();
     assertThat(userList.size()).isEqualTo(users.size());
@@ -130,5 +133,18 @@ class UserServiceTest {
     verify(userRepository).findOneByUsername(stringArgumentCaptor.capture());
     String username = stringArgumentCaptor.getValue();
     assertThat(username).isEqualTo(user.getUsername());
+  }
+
+  @Test
+  void shouldThrowNotActiveException_whenFindUserByIdIsNotActive() {
+    user.setActive(false);
+    when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
+    assertThrows(NotActiveException.class, () -> userService.getUserById(user.getId()));
+  }
+
+  @Test
+  void shouldThrowNoSuchElementException_whenUserIdDoesNotExist() {
+    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+    assertThrows(NoSuchElementException.class, () -> userService.getUserById(20L));
   }
 }

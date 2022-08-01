@@ -4,6 +4,7 @@ import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.CompanyFixture;
 import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.CompanyRepository;
 import com.autopartner.service.impl.CompanyServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +17,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,7 +58,7 @@ class CompanyServiceTest {
 
   @Test
   void findAllCompanies() {
-    when(companyRepository.findAll()).thenReturn(companies);
+    when(companyRepository.findByActiveTrue()).thenReturn(companies);
     Iterable<Company> companyIterable = companyService.listAllCompanies();
     List<Company> companyList = StreamSupport.stream(companyIterable.spliterator(), false)
             .toList();
@@ -72,4 +75,16 @@ class CompanyServiceTest {
     assertThat(company.getId()).isEqualTo(companyId);
   }
 
+  @Test
+  void shouldThrowNotActiveException_whenFindCompanyByIdIsNotActive() {
+    company.setActive(false);
+    when(companyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(company));
+    assertThrows(NotActiveException.class, () -> companyService.getCompanyById(company.getId()));
+  }
+
+  @Test
+  void shouldThrowNoSuchElementException_whenCompanyIdDoesNotExist() {
+    when(companyRepository.findById(anyLong())).thenReturn(Optional.empty());
+    assertThrows(NoSuchElementException.class, () -> companyService.getCompanyById(20L));
+  }
 }

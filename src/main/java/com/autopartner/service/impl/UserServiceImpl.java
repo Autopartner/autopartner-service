@@ -25,10 +25,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Iterable<User> listAllUsers() {
-    Iterable<User> iterable = userRepository.findAll();
-    iterable.iterator()
-            .forEachRemaining(user -> user.getActive());
-    return iterable;
+    return getByActiveTrue();
   }
 
   @Override
