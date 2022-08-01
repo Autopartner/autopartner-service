@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
+    username: ${POSTGRES_USERNAME}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+server:
+  port: 8888
+  contextPath: /
+
+error:
+  whitelabel:
+    enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    hibernate: DEBUG
+    autopartner: DEBUG
+
+autopartner:
+  token:
+    header: X-Auth-Token
+    secret: ${AUTH_SECRET}
+    expiration: 604800
+
+  route:
+    authentication: /auth
+    authentication.refresh: /auth/refresh
+    profile: /api/profile
+
+
+
