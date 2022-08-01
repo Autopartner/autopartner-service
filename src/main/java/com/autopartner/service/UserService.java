@@ -1,12 +1,13 @@
 package com.autopartner.service;
 
 import com.autopartner.domain.User;
+import com.autopartner.exception.NotActiveException;
 
 public interface UserService {
 
   Iterable<User> listAllUsers();
 
-  User getUserById(Long id);
+  User getUserById(Long id) throws NotActiveException;
 
   User saveUser(User user);
 

@@ -4,6 +4,7 @@ import com.autopartner.configuration.WebSecurityConfiguration;
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.service.UserService;
 import com.autopartner.repository.CompanyRepository;
 import com.autopartner.service.CompanyService;
@@ -14,7 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.StreamSupport;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -30,7 +33,7 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public Iterable<Company> listAllCompanies() {
-    return companyRepository.findAll();
+    return getByActiveTrue();
   }
 
   @Override
@@ -40,7 +43,11 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public Company getCompanyById(Long id) {
-    return companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company does not exist"));
+    Company activeCompany = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company does not exist"));
+    if (!activeCompany.getActive()) {
+      throw new NotActiveException("Company is not active");
+    }
+    return activeCompany;
   }
 
   @Override
@@ -51,7 +58,10 @@ public class CompanyServiceImpl implements CompanyService {
   @Override
   public void deleteCompany(Long id) {
     Company company = getCompanyById(id);
-    companyRepository.delete(company);
+    if (company != null) {
+      company.setActive(false);
+      saveCompany(company);
+    }
   }
 
   @Override

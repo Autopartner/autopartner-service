@@ -3,9 +3,14 @@ package com.autopartner.service.impl;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.domain.User;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.stream.StreamSupport;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,12 +25,20 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Iterable<User> listAllUsers() {
-    return userRepository.findAll();
+    List<User> users = StreamSupport.stream(userRepository.findAll().spliterator(), false).toList();
+    users.stream()
+            .filter(user -> user.getActive())
+            .toList();
+    return users;
   }
 
   @Override
   public User getUserById(Long id) {
-    return userRepository.findById(id).get();
+    User activeUser = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company does not exist"));
+    if (!activeUser.getActive()) {
+      throw new NotActiveException("User is not active");
+    }
+    return activeUser;
   }
 
   @Override
@@ -35,10 +48,10 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    User user = getUserById(id);
+    User user= getUserById(id);
     if (user != null) {
       user.setActive(false);
-      userRepository.delete(user);
+      saveUser(user);
     }
   }
 

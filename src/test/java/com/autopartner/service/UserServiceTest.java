@@ -4,6 +4,7 @@ import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
