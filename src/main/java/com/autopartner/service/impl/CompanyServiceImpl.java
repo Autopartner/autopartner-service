@@ -38,7 +38,10 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public Iterable<Company> getByActiveTrue() {
-    return companyRepository.findByActiveTrue();
+    Iterable<Company> iterable = companyRepository.findAll();
+    iterable.iterator()
+            .forEachRemaining(company -> company.getActive());
+    return iterable;
   }
 
   @Override

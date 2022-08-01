@@ -9,6 +9,7 @@ public class UserFixture {
             .username("company@gmail.com")
             .firstName("firstName")
             .lastName("lastName")
+            .active(true)
             .build();
   }
 }

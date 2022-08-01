@@ -2,7 +2,6 @@ package com.autopartner.service;
 
 import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
-import com.autopartner.exception.NotActiveException;
 
 public interface CompanyService {
 
@@ -10,7 +9,7 @@ public interface CompanyService {
 
     Iterable<Company> getByActiveTrue();
 
-    Company getCompanyById(Long id) throws NotActiveException;
+    Company getCompanyById(Long id);
 
     Company saveCompany(Company company);
 

@@ -25,11 +25,15 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Iterable<User> listAllUsers() {
-    List<User> users = StreamSupport.stream(userRepository.findAll().spliterator(), false).toList();
-    users.stream()
-            .filter(user -> user.getActive())
-            .toList();
-    return users;
+    Iterable<User> iterable = userRepository.findAll();
+    iterable.iterator()
+            .forEachRemaining(user -> user.getActive());
+    return iterable;
+  }
+
+  @Override
+  public Iterable<User> getByActiveTrue() {
+    return userRepository.findByActiveTrue();
   }
 
   @Override
@@ -48,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    User user= getUserById(id);
+    User user = getUserById(id);
     if (user != null) {
       user.setActive(false);
       saveUser(user);

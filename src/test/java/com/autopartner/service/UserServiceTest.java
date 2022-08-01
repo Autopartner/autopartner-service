@@ -4,7 +4,6 @@ import com.autopartner.controller.dto.CompanyRegistrationRequest;
 import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
-import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,9 +81,9 @@ class UserServiceTest {
   void deleteUser() {
     when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
     userService.deleteUser(user.getId());
-    verify(userRepository).delete(userArgumentCaptor.capture());
-    User user1 = userArgumentCaptor.getValue();
-    assertThat(user.getId()).isEqualTo(user1.getId());
+    verify(userRepository).findById(longArgumentCaptor.capture());
+    Long userId = longArgumentCaptor.getValue();
+    assertThat(user.getId()).isEqualTo(userId);
   }
 
   @Test

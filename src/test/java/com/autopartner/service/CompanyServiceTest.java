@@ -31,6 +31,8 @@ class CompanyServiceTest {
   CompanyServiceImpl companyService;
   @Captor
   ArgumentCaptor<Company> companyArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> longArgumentCaptor;
   CompanyRegistrationRequest companyRegistrationRequest;
   List<Company> companies;
   Company company;
@@ -65,9 +67,9 @@ class CompanyServiceTest {
   void delete() {
     when(companyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(company));
     companyService.deleteCompany(company.getId());
-    verify(companyRepository).delete(companyArgumentCaptor.capture());
-    Company company1 = companyArgumentCaptor.getValue();
-    assertThat(company.getId()).isEqualTo(company1.getId());
+    verify(companyRepository).findById(longArgumentCaptor.capture());
+    Long companyId = longArgumentCaptor.getValue();
+    assertThat(company.getId()).isEqualTo(companyId);
   }
 
 }
