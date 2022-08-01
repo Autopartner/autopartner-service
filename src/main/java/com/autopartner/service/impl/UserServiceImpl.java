@@ -3,8 +3,10 @@ package com.autopartner.service.impl;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.domain.User;
+import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
+
 import java.util.Objects;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Iterable<User> listAllUsers() {
-    return userRepository.findAll();
+    return userRepository.findByActiveTrue();
   }
 
   @Override
   public User getUserById(Long id) {
-    return userRepository.findById(id).get();
+    User user = userRepository.findByIdAndActiveTrue(id);
+    if (user == null) {
+      throw new NotActiveException("User does not active");
+    }
+    return user;
   }
 
   @Override
@@ -35,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    User user = getUserById(id);
+    User user = userRepository.findByIdAndActiveTrue(id);
     if (user != null) {
       user.setActive(false);
       saveUser(user);
