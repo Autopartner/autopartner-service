@@ -15,10 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.StreamSupport;
-
 import static lombok.AccessLevel.PRIVATE;
 
 @Service
@@ -33,21 +29,15 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public Iterable<Company> listAllCompanies() {
-    return getByActiveTrue();
-  }
-
-  @Override
-  public Iterable<Company> getByActiveTrue() {
     return companyRepository.findByActiveTrue();
   }
 
   @Override
   public Company getCompanyById(Long id) {
-    Company activeCompany = companyRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company does not exist"));
-    if (!activeCompany.getActive()) {
-      throw new NotActiveException("Company is not active");
+    if (companyRepository.findCompanyByIdAndActiveTrue(id) == null) {
+      throw new NotActiveException("Company does not active");
     }
-    return activeCompany;
+    return companyRepository.findCompanyByIdAndActiveTrue(id);
   }
 
   @Override
@@ -57,7 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
 
   @Override
   public void deleteCompany(Long id) {
-    Company company = getCompanyById(id);
+    Company company = companyRepository.findCompanyByIdAndActiveTrue(id);
     if (company != null) {
       company.setActive(false);
       saveCompany(company);

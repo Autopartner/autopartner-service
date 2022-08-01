@@ -7,10 +7,7 @@ import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,21 +22,15 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Iterable<User> listAllUsers() {
-    return getByActiveTrue();
-  }
-
-  @Override
-  public Iterable<User> getByActiveTrue() {
     return userRepository.findByActiveTrue();
   }
 
   @Override
   public User getUserById(Long id) {
-    User activeUser = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Company does not exist"));
-    if (!activeUser.getActive()) {
-      throw new NotActiveException("User is not active");
+    if (userRepository.findByIdAndActiveTrue(id) == null) {
+      throw new NotActiveException("User does not active");
     }
-    return activeUser;
+    return userRepository.findByIdAndActiveTrue(id);
   }
 
   @Override
@@ -49,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void deleteUser(Long id) {
-    User user = getUserById(id);
+    User user = userRepository.findByIdAndActiveTrue(id);
     if (user != null) {
       user.setActive(false);
       saveUser(user);

@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,9 +67,9 @@ class CompanyServiceTest {
 
   @Test
   void delete() {
-    when(companyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(company));
+    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(company);
     companyService.deleteCompany(company.getId());
-    verify(companyRepository).findById(longArgumentCaptor.capture());
+    verify(companyRepository).findCompanyByIdAndActiveTrue(longArgumentCaptor.capture());
     Long companyId = longArgumentCaptor.getValue();
     assertThat(company.getId()).isEqualTo(companyId);
   }
@@ -78,13 +77,13 @@ class CompanyServiceTest {
   @Test
   void shouldThrowNotActiveException_whenFindCompanyByIdIsNotActive() {
     company.setActive(false);
-    when(companyRepository.findById(anyLong())).thenReturn(Optional.ofNullable(company));
+    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(null);
     assertThrows(NotActiveException.class, () -> companyService.getCompanyById(company.getId()));
   }
 
   @Test
   void shouldThrowNoSuchElementException_whenCompanyIdDoesNotExist() {
-    when(companyRepository.findById(anyLong())).thenReturn(Optional.empty());
-    assertThrows(NoSuchElementException.class, () -> companyService.getCompanyById(20L));
+    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(null);
+    assertThrows(NotActiveException.class, () -> companyService.getCompanyById(20L));
   }
 }

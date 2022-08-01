@@ -17,8 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -64,9 +62,9 @@ class UserServiceTest {
 
   @Test
   void getUserById() {
-    when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
+    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(user);
     userService.getUserById(user.getId());
-    verify(userRepository).findById(longArgumentCaptor.capture());
+    verify(userRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
     id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(user.getId());
   }
@@ -82,9 +80,9 @@ class UserServiceTest {
 
   @Test
   void deleteUser() {
-    when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
+    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(user);
     userService.deleteUser(user.getId());
-    verify(userRepository).findById(longArgumentCaptor.capture());
+    verify(userRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
     Long userId = longArgumentCaptor.getValue();
     assertThat(user.getId()).isEqualTo(userId);
   }
@@ -138,13 +136,13 @@ class UserServiceTest {
   @Test
   void shouldThrowNotActiveException_whenFindUserByIdIsNotActive() {
     user.setActive(false);
-    when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
+    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(null);
     assertThrows(NotActiveException.class, () -> userService.getUserById(user.getId()));
   }
 
   @Test
-  void shouldThrowNoSuchElementException_whenUserIdDoesNotExist() {
-    when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
-    assertThrows(NoSuchElementException.class, () -> userService.getUserById(20L));
+  void shouldThrowNotActiveException_whenUserIdDoesNotExist() {
+    when(userRepository.findByIdAndActiveTrue(20L)).thenReturn(null);
+    assertThrows(NotActiveException.class, () -> userService.getUserById(20L));
   }
 }

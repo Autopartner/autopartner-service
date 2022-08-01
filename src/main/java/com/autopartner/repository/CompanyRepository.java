@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
     Iterable<Company> findByActiveTrue();
+    Company findCompanyByIdAndActiveTrue(Long id);
 }
