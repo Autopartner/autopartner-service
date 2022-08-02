@@ -36,4 +36,3 @@ workflows:
             - build
           attach-workspace: true
           setup-remote-docker: true
-          executor: docker-orb/docker
