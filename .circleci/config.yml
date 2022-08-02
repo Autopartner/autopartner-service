@@ -3,9 +3,6 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@8.1.2
 
-deploy: &deploy
-  - aws-ecr/build-and-push-image:
-      repo: "autopartner"
 jobs:
   build:
     docker:
@@ -27,16 +24,13 @@ jobs:
           root: .
           paths:
             - build/jib-image.tar
-  deploy_to_dev:
-    <<: *deploy
-  deploy_to_prod:
-    <<: *deploy
 
 workflows:
   build-and-deploy:
     jobs:
       - build
-      - deploy_to_dev:
+      - aws-ecr/build-and-push-image:
+          repo: "autopartner"
           context: "AP Dev"
           requires:
             - build
