@@ -35,4 +35,3 @@ workflows:
           requires:
             - build
           attach-workspace: true
-          setup-remote-docker: true
