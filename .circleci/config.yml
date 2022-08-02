@@ -1,21 +1,7 @@
 version: 2.1
 
-deploy: &deploy
-  docker:
-    - image: google/cloud-sdk
-  working_directory: ~/repo
-  steps:
-    - setup_remote_docker:
-        docker_layer_caching: true
-    - attach_workspace:
-        at: .
-    - run: |
-        echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-        gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-        gcloud auth configure-docker ${LOCATION}-docker.pkg.dev
-        docker load --input build/jib-image.tar
-        docker tag auto-partner-service ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
-        docker push ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.2
 
 jobs:
   build:
@@ -26,7 +12,7 @@ jobs:
       - checkout
       - restore_cache:
           key: jdk-dependencies-{{ checksum "build.gradle" }}
-      - run: ./gradlew test jacocoTestReport jibBuildTar --image=auto-partner-service:latest --console plain --info
+      - run: ./gradlew build test jacocoTestReport --console plain --info
       - save_cache:
           paths:
             - ~/.gradle
@@ -37,27 +23,21 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - build/jib-image.tar
-  deploy_to_dev:
-    <<: *deploy
-  deploy_to_prod:
-    <<: *deploy
+            - Dockerfile
+            - build/
 
 workflows:
   build-and-deploy:
     jobs:
       - build
-      - deploy_to_dev:
+      - aws-ecr/build-and-push-image:
+          repo: ${AWS_ECR_REPO_NAME}
           context: "AP Dev"
           requires:
             - build
-#          filters:
-#            branches:
-#              only: develop
-#      - deploy_to_prod:
-#          context: "AP Prod"
-#          requires:
-#            - build
-#          filters:
-#            branches:
-#              only: master
+          attach-workspace: true
+          filters:
+            branches:
+              only:
+                - develop
+                - master
