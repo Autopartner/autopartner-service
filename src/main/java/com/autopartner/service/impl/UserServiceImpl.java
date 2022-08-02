@@ -11,9 +11,9 @@ import java.util.Objects;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
@@ -59,5 +59,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public User getUserByUsername(String username) {
     return userRepository.findOneByUsername(username);
+  }
+
+  @Override
+  public User updateUser(User user) {
+    return userRepository.updateUser(user);
   }
 }
