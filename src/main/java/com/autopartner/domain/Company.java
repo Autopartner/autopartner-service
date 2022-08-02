@@ -25,7 +25,7 @@ public class Company {
     @SequenceGenerator(name = "company_seq", sequenceName = "company_seq", allocationSize = 1)
     Long id;
 
-    @Column(name = "company_name")
+    @Column
     String companyName;
 
     @Column

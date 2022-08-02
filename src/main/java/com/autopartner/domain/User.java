@@ -34,10 +34,10 @@ public class User {
   @Column(unique = true)
   String username;
 
-  @Column(name = "first_name")
+  @Column
   String firstName;
 
-  @Column(name = "last_name")
+  @Column
   String lastName;
 
   @Column
@@ -46,7 +46,7 @@ public class User {
   @Column(unique = true)
   String email;
 
-  @Column(name = "last_password_reset")
+  @Column
   Date lastPasswordReset;
 
   @Column
@@ -55,6 +55,6 @@ public class User {
   @Column
   Boolean active;
 
-  @Column(name = "company_id")
+  @Column
   Long companyId;
 }

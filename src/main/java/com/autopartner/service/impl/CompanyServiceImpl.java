@@ -71,6 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
             .password(encoder.encode(request.getPassword()))
             .email(request.getEmail())
             .companyId(company.getId())
+            .authorities("ROLE_USER")
             .build();
     userService.saveUser(user);
     return company;
