@@ -23,15 +23,21 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - .
+            - Dockerfile
+            - build/
 
 workflows:
   build-and-deploy:
     jobs:
       - build
       - aws-ecr/build-and-push-image:
-          repo: "autopartner"
+          repo: ${AWS_ECR_REPO_NAME}
           context: "AP Dev"
           requires:
             - build
           attach-workspace: true
+          filters:
+            branches:
+              only:
+                - develop
+                - master
