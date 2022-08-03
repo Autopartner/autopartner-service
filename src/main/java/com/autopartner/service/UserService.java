@@ -15,6 +15,4 @@ public interface UserService {
   boolean isUsernameUnique(User user);
 
   User getUserByUsername(String username);
-
-  User updateUser(User user);
 }

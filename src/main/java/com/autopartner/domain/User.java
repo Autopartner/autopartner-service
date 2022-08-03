@@ -57,4 +57,7 @@ public class User {
 
   @Column
   Long companyId;
+
+  @Column
+  Long phone;
 }
