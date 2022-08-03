@@ -5,8 +5,9 @@ spring:
       sql:
         database-name: autopartner_db
         instance-connection-name: autopartner-1385:us-central1:autopartner-db
-        username: ${DB_USERNAME}
-        password: ${DB_PASSWORD}
+  datasource:
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     show-sql: true
     hibernate:
