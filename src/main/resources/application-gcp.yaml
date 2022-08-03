@@ -1,12 +1,10 @@
+database: postgresql
 spring:
   cloud:
     gcp:
       sql:
-        enabled: false
-  datasource:
-    password: ${POSTGRES_PASSWORD}
-    url: ${POSTGRES_URL}
-    username: ${POSTGRES_USERNAME}
+        database-name: autopartner_db
+        instance-connection-name: autopartner-1385:us-central1:autopartner-db
   jpa:
     show-sql: true
     hibernate:
@@ -17,9 +15,12 @@ spring:
   jackson:
     serialization:
       INDENT_OUTPUT: true
+  sql:
+    init:
+      mode: always
 
 server:
-  port: 8888
+  port: 8080
   contextPath: /
 
 error:

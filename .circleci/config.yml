@@ -37,7 +37,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - build/
+            - build/jib-image.tar
 
   deploy_to_dev:
     <<: *deploy
