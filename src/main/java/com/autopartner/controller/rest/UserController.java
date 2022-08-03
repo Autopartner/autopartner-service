@@ -48,7 +48,7 @@ public class UserController {
   @Secured("ROLE_ADMIN")
   @PutMapping
   public UserResponse updateUser(@Valid User user) {
-    userService.updateUser(user);
+    userService.saveUser(user);
     return UserResponse.createUserResponse(user);
   }
 
