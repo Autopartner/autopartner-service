@@ -51,13 +51,13 @@ public class UserServiceImpl implements UserService {
   // TODO refactor
   @Override
   @Transactional
-  public boolean isUsernameUnique(User user) {
-    User u = userRepository.findOneByUsername(user.getUsername());
+  public boolean isEmailUnique(User user) {
+    User u = userRepository.findOneByEmail(user.getEmail());
     return Objects.equals(u.getId(), user.getId());
   }
 
   @Override
-  public User getUserByUsername(String username) {
-    return userRepository.findOneByUsername(username);
+  public User getUserByEmail(String username) {
+    return userRepository.findOneByEmail(username);
   }
 }

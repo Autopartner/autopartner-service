@@ -8,6 +8,7 @@ import com.autopartner.service.CompanyService;
 import com.autopartner.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.NoSuchElementException;
 import static java.util.Objects.nonNull;
 import static lombok.AccessLevel.PRIVATE;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/company")
 @RequiredArgsConstructor
@@ -34,12 +36,14 @@ public class CompanyController {
 
   @PostMapping
   public CompanyRegistrationResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
-
-    if (nonNull(userService.getUserByUsername(request.getEmail()))) {
+    log.info("Received company registration request {}", request);
+    if (nonNull(userService.getUserByEmail(request.getEmail()))) {
+      log.error("Received invalid company registration request {}", request);
       throw new UserAlreadyExistsException("User already exists with email: " + request.getEmail());
     }
 
     Company company = companyService.createCompany(request);
+    log.info("Created new company {}", request.getCompanyName());
     return CompanyRegistrationResponse.createResponse(company);
   }
 

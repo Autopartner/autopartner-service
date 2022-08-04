@@ -5,24 +5,24 @@ import com.autopartner.model.base.ModelBase;
 public class AuthenticationRequest extends ModelBase {
 
   private static final long serialVersionUID = 6624726180748515507L;
-  private String username;
+  private String email;
   private String password;
 
   public AuthenticationRequest() {
     super();
   }
 
-  public AuthenticationRequest(String username, String password) {
-    this.setUsername(username);
+  public AuthenticationRequest(String email, String password) {
+    this.setEmail(email);
     this.setPassword(password);
   }
 
-  public String getUsername() {
-    return this.username;
+  public String getEmail() {
+    return this.email;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getPassword() {

@@ -43,7 +43,7 @@ public class AuthenticationController {
     // Perform the authentication
     Authentication authentication = this.authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
-            authenticationRequest.getUsername(),
+            authenticationRequest.getEmail(),
             authenticationRequest.getPassword()
         )
     );
@@ -51,7 +51,7 @@ public class AuthenticationController {
 
     // Reload password post-authentication so we can generate token
     UserDetails userDetails = this.userDetailsService
-        .loadUserByUsername(authenticationRequest.getUsername());
+        .loadUserByUsername(authenticationRequest.getEmail());
     String token = this.tokenUtils.generateToken(userDetails);
 
     // Return the token

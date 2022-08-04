@@ -9,7 +9,7 @@ public class AppUserFactory {
   public static AppUser create(User user) {
     return new AppUser(
         user.getId(),
-        user.getUsername(),
+        user.getEmail(),
         user.getPassword(),
         user.getEmail(),
         user.getLastPasswordReset(),

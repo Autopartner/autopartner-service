@@ -21,8 +21,7 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +60,7 @@ class UserServiceTest {
   }
 
   @Test
-  void getUserById() {
+  void getUserById_whenValidId() {
     when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(user);
     userService.getUserById(user.getId());
     verify(userRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
@@ -89,11 +88,11 @@ class UserServiceTest {
 
   @Test
   void isUnique_whenTheSameUser_thanReturnsTrue() {
-    when(userRepository.findOneByUsername(anyString())).thenReturn(user);
-    boolean result = userService.isUsernameUnique(user);
-    verify(userRepository).findOneByUsername(stringArgumentCaptor.capture());
-    String username = stringArgumentCaptor.getValue();
-    assertThat(username).isEqualTo(user.getEmail());
+    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
+    boolean result = userService.isEmailUnique(user);
+    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
+    String email = stringArgumentCaptor.getValue();
+    assertThat(email).isEqualTo(user.getEmail());
     assertThat(result).isEqualTo(true);
   }
 
@@ -103,11 +102,11 @@ class UserServiceTest {
     user1.setEmail("userTest@gmail.com");
     user1.setId(2L);
     userService.saveUser(user1);
-    when(userRepository.findOneByUsername(anyString())).thenReturn(user1);
-    boolean result = userService.isUsernameUnique(user1);
-    verify(userRepository).findOneByUsername(stringArgumentCaptor.capture());
-    String username = stringArgumentCaptor.getValue();
-    assertThat(username).isEqualTo(user1.getUsername());
+    when(userRepository.findOneByEmail(anyString())).thenReturn(user1);
+    boolean result = userService.isEmailUnique(user1);
+    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
+    String email = stringArgumentCaptor.getValue();
+    assertThat(email).isEqualTo(user1.getEmail());
     assertThat(result).isEqualTo(true);
   }
 
@@ -116,9 +115,9 @@ class UserServiceTest {
     User user1 = UserFixture.createUser();
     user1.setId(4L);
     userService.saveUser(user1);
-    when(userRepository.findOneByUsername(anyString())).thenReturn(user);
-    boolean result = userService.isUsernameUnique(user1);
-    verify(userRepository).findOneByUsername(stringArgumentCaptor.capture());
+    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
+    boolean result = userService.isEmailUnique(user1);
+    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
     String username = stringArgumentCaptor.getValue();
     assertThat(username).isEqualTo(user1.getEmail());
     assertThat(result).isEqualTo(false);
@@ -126,11 +125,11 @@ class UserServiceTest {
 
   @Test
   void getUserByUsername() {
-    when(userRepository.findOneByUsername(anyString())).thenReturn(user);
-    userService.getUserByUsername(user.getUsername());
-    verify(userRepository).findOneByUsername(stringArgumentCaptor.capture());
+    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
+    userService.getUserByEmail(user.getEmail());
+    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
     String username = stringArgumentCaptor.getValue();
-    assertThat(username).isEqualTo(user.getUsername());
+    assertThat(username).isEqualTo(user.getEmail());
   }
 
   @Test

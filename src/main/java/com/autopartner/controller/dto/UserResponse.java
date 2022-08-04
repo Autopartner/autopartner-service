@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class UserResponse {
 
   Long id;
-  String username;
+  String email;
   String firstName;
   String lastName;
   String authorities;
@@ -25,6 +25,7 @@ public class UserResponse {
   public static UserResponse createUserResponse(User user) {
     return UserResponse.builder()
             .id(user.getId())
+            .email(user.getEmail())
             .firstName(user.getFirstName())
             .lastName(user.getLastName())
             .authorities(user.getAuthorities())

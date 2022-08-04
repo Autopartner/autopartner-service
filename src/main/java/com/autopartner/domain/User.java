@@ -31,9 +31,6 @@ public class User {
   @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
   Long id;
 
-  @Column(unique = true)
-  String username;
-
   @Column
   String firstName;
 

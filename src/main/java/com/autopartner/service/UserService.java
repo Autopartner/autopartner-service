@@ -12,7 +12,7 @@ public interface UserService {
 
   void deleteUser(Long id);
 
-  boolean isUsernameUnique(User user);
+  boolean isEmailUnique(User user);
 
-  User getUserByUsername(String username);
+  User getUserByEmail(String username);
 }
