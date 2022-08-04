@@ -67,7 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
     User user = User.builder()
             .firstName(request.getFirstName())
             .lastName(request.getLastName())
-            .username(request.getEmail())
+            .email(request.getEmail())
             .password(encoder.encode(request.getPassword()))
             .email(request.getEmail())
             .companyId(company.getId())

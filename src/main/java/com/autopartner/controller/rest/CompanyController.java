@@ -35,7 +35,7 @@ public class CompanyController {
   @PostMapping
   public CompanyRegistrationResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
 
-    if (nonNull(userService.getUserByUsername(request.getEmail()))) {
+    if (nonNull(userService.getUserByEmail(request.getEmail()))) {
       throw new UserAlreadyExistsException("User already exists with email: " + request.getEmail());
     }
 

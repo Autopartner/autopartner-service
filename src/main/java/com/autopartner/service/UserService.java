@@ -14,5 +14,5 @@ public interface UserService {
 
   boolean isUsernameUnique(User user);
 
-  User getUserByUsername(String username);
+  User getUserByEmail(String username);
 }
