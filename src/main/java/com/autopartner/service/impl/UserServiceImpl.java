@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
   // TODO refactor
   @Override
   @Transactional
-  public boolean isUsernameUnique(User user) {
+  public boolean isEmailUnique(User user) {
     User u = userRepository.findOneByEmail(user.getEmail());
     return Objects.equals(u.getId(), user.getId());
   }
