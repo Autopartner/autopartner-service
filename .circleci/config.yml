@@ -16,6 +16,10 @@ deploy: &deploy
         docker load --input build/jib-image.tar
         docker tag auto-partner-service ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
         docker push ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
+        gcloud run services update auto-partner-service \
+          --image=${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service \
+          --platform managed \
+          --region=${LOCATION} 
 
 jobs:
   build_image:
