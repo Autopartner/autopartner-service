@@ -1,4 +1,36 @@
 spring:
-  config:
-    activate:
-      on-profile: local
+  cloud:
+    gcp:
+      sql:
+        enabled: false
+      core:
+        enabled: false
+  datasource:
+    url: ${POSTGRES_URL}
+    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_USERNAME}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+server:
+  port: 8888
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    hibernate: DEBUG
+    autopartner: DEBUG
+
+autopartner:
+  token:
+    secret: ${AUTH_SECRET}
