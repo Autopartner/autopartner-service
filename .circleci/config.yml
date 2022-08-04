@@ -71,7 +71,12 @@ workflows:
 
   build-and-deploy:
     jobs:
-      - build_image
+      - build_image:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
       - deploy_to_dev:
           context: "AP Dev"
           requires:
