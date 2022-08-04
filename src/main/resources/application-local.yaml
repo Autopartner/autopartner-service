@@ -3,6 +3,8 @@ spring:
     gcp:
       sql:
         enabled: false
+      core:
+        enabled: false
   datasource:
     password: ${POSTGRES_PASSWORD}
     url: ${POSTGRES_URL}
