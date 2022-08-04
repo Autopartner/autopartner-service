@@ -1,9 +1,9 @@
 package com.autopartner.service;
 
-import com.autopartner.controller.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.CompanyFixture;
-import com.autopartner.controller.dto.CompanyRegistrationRequestFixture;
+import com.autopartner.api.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.CompanyRepository;
 import com.autopartner.service.impl.CompanyServiceImpl;

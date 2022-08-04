@@ -2,6 +2,7 @@ package com.autopartner.domain;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,9 @@ import javax.persistence.Table;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
@@ -23,7 +27,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "users")
 @FieldDefaults(level = PRIVATE)
 @Builder
-public class User {
+public class User implements UserDetails {
 
   @Id
   @Column(name = "id")
@@ -57,4 +61,35 @@ public class User {
 
   @Column
   Long phone;
+
+  @Override
+  public String getUsername() {
+    return email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return active;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return active;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return active;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return active;
+  }
+
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+  }
+
+
 }

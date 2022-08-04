@@ -1,7 +1,7 @@
 package com.autopartner.service.impl;
 
-import com.autopartner.configuration.WebSecurityConfiguration;
-import com.autopartner.controller.dto.CompanyRegistrationRequest;
+import com.autopartner.api.configuration.WebConfiguration;
+import com.autopartner.api.dto.CompanyRegistrationRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
 import com.autopartner.exception.NotActiveException;
@@ -25,7 +25,7 @@ public class CompanyServiceImpl implements CompanyService {
   CompanyRepository companyRepository;
   UserService userService;
   @Autowired
-  PasswordEncoder encoder = WebSecurityConfiguration.passwordEncoder();
+  PasswordEncoder encoder = WebConfiguration.passwordEncoder();
 
   @Override
   public Iterable<Company> listAllCompanies() {
