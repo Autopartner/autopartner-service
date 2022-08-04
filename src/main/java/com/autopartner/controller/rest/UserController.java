@@ -8,9 +8,11 @@ import com.autopartner.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -42,6 +44,7 @@ public class UserController {
   @PostMapping
   public UserResponse newUser(@Valid User user) {
     userService.saveUser(user);
+    log.info("Created new user {}", user);
     return UserResponse.createUserResponse(user);
   }
 
@@ -49,6 +52,7 @@ public class UserController {
   @PutMapping
   public UserResponse updateUser(@Valid User user) {
     userService.saveUser(user);
+    log.info("Updated user {}", user);
     return UserResponse.createUserResponse(user);
   }
 
