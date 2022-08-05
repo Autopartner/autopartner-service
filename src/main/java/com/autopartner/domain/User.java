@@ -53,7 +53,7 @@ public class User implements UserDetails {
   @Column
   String authorities;
 
-  @Column
+  @Column(columnDefinition = "true")
   Boolean active;
 
   @Column

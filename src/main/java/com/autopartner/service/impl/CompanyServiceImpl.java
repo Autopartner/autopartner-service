@@ -62,6 +62,7 @@ public class CompanyServiceImpl implements CompanyService {
             .companyName(request.getCompanyName())
             .country(request.getCountry())
             .city(request.getCity())
+            .active(true)
             .build();
     saveCompany(company);
     User user = User.builder()
@@ -72,6 +73,7 @@ public class CompanyServiceImpl implements CompanyService {
             .email(request.getEmail())
             .companyId(company.getId())
             .authorities("ROLE_USER")
+            .active(true)
             .build();
     userService.saveUser(user);
     return company;

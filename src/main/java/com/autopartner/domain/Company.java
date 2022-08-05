@@ -34,6 +34,6 @@ public class Company {
     @Column
     String city;
 
-    @Column
+    @Column(columnDefinition = "true")
     Boolean active;
 }
