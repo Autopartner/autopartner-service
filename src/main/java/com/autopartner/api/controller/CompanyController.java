@@ -38,7 +38,7 @@ public class CompanyController {
   public CompanyRegistrationResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
     log.info("Received company registration request {}", request);
     if (nonNull(userService.getUserByEmail(request.getEmail()))) {
-      log.error("Received invalid company registration request {}", request);
+      log.error("User already exists with email: {}", request.getEmail());
       throw new UserAlreadyExistsException("User already exists with email: " + request.getEmail());
     }
 

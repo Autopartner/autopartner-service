@@ -1,9 +1,11 @@
 package com.autopartner.api.controller;
 
+import static java.util.Objects.nonNull;
 import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.api.dto.UserResponse;
 import com.autopartner.domain.User;
+import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +39,18 @@ public class UserController {
   @Secured("ROLE_ADMIN")
   @DeleteMapping("/{id}")
   public void deleteUser(@PathVariable Long id) {
-    userService.deleteUser(id);
+    User user = userService.getUserById(id);
+    log.info("Deleted user {}", user);
+    userService.deleteUser(user.getId());
   }
 
   @Secured("ROLE_ADMIN")
   @PostMapping
   public UserResponse newUser(@Valid User user) {
+    if (nonNull(userService.getUserByEmail(user.getEmail()))) {
+      log.error("User already exists with email: {}", user.getEmail());
+      throw new UserAlreadyExistsException("User already exists with email: " + user.getEmail());
+    }
     userService.saveUser(user);
     log.info("Created new user {}", user);
     return UserResponse.createUserResponse(user);
@@ -51,6 +59,10 @@ public class UserController {
   @Secured("ROLE_ADMIN")
   @PutMapping
   public UserResponse updateUser(@Valid User user) {
+    if (userService.getUserByEmail(user.getEmail()).equals(user)) {
+      log.error("User already exists with email: {}", user.getEmail());
+      throw new UserAlreadyExistsException("User already exists with email: " + user.getEmail());
+    }
     userService.saveUser(user);
     log.info("Updated user {}", user);
     return UserResponse.createUserResponse(user);
