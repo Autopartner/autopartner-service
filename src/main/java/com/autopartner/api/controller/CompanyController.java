@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/company")
+@RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CompanyController {
@@ -32,6 +32,15 @@ public class CompanyController {
   @GetMapping()
   public Iterable<Company> getAll() {
     return companyService.listAllCompanies();
+  }
+
+  @GetMapping(value = "/{id}")
+  public Company getCompany(@PathVariable Long id) {
+    Company company = companyService.getCompanyById(id);
+    if (company == null) {
+      throw new NoSuchElementException("Company does not exist");
+    }
+    return company;
   }
 
   @PostMapping
