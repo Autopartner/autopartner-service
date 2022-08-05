@@ -15,4 +15,6 @@ public interface UserService {
   boolean isEmailUnique(User user);
 
   User getUserByEmail(String username);
+
+  boolean existsByEmail(String email);
 }

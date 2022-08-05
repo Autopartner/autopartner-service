@@ -4,7 +4,7 @@ public class CompanyRegistrationRequestFixture {
   public static CompanyRegistrationRequest createCompanyRegistrationRequest() {
     return CompanyRegistrationRequest.builder()
             .email("company@gmail.com")
-            .companyName("company")
+            .name("company")
             .country("country")
             .city("city")
             .firstName("firstName")

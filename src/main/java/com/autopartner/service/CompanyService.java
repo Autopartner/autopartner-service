@@ -1,17 +1,21 @@
 package com.autopartner.service;
 
 import com.autopartner.api.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.CompanyRequest;
 import com.autopartner.domain.Company;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface CompanyService {
 
-    Iterable<Company> listAllCompanies();
+    List<Company> findAll();
 
-    Company getCompanyById(Long id);
+    Optional<Company> findById(Long id);
 
-    Company saveCompany(Company company);
+    Company update(Company company, CompanyRequest request);
 
-    void deleteCompany(Long id);
+    void delete(Company company);
 
-    Company createCompany(CompanyRegistrationRequest request);
+    Company create(CompanyRegistrationRequest request);
 }

@@ -1,12 +1,15 @@
 package com.autopartner.service;
 
 import com.autopartner.api.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.CompanyFixture;
-import com.autopartner.api.dto.CompanyRegistrationRequestFixture;
-import com.autopartner.exception.NotActiveException;
+import com.autopartner.domain.User;
 import com.autopartner.repository.CompanyRepository;
+import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.CompanyServiceImpl;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,23 +18,31 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@FieldDefaults(level = AccessLevel.PACKAGE)
 class CompanyServiceTest {
 
   @Mock
-  private CompanyRepository companyRepository;
+  CompanyRepository companyRepository;
+  @Mock
+  UserRepository userRepository;
+  @Mock
+  PasswordEncoder passwordEncoder;
   @InjectMocks
   CompanyServiceImpl companyService;
   @Captor
   ArgumentCaptor<Company> companyArgumentCaptor;
+  @Captor
+  ArgumentCaptor<User> userArgumentCaptor;
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
   CompanyRegistrationRequest companyRegistrationRequest;
@@ -46,43 +57,44 @@ class CompanyServiceTest {
   }
 
   @Test
-  void saveCompany() {
-    companyService.saveCompany(company);
+  void create() {
+
+    String password = "password";
+    when(companyRepository.save(any())).thenReturn(company);
+    when(passwordEncoder.encode(any())).thenReturn(password);
+
+    companyService.create(companyRegistrationRequest);
     verify(companyRepository).save(companyArgumentCaptor.capture());
-    assertThat(company.getCompanyName()).isEqualTo(companyRegistrationRequest.getCompanyName());
-    assertThat(company.getCountry()).isEqualTo(companyRegistrationRequest.getCountry());
-    assertThat(company.getCity()).isEqualTo(companyRegistrationRequest.getCity());
+    Company actualCompany = companyArgumentCaptor.getValue();
+    assertThat(actualCompany.getName()).isEqualTo(companyRegistrationRequest.getName());
+    assertThat(actualCompany.getCountry()).isEqualTo(companyRegistrationRequest.getCountry());
+    assertThat(actualCompany.getCity()).isEqualTo(companyRegistrationRequest.getCity());
+
+    verify(userRepository).save(userArgumentCaptor.capture());
+    verify(passwordEncoder).encode(companyRegistrationRequest.getPassword());
+    User actualUser = userArgumentCaptor.getValue();
+    assertThat(actualUser.getFirstName()).isEqualTo(companyRegistrationRequest.getFirstName());
+    assertThat(actualUser.getLastName()).isEqualTo(companyRegistrationRequest.getLastName());
+    assertThat(actualUser.getEmail()).isEqualTo(companyRegistrationRequest.getEmail());
+    assertThat(actualUser.getPhone()).isEqualTo(companyRegistrationRequest.getPhone());
+    assertThat(actualUser.getCompanyId()).isEqualTo(company.getId());
+    assertThat(actualUser.getPassword()).isEqualTo(password);
+
   }
 
   @Test
-  void findAllCompanies() {
-    when(companyRepository.findByActiveTrue()).thenReturn(companies);
-    Iterable<Company> companyIterable = companyService.listAllCompanies();
-    List<Company> companyList = StreamSupport.stream(companyIterable.spliterator(), false)
-            .toList();
-    assertThat(companies).isEqualTo(companyList);
-    assertThat(companyList.stream().findFirst().get()).isEqualTo(company);
+  void findAll() {
+    when(companyRepository.findAllByActiveTrue()).thenReturn(companies);
+    List<Company> actualCompanies = companyService.findAll();
+    assertThat(companies).isEqualTo(actualCompanies);
   }
 
   @Test
   void delete() {
-    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(company);
-    companyService.deleteCompany(company.getId());
-    verify(companyRepository).findCompanyByIdAndActiveTrue(longArgumentCaptor.capture());
-    Long companyId = longArgumentCaptor.getValue();
-    assertThat(company.getId()).isEqualTo(companyId);
-  }
-
-  @Test
-  void shouldThrowNotActiveException_whenFindCompanyByIdIsNotActive() {
-    company.setActive(false);
-    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(null);
-    assertThrows(NotActiveException.class, () -> companyService.getCompanyById(company.getId()));
-  }
-
-  @Test
-  void shouldThrowNoSuchElementException_whenCompanyIdDoesNotExist() {
-    when(companyRepository.findCompanyByIdAndActiveTrue(anyLong())).thenReturn(null);
-    assertThrows(NotActiveException.class, () -> companyService.getCompanyById(20L));
+    companyService.delete(company);
+    verify(companyRepository).save(companyArgumentCaptor.capture());
+    Company actualCompany = companyArgumentCaptor.getValue();
+    assertThat(actualCompany).isEqualTo(company);
+    assertThat(actualCompany.getActive()).isFalse();
   }
 }
