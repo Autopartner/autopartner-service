@@ -70,7 +70,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers("/auth").permitAll()
-        .antMatchers(HttpMethod.POST, "/api/company").permitAll()
+        .antMatchers(HttpMethod.POST, "/api/v1/companies").permitAll()
         .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
         .antMatchers("/api/**").authenticated();
 
