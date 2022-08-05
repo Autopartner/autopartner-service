@@ -28,12 +28,13 @@ public class CompanyController {
   CompanyService companyService;
   UserService userService;
 
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @Secured("ROLE_ADMIN")
   @GetMapping()
   public Iterable<Company> getAll() {
     return companyService.listAllCompanies();
   }
 
+  @Secured("ROLE_USER")
   @GetMapping(value = "/{id}")
   public Company getCompany(@PathVariable Long id) {
     Company company = companyService.getCompanyById(id);

@@ -53,8 +53,9 @@ public class User implements UserDetails {
   @Column
   String authorities;
 
-  @Column(columnDefinition = "true")
-  Boolean active;
+  @Column
+  @Builder.Default
+  Boolean active = true;
 
   @Column
   Long companyId;

@@ -34,6 +34,7 @@ public class Company {
     @Column
     String city;
 
-    @Column(columnDefinition = "true")
-    Boolean active;
+    @Column
+    @Builder.Default
+    Boolean active = true;
 }
