@@ -12,15 +12,9 @@
 
 - https://www.pgadmin.org/download/
 
-##### Execute queries from /config
+##### Execute queries from /config in pgAdmin
 
 - initDB.sql
-
-### Setup backend
-
-##### Import gradle project
-
-- https://www.jetbrains.com/help/idea/gradle.html
 
 #####  Build project 
 
@@ -33,12 +27,17 @@ or in the gradle tool window
 - clean
 - build
 
-##### Run project by click RUN on class
+##### Run project
+
+set spring profile local
+
+set evn variables
+POSTGRES_PASSWORD=test;
+POSTGRES_USERNAME=autopartner_user;
+POSTGRES_URL=jdbc:postgresql://localhost:5432/autopartner_db;
+AUTH_SECRET=sssshhhh!
 
 ```bash
-  Application
+  java -jar build/libs/autopartner-be-0.0.2-SNAPSHOT.jar
 ```
-
-##### Run user import to DB
-
-- import.sql
+Or run with Idea
