@@ -25,7 +25,7 @@ public class CompanyRegistrationResponse {
   public static CompanyRegistrationResponse createResponse(Company company) {
     return CompanyRegistrationResponse.builder()
             .id(company.getId())
-            .companyName(company.getCompanyName())
+            .companyName(company.getName())
             .country(company.getCountry())
             .city(company.getCity())
             .build();

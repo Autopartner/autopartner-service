@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.autopartner.api.dto.CompanyRegistrationRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -51,7 +52,8 @@ public class User implements UserDetails {
   Date lastPasswordReset;
 
   @Column
-  String authorities;
+  @Builder.Default
+  String authorities = "ROLE_USER";
 
   @Column
   @Builder.Default
@@ -61,7 +63,7 @@ public class User implements UserDetails {
   Long companyId;
 
   @Column
-  Long phone;
+  String phone;
 
   @Override
   public String getUsername() {
@@ -90,6 +92,17 @@ public class User implements UserDetails {
 
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+  }
+
+  public static User create(CompanyRegistrationRequest request, String password, Long companyId) {
+    return User.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .password(password)
+        .companyId(companyId)
+        .build();
   }
 
 

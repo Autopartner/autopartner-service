@@ -1,5 +1,7 @@
 package com.autopartner.domain;
 
+import com.autopartner.api.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.CompanyRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,8 +27,8 @@ public class Company {
     @SequenceGenerator(name = "company_seq", sequenceName = "company_seq", allocationSize = 1)
     Long id;
 
-    @Column
-    String companyName;
+    @Column(name = "company_name")
+    String name;
 
     @Column
     String country;
@@ -37,4 +39,22 @@ public class Company {
     @Column
     @Builder.Default
     Boolean active = true;
+
+    public static Company create(CompanyRegistrationRequest request) {
+        return Company.builder()
+            .name(request.getName())
+            .country(request.getCountry())
+            .city(request.getCity())
+            .build();
+    }
+
+    public void update(CompanyRequest request) {
+        name = request.getName();
+        country = request.getCountry();
+        city = request.getCity();
+    }
+
+    public void delete() {
+        active = false;
+    }
 }

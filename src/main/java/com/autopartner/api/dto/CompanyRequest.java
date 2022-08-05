@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -13,15 +14,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 @AllArgsConstructor
 @Builder
-public class CompanyRegistrationRequest {
-
-  @Email
-  @NotEmpty
-  String email;
-
-  @NotEmpty
-  @Size(min = 6, max = 256)
-  String password;
+public class CompanyRequest {
 
   @NotEmpty
   @Size(min = 3, max = 256)
@@ -35,15 +28,4 @@ public class CompanyRegistrationRequest {
   @Size(min = 3, max = 256)
   String city;
 
-  @NotEmpty
-  @Size(min = 3, max = 256)
-  String firstName;
-
-  @NotEmpty
-  @Size(min = 3, max = 256)
-  String lastName;
-
-  @NotEmpty
-  @Pattern(regexp = "\\+38[0-9]{9}")
-  String phone;
 }
