@@ -31,6 +31,10 @@ public class UserRequest {
   String lastName;
 
   @NotEmpty
+  @Size(min = 6, max = 256)
+  String password;
+
+  @NotEmpty
   @Pattern(regexp = "\\+38[0-9]{10}")
   String phone;
 }

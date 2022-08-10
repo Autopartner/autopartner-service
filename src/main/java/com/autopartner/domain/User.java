@@ -106,12 +106,13 @@ public class User implements UserDetails {
         .build();
   }
 
-  public static User create(UserRequest request) {
+  public static User create(UserRequest request, String password) {
     return User.builder()
             .firstName(request.getFirstName())
             .lastName(request.getLastName())
             .email(request.getEmail())
             .phone(request.getPhone())
+            .password(password)
             .build();
   }
 

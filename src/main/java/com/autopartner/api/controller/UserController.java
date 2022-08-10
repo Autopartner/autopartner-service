@@ -28,7 +28,7 @@ public class UserController {
 
   @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER"})
   @GetMapping
-  public List<UserResponse> getAllUsers() {
+  public List<UserResponse> getAll() {
     return userService.findAll().stream()
             .map(UserResponse::createUserResponse)
             .toList();
@@ -36,7 +36,7 @@ public class UserController {
 
   @Secured({"ROLE_USER", "ROLE_ADMIN"})
   @GetMapping("/{id}")
-  public UserResponse getUser(@PathVariable Long id) {
+  public UserResponse get(@PathVariable Long id) {
     return userService.findById(id)
             .map(UserResponse::createUserResponse)
             .orElseThrow(() -> new NoSuchElementException("User does not exist: " + id));
@@ -59,7 +59,7 @@ public class UserController {
 
   @Secured("ROLE_ADMIN")
   @PutMapping("{id}")
-  public UserResponse updateUser(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
+  public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
     User user = userService.findById(id)
             .orElseThrow(() -> new NoSuchElementException("User does not exist"));
 
@@ -69,7 +69,7 @@ public class UserController {
 
   @Secured("ROLE_ADMIN")
   @DeleteMapping("/{id}")
-  public void deleteUser(@PathVariable Long id) {
+  public void delete(@PathVariable Long id) {
     User user = userService.findById(id)
             .orElseThrow(() -> new NoSuchElementException("User does not exist"));
     log.info("Deleted user {}", user.getEmail());

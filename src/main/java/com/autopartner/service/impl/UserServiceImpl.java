@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +23,9 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   UserRepository userRepository;
+
+  PasswordEncoder passwordEncoder;
+
 
   @Override
   public List<User> findAll() {
@@ -38,10 +42,10 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user);
   }
 
+  // TODO add company id
   @Override
   public User create(UserRequest request) {
-    User user = save(User.create(request));
-    return null;
+    return save(User.create(request, passwordEncoder.encode(request.getPassword())));
   }
 
   @Override
