@@ -2,13 +2,16 @@ package com.autopartner.service.impl;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import com.autopartner.api.dto.UserRequest;
 import com.autopartner.domain.User;
-import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import javax.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
@@ -21,44 +24,49 @@ public class UserServiceImpl implements UserService {
   UserRepository userRepository;
 
   @Override
-  public Iterable<User> listAllUsers() {
-    return userRepository.findByActiveTrue();
+  public List<User> findAll() {
+    return userRepository.findAllByActiveTrue();
   }
 
   @Override
-  public User getUserById(Long id) {
-    User user = userRepository.findByIdAndActiveTrue(id);
-    if (user == null) {
-      throw new NotActiveException("User does not active");
-    }
-    return user;
+  public Optional<User> findById(Long id) {
+    return userRepository.findByIdAndActiveTrue(id);
   }
 
   @Override
-  public User saveUser(User user) {
+  public User save(User user) {
     return userRepository.save(user);
   }
 
   @Override
-  public void deleteUser(Long id) {
-    User user = userRepository.findByIdAndActiveTrue(id);
-    if (user != null) {
-      user.setActive(false);
-      saveUser(user);
-    }
+  public User create(UserRequest request) {
+    User user = save(User.create(request));
+    return null;
+  }
+
+  @Override
+  public User update(User user, UserRequest request) {
+    user.update(request);
+    return save(user);
+  }
+
+  @Override
+  public void delete(User user) {
+    user.delete();
+    save(user);
   }
 
   // TODO refactor
   @Override
   @Transactional
   public boolean isEmailUnique(User user) {
-    User u = userRepository.findOneByEmail(user.getEmail());
-    return Objects.equals(u.getId(), user.getId());
+      User u = userRepository.findOneByEmail(user.getEmail());
+      return Objects.equals(u.getId(), user.getId());
   }
 
   @Override
-  public User getUserByEmail(String username) {
-    return userRepository.findOneByEmail(username);
+  public Optional<User> findByEmail(String username) {
+    return Optional.of(userRepository.findOneByEmail(username));
   }
 
   @Override

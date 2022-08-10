@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -52,8 +53,8 @@ class UserServiceTest {
 
   @Test
   void listAllUsers() {
-    when(userRepository.findByActiveTrue()).thenReturn(users);
-    Iterable<User> userIterable = userService.listAllUsers();
+    when(userRepository.findAllByActiveTrue()).thenReturn(users);
+    Iterable<User> userIterable = userService.findAll();
     List<User> userList = StreamSupport.stream(userIterable.spliterator(), false).toList();
     assertThat(userList.size()).isEqualTo(users.size());
     assertThat(userList.stream().findFirst().get()).isEqualTo(user);
@@ -61,8 +62,8 @@ class UserServiceTest {
 
   @Test
   void getUserById_whenValidId() {
-    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(user);
-    userService.getUserById(user.getId());
+    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(user));
+    userService.findById(user.getId());
     verify(userRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
     id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(user.getId());
@@ -70,7 +71,7 @@ class UserServiceTest {
 
   @Test
   void saveUser() {
-    userService.saveUser(user);
+    userService.save(user);
     verify(userRepository).save(userArgumentCaptor.capture());
     assertThat(user.getFirstName()).isEqualTo(companyRegistrationRequest.getFirstName());
     assertThat(user.getLastName()).isEqualTo(companyRegistrationRequest.getLastName());
@@ -79,11 +80,11 @@ class UserServiceTest {
 
   @Test
   void deleteUser() {
-    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(user);
-    userService.deleteUser(user.getId());
-    verify(userRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    Long userId = longArgumentCaptor.getValue();
-    assertThat(user.getId()).isEqualTo(userId);
+    userService.delete(user);
+    verify(userRepository).save(userArgumentCaptor.capture());
+    User actualUser = userArgumentCaptor.getValue();
+    assertThat(actualUser).isEqualTo(user);
+    assertThat(actualUser.getActive()).isFalse();
   }
 
   @Test
@@ -101,7 +102,7 @@ class UserServiceTest {
     User user1 = UserFixture.createUser();
     user1.setEmail("userTest@gmail.com");
     user1.setId(2L);
-    userService.saveUser(user1);
+    userService.save(user1);
     when(userRepository.findOneByEmail(anyString())).thenReturn(user1);
     boolean result = userService.isEmailUnique(user1);
     verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
@@ -114,7 +115,7 @@ class UserServiceTest {
   void isUnique_whenEmailIsNotUnique_thanReturnsFalse() {
     User user1 = UserFixture.createUser();
     user1.setId(4L);
-    userService.saveUser(user1);
+    userService.save(user1);
     when(userRepository.findOneByEmail(anyString())).thenReturn(user);
     boolean result = userService.isEmailUnique(user1);
     verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
@@ -126,22 +127,9 @@ class UserServiceTest {
   @Test
   void getUserByUsername() {
     when(userRepository.findOneByEmail(anyString())).thenReturn(user);
-    userService.getUserByEmail(user.getEmail());
+    userService.findByEmail(user.getEmail());
     verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
     String username = stringArgumentCaptor.getValue();
     assertThat(username).isEqualTo(user.getEmail());
-  }
-
-  @Test
-  void shouldThrowNotActiveException_whenFindUserByIdIsNotActive() {
-    user.setActive(false);
-    when(userRepository.findByIdAndActiveTrue(anyLong())).thenReturn(null);
-    assertThrows(NotActiveException.class, () -> userService.getUserById(user.getId()));
-  }
-
-  @Test
-  void shouldThrowNotActiveException_whenUserIdDoesNotExist() {
-    when(userRepository.findByIdAndActiveTrue(20L)).thenReturn(null);
-    assertThrows(NotActiveException.class, () -> userService.getUserById(20L));
   }
 }

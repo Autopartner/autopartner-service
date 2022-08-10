@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.autopartner.api.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.UserRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -105,5 +106,23 @@ public class User implements UserDetails {
         .build();
   }
 
+  public static User create(UserRequest request) {
+    return User.builder()
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .email(request.getEmail())
+            .phone(request.getPhone())
+            .build();
+  }
 
+  public void update(UserRequest request) {
+    firstName = request.getFirstName();
+    lastName = request.getLastName();
+    email = request.getEmail();
+    phone = request.getPhone();
+  }
+
+  public void delete() {
+    active = false;
+  }
 }
