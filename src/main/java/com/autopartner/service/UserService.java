@@ -1,20 +1,28 @@
 package com.autopartner.service;
 
+import com.autopartner.api.dto.UserRequest;
 import com.autopartner.domain.User;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-  Iterable<User> listAllUsers();
+  List<User> findAll();
 
-  User getUserById(Long id);
+  Optional<User> findById(Long id);
 
-  User saveUser(User user);
+  User save(User user);
 
-  void deleteUser(Long id);
+  User create(UserRequest request);
+
+  User update(User user, UserRequest request);
+
+  void delete(User user);
 
   boolean isEmailUnique(User user);
 
-  User getUserByEmail(String username);
+  Optional<User> findByEmail(String username);
 
   boolean existsByEmail(String email);
 }

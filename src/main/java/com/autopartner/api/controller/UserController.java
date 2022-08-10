@@ -1,8 +1,8 @@
 package com.autopartner.api.controller;
 
-import static java.util.Objects.nonNull;
 import static lombok.AccessLevel.PRIVATE;
 
+import com.autopartner.api.dto.UserRequest;
 import com.autopartner.api.dto.UserResponse;
 import com.autopartner.domain.User;
 import com.autopartner.exception.UserAlreadyExistsException;
@@ -13,6 +13,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
@@ -25,47 +28,51 @@ public class UserController {
 
   @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER"})
   @GetMapping
-  public Iterable<User> getAllUsers() {
-    return userService.listAllUsers();
+  public List<UserResponse> getAll() {
+    return userService.findAll().stream()
+            .map(UserResponse::createUserResponse)
+            .toList();
   }
 
   @Secured({"ROLE_USER", "ROLE_ADMIN"})
   @GetMapping("/{id}")
-  public UserResponse getUser(@PathVariable Long id) {
-    User user = userService.getUserById(id);
-    return UserResponse.createUserResponse(user);
-  }
-
-  @Secured("ROLE_ADMIN")
-  @DeleteMapping("/{id}")
-  public void deleteUser(@PathVariable Long id) {
-    User user = userService.getUserById(id);
-    log.info("Deleted user {}", user);
-    userService.deleteUser(user.getId());
+  public UserResponse get(@PathVariable Long id) {
+    return userService.findById(id)
+            .map(UserResponse::createUserResponse)
+            .orElseThrow(() -> new NoSuchElementException("User does not exist: " + id));
   }
 
   @Secured("ROLE_ADMIN")
   @PostMapping
-  public UserResponse newUser(@Valid User user) {
-    if (nonNull(userService.getUserByEmail(user.getEmail()))) {
-      log.error("User already exists with email: {}", user.getEmail());
-      throw new UserAlreadyExistsException("User already exists with email: " + user.getEmail());
+  public UserResponse create(@Valid @RequestBody UserRequest request) {
+    log.info("Received user registration request {}", request);
+    String email = request.getEmail();
+    if (userService.existsByEmail(email)) {
+      log.error("User already exists with email: {}", email);
+      throw new UserAlreadyExistsException("User already exists with email: " + email);
     }
-    userService.saveUser(user);
-    log.info("Created new user {}", user);
+
+    User user = userService.create(request);
+    log.info("Created new user {}", request.getEmail());
     return UserResponse.createUserResponse(user);
   }
 
   @Secured("ROLE_ADMIN")
-  @PutMapping
-  public UserResponse updateUser(@Valid User user) {
-    if (userService.getUserByEmail(user.getEmail()).equals(user)) {
-      log.error("User already exists with email: {}", user.getEmail());
-      throw new UserAlreadyExistsException("User already exists with email: " + user.getEmail());
-    }
-    userService.saveUser(user);
-    log.info("Updated user {}", user);
-    return UserResponse.createUserResponse(user);
+  @PutMapping("{id}")
+  public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
+    User user = userService.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("User does not exist"));
+
+    log.info("Updated user {}", user.getEmail());
+    return UserResponse.createUserResponse(userService.update(user, request));
   }
 
+  @Secured("ROLE_ADMIN")
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable Long id) {
+    User user = userService.findById(id)
+            .orElseThrow(() -> new NoSuchElementException("User does not exist"));
+    log.info("Deleted user {}", user.getEmail());
+    userService.delete(user);
+  }
 }
