@@ -1,50 +1,79 @@
 package com.autopartner.api.controller;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.ClientRequest;
+import com.autopartner.api.dto.ClientResponse;
 import com.autopartner.domain.Client;
+import com.autopartner.domain.User;
+import com.autopartner.exception.ClientAlreadyExistsException;
+import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.ClientService;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/clients")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ClientController {
 
-  ClientService clientService;
+    ClientService clientService;
 
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = {"/api/client"}, method = RequestMethod.GET)
-  public ResponseEntity<?> getAll() {
-    return ResponseEntity.ok(clientService.getByActiveTrue());
-  }
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+    @GetMapping
+    public List<ClientResponse> getAll() {
+        return clientService.findAll().stream()
+                .map(ClientResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
 
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/client/{id}", method = RequestMethod.GET)
-  public ResponseEntity<?> get(@PathVariable Long id) {
-    return ResponseEntity.ok(clientService.getClientById(id));
-  }
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+    @GetMapping(value = "/{id}")
+    public ClientResponse getClient(@PathVariable Long id) {
+        return clientService.findById(id)
+                .map(ClientResponse::fromEntity)
+                .orElseThrow(() -> new NotFoundException("Client", id));
+    }
 
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/client/{id}", method = RequestMethod.DELETE)
-  public ResponseEntity<?> delete(@PathVariable Long id) {
-    clientService.deleteClient(id);
-    return ResponseEntity.ok(true);
-  }
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+    @PostMapping
+    public ClientResponse create(@Valid @RequestBody ClientRequest request,
+                                 @AuthenticationPrincipal User user) {
+        log.info("Received client registration request {}", request);
+        String phone = request.getPhone();
+        if(clientService.existsByPhone(phone)){
+            log.info("Client already exist with phone: {}", phone);
+            throw new ClientAlreadyExistsException("Client already exist with phone: " + phone);
+        }
+        Client client = clientService.create(request, user.getCompanyId());
+        log.info("Created new client {}", request.getFirstName());
+        return ClientResponse.fromEntity(client);
+    }
 
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/client", method = RequestMethod.POST)
-  public ResponseEntity<?> save(@Valid @RequestBody Client client) {
-    return ResponseEntity.ok(clientService.saveClient(client));
-  }
+    @PutMapping("/{id}")
+    @Secured("ROLE_USER")
+    public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest clientRequest) {
+        Client client = clientService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Client", id));
+        return ClientResponse.fromEntity(clientService.update(client, clientRequest));
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable Long id) {
+     Client client = clientService.findById(id)
+             .orElseThrow(() -> new NotFoundException("Client", id));
+     clientService.delete(client);
+    }
 
 }

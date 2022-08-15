@@ -1,80 +1,114 @@
 package com.autopartner.domain;
 
+import com.autopartner.api.dto.ClientRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.time.LocalDateTime;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
-
 @Entity
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "clients")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class Client {
 
-  @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_seq")
-  @SequenceGenerator(name = "clients_seq", sequenceName = "clients_seq", allocationSize = 1)
-  Long id;
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_seq")
+    @SequenceGenerator(name = "clients_seq", sequenceName = "clients_seq", allocationSize = 1)
+    Long id;
 
-  @Column(name = "first_name")
-  String firstName;
+    @Column
+    Long companyId;
 
-  @Column(name = "last_name")
-  String lastName;
+    @Column
+    Long userId;
 
-  @Column(name = "company_name")
-  String companyName;
+    @Column
+    String firstName;
 
-  @Column(name = "address")
-  String address;
+    @Column
+    String lastName;
 
-  @Column(name = "phone")
-  String phone;
+    @Column
+    String companyName;
 
-  @Column(name = "email")
-  String email;
+    @Column
+    String address;
 
-  @Column(name = "created_at")
-  LocalDateTime createdAt;
+    @Column
+    String phone;
 
-  @Column(name = "note")
-  String note;
+    @Column
+    String email;
 
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-  @OrderBy("id asc")
-  @JsonIgnore
-  List<Car> cars;
+    @Column
+    @CreationTimestamp
+    LocalDateTime createdAt;
 
-  @Column(name = "active")
-  Boolean active;
+    @Column
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
 
-  @PrePersist
-  protected void onCreate() {
-    createdAt = LocalDateTime.now();
-  }
+    @Column
+    int productDiscount;
 
+    @Column
+    int taskDiscount;
+
+    @Column
+    ClientType clientType;
+    @Column
+    String note;
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OrderBy("id asc")
+    @JsonIgnore
+    List<Car> cars;
+
+    @Column
+    @Builder.Default
+    Boolean active = true;
+
+    public static Client create(ClientRequest request, Long companyId) {
+        return Client.builder()
+                .companyId(companyId)
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .companyName(request.getCompanyName())
+                .address(request.getAddress())
+                .phone(request.getPhone())
+                .email(request.getEmail())
+                .productDiscount(request.getProductDiscount())
+                .taskDiscount(request.getTaskDiscount())
+                .clientType(request.getClientType())
+                .note(request.getNote())
+                .build();
+    }
+
+    public void update(ClientRequest request) {
+        firstName = request.getFirstName();
+        lastName = request.getLastName();
+        companyName = request.getCompanyName();
+        address = request.getAddress();
+        phone = request.getPhone();
+        email = request.getEmail();
+        productDiscount = request.getProductDiscount();
+        taskDiscount = request.getTaskDiscount();
+        note = request.getNote();
+    }
+
+    public void delete() {
+        active = false;
+    }
 }

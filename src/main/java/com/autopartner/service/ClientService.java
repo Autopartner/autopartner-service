@@ -1,15 +1,21 @@
 package com.autopartner.service;
 
+import com.autopartner.api.dto.ClientRequest;
 import com.autopartner.domain.Client;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface ClientService {
+    List<Client> findAll();
 
-  Iterable<Client> getByActiveTrue();
+    Optional<Client> findById(Long id);
 
-  Client getClientById(Long id);
+    void delete(Client client);
 
-  Client saveClient(Client client);
+    Client create(ClientRequest request, Long companyId);
 
-  void deleteClient(Long id);
+    Client update(Client client, ClientRequest request);
 
+    boolean existsByPhone(String phone);
 }
