@@ -1,45 +1,58 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.ClientRequest;
 import com.autopartner.domain.Client;
 import com.autopartner.repository.ClientRepository;
 import com.autopartner.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-/**
- * Created by User on 8/2/2016.
- */
-@Repository
+import java.util.List;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ClientServiceImpl implements ClientService {
 
-  ClientRepository clientRepository;
+    ClientRepository clientRepository;
 
-  @Override
-  public Iterable<Client> getByActiveTrue() {
-    return clientRepository.findByActiveTrue();
-  }
-
-  @Override
-  public Client getClientById(Long id) {
-    return clientRepository.findById(id).get();
-  }
-
-  @Override
-  public Client saveClient(Client client) {
-    return clientRepository.save(client);
-  }
-
-  @Override
-  public void deleteClient(Long id) {
-    Client client = getClientById(id);
-    if (client != null) {
-      client.setActive(false);
-      saveClient(client);
+    @Override
+    public List<Client> findAll() {
+        return clientRepository.findByActiveTrue();
     }
-  }
+
+    @Override
+    public Optional<Client> findById(Long id) {
+        return clientRepository.findByIdAndActiveTrue(id);
+    }
+
+    private Client save(Client client) {
+        return clientRepository.save(client);
+    }
+
+    @Override
+    public Client update(Client client, ClientRequest request) {
+        client.update(request);
+        return save(client);
+    }
+
+    @Override
+    public void delete(Client client) {
+        client.delete();
+        save(client);
+    }
+
+    @Override
+    public Client create(ClientRequest request, Long companyId) {
+        return save(Client.create(request, companyId));
+    }
+    @Override
+    public boolean existsByPhone(String phone) {
+        return clientRepository.existsByPhoneAndActiveTrue(phone);
+    }
+
 }
