@@ -1,21 +1,20 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.api.dto.UserRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.transaction.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ public class UserServiceImpl implements UserService {
   UserRepository userRepository;
 
   PasswordEncoder passwordEncoder;
-
 
   @Override
   public List<User> findAll() {

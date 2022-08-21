@@ -1,7 +1,8 @@
 package com.autopartner.api.configuration;
 
 import com.autopartner.api.auth.JwtRequestFilter;
-import com.autopartner.api.auth.UnauthorizedHandler;
+import com.autopartner.api.dto.ErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,6 +22,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static javax.servlet.http.HttpServletResponse.*;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,11 +34,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
-  UnauthorizedHandler unauthorizedHandler;
-
+  public static final ErrorResponse UNAUTHORIZED_RESPONSE = new ErrorResponse(SC_UNAUTHORIZED, SC_UNAUTHORIZED, "Unauthorized");
   UserDetailsService userDetailsService;
 
   JwtRequestFilter jwtRequestFilter;
+
+  ObjectMapper objectMapper;
 
   @Autowired
   @Override
@@ -63,7 +70,7 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     httpSecurity
         .exceptionHandling()
-        .authenticationEntryPoint(unauthorizedHandler)
+        .authenticationEntryPoint((request, response, authException) -> writeUnauthorized(response))
         .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -78,5 +85,10 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
   }
 
+  private void writeUnauthorized(HttpServletResponse res) throws IOException {
+    res.setContentType("application/json;charset=UTF-8");
+    res.setStatus(SC_UNAUTHORIZED);
+    res.getWriter().write(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE));
+  }
 
 }

@@ -52,7 +52,7 @@ class CompanyServiceTest {
   @BeforeEach
   public void init() {
     company = CompanyFixture.createCompany();
-    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequest();
+    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword();
     companies = List.of(company, new Company());
   }
 

@@ -1,10 +1,10 @@
 package com.autopartner.api.controller;
 
 import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRegistrationResponse;
 import com.autopartner.api.dto.CompanyRequest;
 import com.autopartner.api.dto.CompanyResponse;
 import com.autopartner.domain.Company;
+import com.autopartner.exception.NotFoundException;
 import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.CompanyService;
 import com.autopartner.service.UserService;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -41,14 +40,14 @@ public class CompanyController {
 
   @Secured("ROLE_USER")
   @GetMapping(value = "/{id}")
-  public CompanyResponse getCompany(@PathVariable Long id) {
+  public CompanyResponse get(@PathVariable Long id) {
     return companyService.findById(id)
         .map(CompanyResponse::fromEntity)
-        .orElseThrow(() -> new NoSuchElementException("Company does not exist: " + id));
+        .orElseThrow(() -> new NotFoundException("Company", id));
   }
 
   @PostMapping
-  public CompanyRegistrationResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
+  public CompanyResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
     log.info("Received company registration request {}", request);
     String email = request.getEmail();
     if (userService.existsByEmail(email)) {
@@ -58,14 +57,14 @@ public class CompanyController {
 
     Company company = companyService.create(request);
     log.info("Created new company {}", request.getName());
-    return CompanyRegistrationResponse.createResponse(company);
+    return CompanyResponse.fromEntity(company);
   }
 
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
   public CompanyResponse update(@PathVariable Long id, @RequestBody @Valid CompanyRequest companyRequest) {
     Company company = companyService.findById(id)
-        .orElseThrow(() -> new NoSuchElementException("Company does not exist"));
+        .orElseThrow(() -> new NotFoundException("Company", id));
     return CompanyResponse.fromEntity(companyService.update(company, companyRequest));
   }
 
@@ -73,7 +72,7 @@ public class CompanyController {
   @DeleteMapping("/{id}")
   public void delete(@PathVariable Long id) {
     Company company = companyService.findById(id)
-        .orElseThrow(() -> new NoSuchElementException("Company does not exist"));
+        .orElseThrow(() -> new NotFoundException("Company", id));
     companyService.delete(company);
   }
 
