@@ -4,7 +4,6 @@ import com.autopartner.api.dto.CompanyRegistrationRequest;
 import com.autopartner.api.dto.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
-import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +47,7 @@ class UserServiceTest {
   public void init() {
     user = UserFixture.createUser();
     users = List.of(user, new User());
-    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequest();
+    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword();
   }
 
   @Test

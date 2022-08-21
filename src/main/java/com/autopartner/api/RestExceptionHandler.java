@@ -1,6 +1,7 @@
 package com.autopartner.api;
 
 import com.autopartner.api.dto.ErrorResponse;
+import com.autopartner.exception.NotFoundException;
 import com.autopartner.exception.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.NoSuchElementException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -22,12 +21,15 @@ public class RestExceptionHandler {
 
   @ExceptionHandler(value = {MethodArgumentNotValidException.class})
   public ResponseEntity<ErrorResponse> handleException(MethodArgumentNotValidException e) {
-    String error = e.getBindingResult().getFieldErrors().toString();
-    return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, error);
+    final String message = e.getBindingResult().getFieldErrors().stream()
+        .map(error -> error.getField() + "=" + error.getRejectedValue() + ", " + error.getDefaultMessage())
+        .findFirst()
+        .orElse("Argument Not Valid");
+    return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, message);
   }
 
-  @ExceptionHandler(value = {NoSuchElementException.class})
-  public ResponseEntity<ErrorResponse> handleException(NoSuchElementException e) {
+  @ExceptionHandler(value = {NotFoundException.class})
+  public ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
     return error(NOT_FOUND, NOT_FOUND.value(), e.getMessage());
   }
 
