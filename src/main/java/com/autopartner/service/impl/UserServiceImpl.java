@@ -40,10 +40,9 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user);
   }
 
-  // TODO add company id
   @Override
-  public User create(UserRequest request) {
-    return save(User.create(request, passwordEncoder.encode(request.getPassword())));
+  public User create(UserRequest request, Long companyId) {
+    return save(User.create(request, passwordEncoder.encode(request.getPassword()), companyId));
   }
 
   @Override
