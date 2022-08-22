@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class UserController {
   @GetMapping
   public List<UserResponse> getAll() {
     return userService.findAll().stream()
-            .map(UserResponse::createUserResponse)
+            .map(UserResponse::fromEntity)
             .toList();
   }
 
@@ -38,13 +39,14 @@ public class UserController {
   @GetMapping("/{id}")
   public UserResponse get(@PathVariable Long id) {
     return userService.findById(id)
-            .map(UserResponse::createUserResponse)
+            .map(UserResponse::fromEntity)
             .orElseThrow(() -> new NoSuchElementException("User does not exist: " + id));
   }
 
   @Secured("ROLE_ADMIN")
   @PostMapping
-  public UserResponse create(@Valid @RequestBody UserRequest request) {
+  public UserResponse create(@Valid @RequestBody UserRequest request,
+                             @AuthenticationPrincipal User user) {
     log.info("Received user registration request {}", request);
     String email = request.getEmail();
     if (userService.existsByEmail(email)) {
@@ -52,9 +54,9 @@ public class UserController {
       throw new UserAlreadyExistsException("User already exists with email: " + email);
     }
 
-    User user = userService.create(request);
+    User newUser = userService.create(request, user.getId());
     log.info("Created new user {}", request.getEmail());
-    return UserResponse.createUserResponse(user);
+    return UserResponse.fromEntity(newUser);
   }
 
   @Secured("ROLE_ADMIN")
@@ -64,7 +66,7 @@ public class UserController {
             .orElseThrow(() -> new NoSuchElementException("User does not exist"));
 
     log.info("Updated user {}", user.getEmail());
-    return UserResponse.createUserResponse(userService.update(user, request));
+    return UserResponse.fromEntity(userService.update(user, request));
   }
 
   @Secured("ROLE_ADMIN")

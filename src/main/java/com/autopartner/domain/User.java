@@ -95,7 +95,7 @@ public class User implements UserDetails {
     return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
   }
 
-  public static User create(CompanyRegistrationRequest request, String password, Long companyId) {
+  public static User createWithCompany(CompanyRegistrationRequest request, String password, Long companyId) {
     return User.builder()
         .firstName(request.getFirstName())
         .lastName(request.getLastName())
@@ -106,7 +106,7 @@ public class User implements UserDetails {
         .build();
   }
 
-  public static User create(UserRequest request, String password) {
+  public static User createWithCompany(UserRequest request, String password, Long companyId) {
     return User.builder()
             .firstName(request.getFirstName())
             .lastName(request.getLastName())

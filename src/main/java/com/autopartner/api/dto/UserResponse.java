@@ -22,7 +22,7 @@ public class UserResponse {
   Boolean active;
   Long companyId;
 
-  public static UserResponse createUserResponse(User user) {
+  public static UserResponse fromEntity(User user) {
     return UserResponse.builder()
             .id(user.getId())
             .email(user.getEmail())
