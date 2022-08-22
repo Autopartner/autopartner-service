@@ -4,7 +4,9 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.api.dto.UserRequest;
 import com.autopartner.api.dto.UserResponse;
+import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
+import com.autopartner.exception.NotFoundException;
 import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.UserService;
 import javax.validation.Valid;
@@ -40,13 +42,13 @@ public class UserController {
   public UserResponse get(@PathVariable Long id) {
     return userService.findById(id)
             .map(UserResponse::fromEntity)
-            .orElseThrow(() -> new NoSuchElementException("User does not exist: " + id));
+            .orElseThrow(() -> new NotFoundException("User does not exist: ", id));
   }
 
   @Secured("ROLE_ADMIN")
   @PostMapping
   public UserResponse create(@Valid @RequestBody UserRequest request,
-                             @AuthenticationPrincipal User user) {
+                             @AuthenticationPrincipal Company company) {
     log.info("Received user registration request {}", request);
     String email = request.getEmail();
     if (userService.existsByEmail(email)) {
@@ -54,7 +56,7 @@ public class UserController {
       throw new UserAlreadyExistsException("User already exists with email: " + email);
     }
 
-    User newUser = userService.create(request, user.getId());
+    User newUser = userService.create(request, company.getId());
     log.info("Created new user {}", request.getEmail());
     return UserResponse.fromEntity(newUser);
   }
@@ -63,7 +65,7 @@ public class UserController {
   @PutMapping("{id}")
   public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
     User user = userService.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("User does not exist"));
+            .orElseThrow(() -> new NotFoundException("User does not exist", id));
 
     log.info("Updated user {}", user.getEmail());
     return UserResponse.fromEntity(userService.update(user, request));
@@ -73,7 +75,7 @@ public class UserController {
   @DeleteMapping("/{id}")
   public void delete(@PathVariable Long id) {
     User user = userService.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("User does not exist"));
+            .orElseThrow(() -> new NotFoundException("User does not exist", id));
     log.info("Deleted user {}", user.getEmail());
     userService.delete(user);
   }

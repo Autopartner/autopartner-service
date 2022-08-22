@@ -41,8 +41,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User create(UserRequest request, Long userId) {
-    return save(User.createWithCompany(request, passwordEncoder.encode(request.getPassword()), userId));
+  public User create(UserRequest request, Long companyId) {
+    return save(User.create(request, passwordEncoder.encode(request.getPassword()), companyId));
   }
 
   @Override
