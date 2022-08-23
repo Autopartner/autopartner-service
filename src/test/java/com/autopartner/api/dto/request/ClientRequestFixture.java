@@ -1,5 +1,6 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.request;
 
+import com.autopartner.api.dto.request.ClientRequest;
 import com.autopartner.domain.ClientType;
 
 public class ClientRequestFixture {

@@ -1,6 +1,6 @@
 package com.autopartner.api;
 
-import com.autopartner.api.dto.ErrorResponse;
+import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.exception.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;

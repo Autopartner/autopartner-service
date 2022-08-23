@@ -1,4 +1,6 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.request;
+
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
 
 public class CompanyRegistrationRequestFixture {
   public static CompanyRegistrationRequest createCompanyRegistrationRequestWithoutPassword() {

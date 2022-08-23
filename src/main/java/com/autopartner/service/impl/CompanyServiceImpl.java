@@ -1,7 +1,7 @@
 package com.autopartner.service.impl;
 
-import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRequest;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
 import com.autopartner.repository.CompanyRepository;

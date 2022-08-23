@@ -1,7 +1,7 @@
 package com.autopartner.domain;
 
-import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRequest;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,10 +42,10 @@ public class Company {
 
     public static Company create(CompanyRegistrationRequest request) {
         return Company.builder()
-            .name(request.getName())
-            .country(request.getCountry())
-            .city(request.getCity())
-            .build();
+                .name(request.getName())
+                .country(request.getCountry())
+                .city(request.getCity())
+                .build();
     }
 
     public void update(CompanyRequest request) {

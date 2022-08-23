@@ -1,6 +1,6 @@
 package com.autopartner.service.impl;
 
-import com.autopartner.api.dto.ClientRequest;
+import com.autopartner.api.dto.request.ClientRequest;
 import com.autopartner.domain.Client;
 import com.autopartner.repository.ClientRepository;
 import com.autopartner.service.ClientService;
@@ -50,6 +50,7 @@ public class ClientServiceImpl implements ClientService {
     public Client create(ClientRequest request, Long companyId) {
         return save(Client.create(request, companyId));
     }
+
     @Override
     public boolean existsByPhone(String phone) {
         return clientRepository.existsByPhoneAndActiveTrue(phone);

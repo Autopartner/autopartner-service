@@ -1,7 +1,7 @@
 package com.autopartner.api.configuration;
 
 import com.autopartner.api.auth.JwtRequestFilter;
-import com.autopartner.api.dto.ErrorResponse;
+import com.autopartner.api.dto.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

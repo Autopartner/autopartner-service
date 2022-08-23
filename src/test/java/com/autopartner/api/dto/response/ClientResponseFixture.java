@@ -1,5 +1,6 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.response;
 
+import com.autopartner.api.dto.response.ClientResponse;
 import com.autopartner.domain.ClientType;
 
 public class ClientResponseFixture {

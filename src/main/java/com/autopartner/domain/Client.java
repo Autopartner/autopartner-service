@@ -1,6 +1,6 @@
 package com.autopartner.domain;
 
-import com.autopartner.api.dto.ClientRequest;
+import com.autopartner.api.dto.request.ClientRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

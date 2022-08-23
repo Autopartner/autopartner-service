@@ -1,6 +1,8 @@
 package com.autopartner.service.impl;
 
-import com.autopartner.api.dto.UserRequest;
+import static lombok.AccessLevel.PRIVATE;
+
+import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
@@ -13,8 +15,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import static lombok.AccessLevel.PRIVATE;
 
 @Service
 @RequiredArgsConstructor

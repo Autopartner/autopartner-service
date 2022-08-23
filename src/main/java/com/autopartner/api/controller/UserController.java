@@ -2,8 +2,8 @@ package com.autopartner.api.controller;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.autopartner.api.dto.UserRequest;
-import com.autopartner.api.dto.UserResponse;
+import com.autopartner.api.dto.request.UserRequest;
+import com.autopartner.api.dto.response.UserResponse;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
 import com.autopartner.exception.NotFoundException;

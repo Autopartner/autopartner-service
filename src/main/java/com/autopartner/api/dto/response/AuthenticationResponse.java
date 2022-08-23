@@ -1,4 +1,4 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
