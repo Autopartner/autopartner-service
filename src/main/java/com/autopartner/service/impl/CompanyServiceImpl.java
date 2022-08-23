@@ -57,7 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
   @Transactional
   public Company create(CompanyRegistrationRequest request) {
     Company company = save(Company.create(request));
-    User user = User.create(request, passwordEncoder.encode(request.getPassword()), company.getId());
+    User user = User.createWithCompany(request, passwordEncoder.encode(request.getPassword()), company.getId());
     userRepository.save(user);
     return company;
   }

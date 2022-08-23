@@ -14,7 +14,7 @@ public interface UserService {
 
   User save(User user);
 
-  User create(UserRequest request);
+  User create(UserRequest request, Long companyId);
 
   User update(User user, UserRequest request);
 

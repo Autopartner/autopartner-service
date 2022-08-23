@@ -6,16 +6,17 @@ import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import javax.transaction.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService {
   UserRepository userRepository;
 
   PasswordEncoder passwordEncoder;
-
 
   @Override
   public List<User> findAll() {
@@ -42,10 +42,9 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user);
   }
 
-  // TODO add company id
   @Override
-  public User create(UserRequest request) {
-    return save(User.create(request, passwordEncoder.encode(request.getPassword())));
+  public User create(UserRequest request, Long companyId) {
+    return save(User.create(request, passwordEncoder.encode(request.getPassword()), companyId));
   }
 
   @Override

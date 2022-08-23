@@ -47,7 +47,7 @@ class UserServiceTest {
   public void init() {
     user = UserFixture.createUser();
     users = List.of(user, new User());
-    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequest();
+    companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword();
   }
 
   @Test
