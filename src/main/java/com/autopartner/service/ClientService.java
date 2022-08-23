@@ -1,6 +1,6 @@
 package com.autopartner.service;
 
-import com.autopartner.api.dto.ClientRequest;
+import com.autopartner.api.dto.request.ClientRequest;
 import com.autopartner.domain.Client;
 
 import java.util.List;

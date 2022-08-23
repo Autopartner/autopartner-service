@@ -1,7 +1,7 @@
 package com.autopartner.api.controller;
 
-import com.autopartner.api.dto.ClientRequest;
-import com.autopartner.api.dto.ClientResponse;
+import com.autopartner.api.dto.request.ClientRequest;
+import com.autopartner.api.dto.response.ClientResponse;
 import com.autopartner.domain.Client;
 import com.autopartner.domain.User;
 import com.autopartner.exception.ClientAlreadyExistsException;
@@ -39,7 +39,7 @@ public class ClientController {
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @GetMapping(value = "/{id}")
-    public ClientResponse getClient(@PathVariable Long id) {
+    public ClientResponse get(@PathVariable Long id) {
         return clientService.findById(id)
                 .map(ClientResponse::fromEntity)
                 .orElseThrow(() -> new NotFoundException("Client", id));
@@ -62,10 +62,10 @@ public class ClientController {
 
     @PutMapping("/{id}")
     @Secured("ROLE_USER")
-    public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest clientRequest) {
+    public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
         Client client = clientService.findById(id)
                 .orElseThrow(() -> new NotFoundException("Client", id));
-        return ClientResponse.fromEntity(clientService.update(client, clientRequest));
+        return ClientResponse.fromEntity(clientService.update(client, request));
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})

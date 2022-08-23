@@ -1,7 +1,7 @@
 package com.autopartner.api.auth;
 
-import com.autopartner.api.dto.AuthenticationRequest;
-import com.autopartner.api.dto.AuthenticationResponse;
+import com.autopartner.api.dto.request.AuthenticationRequest;
+import com.autopartner.api.dto.response.AuthenticationResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;

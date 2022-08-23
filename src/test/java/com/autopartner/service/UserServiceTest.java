@@ -1,10 +1,9 @@
 package com.autopartner.service;
 
-import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRegistrationRequestFixture;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRegistrationRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
-import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;

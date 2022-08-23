@@ -1,9 +1,9 @@
 package com.autopartner.api.controller;
 
-import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRegistrationResponse;
-import com.autopartner.api.dto.CompanyRequest;
-import com.autopartner.api.dto.CompanyResponse;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.response.CompanyRegistrationResponse;
+import com.autopartner.api.dto.request.CompanyRequest;
+import com.autopartner.api.dto.response.CompanyResponse;
 import com.autopartner.domain.Company;
 import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.CompanyService;

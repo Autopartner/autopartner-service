@@ -2,7 +2,7 @@ package com.autopartner.service.impl;
 
 import static lombok.AccessLevel.PRIVATE;
 
-import com.autopartner.api.dto.UserRequest;
+import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;

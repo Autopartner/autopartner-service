@@ -1,7 +1,7 @@
 package com.autopartner.service;
 
-import com.autopartner.api.dto.ClientRequest;
-import com.autopartner.api.dto.ClientRequestFixture;
+import com.autopartner.api.dto.request.ClientRequest;
+import com.autopartner.api.dto.request.ClientRequestFixture;
 import com.autopartner.domain.Client;
 import com.autopartner.domain.ClientFixture;
 import com.autopartner.repository.ClientRepository;

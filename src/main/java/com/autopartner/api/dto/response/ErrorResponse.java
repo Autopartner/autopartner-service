@@ -1,4 +1,4 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.response;
 
 import static org.springframework.util.Assert.notNull;
 
