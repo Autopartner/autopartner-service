@@ -16,8 +16,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
-
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)

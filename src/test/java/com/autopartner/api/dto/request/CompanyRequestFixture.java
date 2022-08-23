@@ -1,4 +1,4 @@
-package com.autopartner.api.dto;
+package com.autopartner.api.dto.request;
 
 public class CompanyRequestFixture {
   public static CompanyRequest createCompanyRequest() {

@@ -1,9 +1,9 @@
 package com.autopartner.api.controller;
 
-import com.autopartner.api.dto.CompanyRegistrationRequest;
-import com.autopartner.api.dto.CompanyRequest;
-import com.autopartner.api.dto.CompanyResponse;
-import com.autopartner.api.dto.ErrorResponse;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRequest;
+import com.autopartner.api.dto.response.CompanyResponse;
+import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.CompanyFixture;
 import com.autopartner.service.CompanyService;
@@ -19,9 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.autopartner.api.configuration.WebConfiguration.UNAUTHORIZED_RESPONSE;
-import static com.autopartner.api.dto.CompanyRegistrationRequestFixture.createCompanyRegistrationRequest;
-import static com.autopartner.api.dto.CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword;
-import static com.autopartner.api.dto.CompanyRequestFixture.createCompanyRequest;
+import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.createCompanyRegistrationRequest;
+import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword;
+import static com.autopartner.api.dto.request.CompanyRequestFixture.createCompanyRequest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
