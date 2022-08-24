@@ -2,6 +2,8 @@ package com.autopartner.service;
 
 import com.autopartner.api.dto.request.CompanyRegistrationRequest;
 import com.autopartner.api.dto.request.CompanyRegistrationRequestFixture;
+import com.autopartner.api.dto.request.UserRequest;
+import com.autopartner.api.dto.request.UserRequestFixture;
 import com.autopartner.domain.User;
 import com.autopartner.domain.UserFixture;
 import com.autopartner.repository.UserRepository;
@@ -20,7 +22,6 @@ import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -39,6 +40,7 @@ class UserServiceTest {
   @Captor
   ArgumentCaptor<String> stringArgumentCaptor;
   CompanyRegistrationRequest companyRegistrationRequest;
+  UserRequest request;
   List<User> users;
   User user;
   long id;
@@ -48,6 +50,7 @@ class UserServiceTest {
     user = UserFixture.createUser();
     users = List.of(user, new User());
     companyRegistrationRequest = CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword();
+    request = UserRequestFixture.createUser();
   }
 
   @Test
@@ -75,6 +78,14 @@ class UserServiceTest {
     assertThat(user.getFirstName()).isEqualTo(companyRegistrationRequest.getFirstName());
     assertThat(user.getLastName()).isEqualTo(companyRegistrationRequest.getLastName());
     assertThat(user.getEmail()).isEqualTo(companyRegistrationRequest.getEmail());
+  }
+
+  @Test
+  void update() {
+    userService.update(user, request);
+    verify(userRepository).save(userArgumentCaptor.capture());
+    User actualUser = userArgumentCaptor.getValue();
+    assertThat(actualUser.getEmail()).isEqualTo((request.getEmail()));
   }
 
   @Test
