@@ -4,7 +4,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.api.dto.response.UserResponse;
-import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.exception.UserAlreadyExistsException;
@@ -18,7 +17,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Slf4j
 @RestController
