@@ -49,7 +49,7 @@ public class ClientController {
     @PostMapping
     public ClientResponse create(@Valid @RequestBody ClientRequest request,
                                  @AuthenticationPrincipal User user) {
-        log.info("Received client registration request {}", request);
+        log.error("Received client registration request {}", request);
         String phone = request.getPhone();
         if(clientService.existsByPhone(phone)){
             log.info("Client already exist with phone: {}", phone);
