@@ -1,33 +1,58 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.CarBrandRequest;
 import com.autopartner.domain.CarBrand;
 import com.autopartner.repository.CarBrandRepository;
 import com.autopartner.service.CarBrandService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+import java.util.List;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarBrandServiceImpl implements CarBrandService {
 
-  CarBrandRepository carBrandRepository;
+    CarBrandRepository carBrandRepository;
 
-  @Override
-  public Iterable<CarBrand> getByActiveTrue() {
-    return carBrandRepository.findByActiveTrue();
-  }
+    @Override
+    public List<CarBrand> findAll() {
+        return carBrandRepository.findByActiveTrue();
+    }
 
-  @Override
-  public CarBrand getCarBrandById(Long id) {
-    return carBrandRepository.findById(id).get();
-  }
+    @Override
+    public Optional<CarBrand> findById(Long id) {
+        return carBrandRepository.findById(id);
+    }
 
-  @Override
-  public CarBrand saveCarBrand(CarBrand carBrand) {
-    return carBrandRepository.save(carBrand);
-  }
+    private CarBrand save(CarBrand carBrand) {
+        return carBrandRepository.save(carBrand);
+    }
+
+    @Override
+    public CarBrand update(CarBrand carBrand, CarBrandRequest request) {
+        carBrand.update(request);
+        return save(carBrand);
+    }
+
+    @Override
+    public void delete(CarBrand carBrand) {
+        carBrand.delete();
+        save(carBrand);
+    }
+
+    @Override
+    public CarBrand create(CarBrandRequest request, Long companyId) {
+        return save(CarBrand.create(request, companyId));
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return carBrandRepository.existsByNameAndActiveTrue(name);
+    }
 }
