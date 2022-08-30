@@ -35,11 +35,10 @@ public class CarType {
     @Column
     String name;
 
-    @OneToMany(mappedBy = "carType", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "carType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("id asc")
     @JsonIgnore
-    List<CarBrand> brands;
-
+    List<CarModel> models;
     @Column
     @Builder.Default
     Boolean active = true;
