@@ -1,13 +1,21 @@
 package com.autopartner.service;
 
+import com.autopartner.api.dto.request.CarRequest;
 import com.autopartner.domain.Car;
+
+import java.util.List;
+import java.util.Optional;
 
 public interface CarService {
 
-  Iterable<Car> getByActiveTrue();
+  List<Car> findAll();
 
-  Car getCarById(Long id);
+  Optional<Car> findById(Long id);
 
-  Car saveCar(Car car);
+  void delete(Car car);
+
+  Car create(CarRequest request, Long companyId);
+
+  Car update(Car car, CarRequest request);
 
 }

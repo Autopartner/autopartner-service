@@ -2,20 +2,28 @@ package com.autopartner.api.controller;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import com.autopartner.api.dto.request.CarRequest;
+import com.autopartner.api.dto.response.CarResponse;
 import com.autopartner.domain.Car;
+import com.autopartner.domain.User;
+import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.CarService;
+
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/cars")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarController {
@@ -23,20 +31,45 @@ public class CarController {
   CarService carService;
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = {"/api/car"}, method = RequestMethod.GET)
-  public ResponseEntity<?> getAll() {
-    return ResponseEntity.ok(carService.getByActiveTrue());
+  @GetMapping
+  public List<CarResponse> getAll() {
+    return carService.findAll().stream()
+            .map(CarResponse::fromEntity)
+            .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/car/{id}", method = RequestMethod.GET)
-  public ResponseEntity<?> get(@PathVariable Long id) {
-    return ResponseEntity.ok(carService.getCarById(id));
+  @GetMapping(value = "/{id}")
+  public CarResponse get(@PathVariable Long id) {
+    return carService.findById(id)
+            .map(CarResponse::fromEntity)
+            .orElseThrow(() -> new NotFoundException("Car", id));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/car", method = RequestMethod.POST)
-  public ResponseEntity<?> save(@Valid @RequestBody Car car) {
-    return ResponseEntity.ok(carService.saveCar(car));
+  @PostMapping
+  public CarResponse create(@Valid @RequestBody CarRequest request,
+                            @AuthenticationPrincipal User user) {
+    log.info("Received car registration request {}", request);
+    Car newCar = carService.create(request, user.getCompanyId());
+    log.info("Created new car {}", newCar.getPlateNumber());
+    return CarResponse.fromEntity(newCar);
+  }
+
+  @PutMapping("/{id}")
+  @Secured("ROLE_USER")
+  public CarResponse update(@PathVariable Long id,
+                            @RequestBody @Valid CarRequest request) {
+    Car car = carService.findById(id)
+            .orElseThrow(() -> new NotFoundException("Car", id));
+    return CarResponse.fromEntity(carService.update(car, request));
+  }
+
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @DeleteMapping(value = "/{id}")
+  public void delete(@PathVariable Long id) {
+    Car car = carService.findById(id)
+            .orElseThrow(() -> new NotFoundException("Car", id));
+    carService.delete(car);
   }
 }

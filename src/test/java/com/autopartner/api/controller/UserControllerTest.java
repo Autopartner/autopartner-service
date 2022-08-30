@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.autopartner.api.configuration.WebConfiguration.UNAUTHORIZED_RESPONSE;
-import static com.autopartner.api.dto.request.UserRequestFixture.createUser;
+import static com.autopartner.api.dto.request.UserRequestFixture.createUserRequest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -72,7 +72,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
   @Test
   void create_ValidRequest_CreatesUser() throws Exception {
-    UserRequest request = createUser();
+    UserRequest request = createUserRequest();
     when(userService.existsByEmail(request.getEmail())).thenReturn(false);
     User user = UserFixture.createUser();
     UserResponse userResponse = UserResponse.fromEntity(user);
@@ -86,8 +86,20 @@ public class UserControllerTest extends AbstractControllerTest {
   }
 
   @Test
+  void create_InvalidRequest_ReturnsError() throws Exception {
+    UserRequest request = createUserRequest();
+    when(userService.existsByEmail(request.getEmail())).thenReturn(true);
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User already exists with email: " + request.getEmail());
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().is4xxClientError())
+            .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
   void update_InvalidUserId_ReturnsError() throws Exception {
-    UserRequest request = createUser();
+    UserRequest request = createUserRequest();
     long userId = 1L;
     when(userService.findById(userId)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "User with id=1 is not found");
@@ -101,7 +113,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
   @Test
   void update_ValidRequest_UpdatesUser() throws Exception {
-    UserRequest request = createUser();
+    UserRequest request = createUserRequest();
     User user = UserFixture.createUser();
     long userId = 1L;
     UserResponse userResponse = UserResponse.fromEntity(user);
@@ -117,7 +129,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
   @Test
   void delete_InvalidUserId_ReturnsError() throws Exception {
-    UserRequest request = createUser();
+    UserRequest request = createUserRequest();
     long userId = 1L;
     when(userService.findById(userId)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "User with id=1 is not found");
