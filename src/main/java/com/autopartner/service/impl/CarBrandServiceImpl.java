@@ -27,7 +27,7 @@ public class CarBrandServiceImpl implements CarBrandService {
 
     @Override
     public Optional<CarBrand> findById(Long id) {
-        return carBrandRepository.findById(id);
+        return carBrandRepository.findByIdAndActiveTrue(id);
     }
 
     private CarBrand save(CarBrand carBrand) {

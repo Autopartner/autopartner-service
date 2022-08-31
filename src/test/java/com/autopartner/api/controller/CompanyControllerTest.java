@@ -93,7 +93,7 @@ public class CompanyControllerTest extends AbstractControllerTest {
   void create_UserAlreadyExists_ReturnsError() throws Exception {
     CompanyRegistrationRequest request = createCompanyRegistrationRequest();
     when(userService.existsByEmail(request.getEmail())).thenReturn(true);
-    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User already exists with email: company@gmail.com");
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User with param: company@gmail.com already exists");
     this.mockMvc.perform(post(URL)
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))

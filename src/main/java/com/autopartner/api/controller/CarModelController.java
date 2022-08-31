@@ -3,7 +3,7 @@ package com.autopartner.api.controller;
 import com.autopartner.api.dto.request.CarModelRequest;
 import com.autopartner.api.dto.response.CarModelResponse;
 import com.autopartner.domain.*;
-import com.autopartner.exception.ClientAlreadyExistsException;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.*;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class CarModelController {
         String name = request.getName();
         if (carModelService.existsByName(name)) {
             log.error("Car model already exist with name: {}", name);
-            throw new ClientAlreadyExistsException("Car model already exist with name: " + name);
+            throw new AlreadyExistsException("CarModel", name);
         }
         CarBrand brand = carBrandService.findById(request.getCarBrandId())
                 .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
@@ -68,12 +68,12 @@ public class CarModelController {
     @PutMapping("/{id}")
     @Secured("ROLE_USER")
     public CarModelResponse update(@PathVariable Long id, @RequestBody @Valid CarModelRequest request) {
+        CarModel model = carModelService.findById(id)
+                .orElseThrow(() -> new NotFoundException("CarModel", id));
         CarBrand brand = carBrandService.findById(request.getCarBrandId())
                 .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
         CarType type = carTypeService.findById(request.getCarTypeId())
                 .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
-        CarModel model = carModelService.findById(id)
-                .orElseThrow(() -> new NotFoundException("CarModel", id));
         return CarModelResponse.fromEntity(carModelService.update(model, brand, type, request));
     }
 

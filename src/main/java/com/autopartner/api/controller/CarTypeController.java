@@ -4,7 +4,7 @@ import com.autopartner.api.dto.request.CarTypeRequest;
 import com.autopartner.api.dto.response.CarTypeResponse;
 import com.autopartner.domain.CarType;
 import com.autopartner.domain.User;
-import com.autopartner.exception.ClientAlreadyExistsException;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.CarTypeService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class CarTypeController {
     public CarTypeResponse get(@PathVariable Long id) {
         return carTypeService.findById(id)
                 .map(CarTypeResponse::fromEntity)
-                .orElseThrow(() -> new NotFoundException("Car type", id));
+                .orElseThrow(() -> new NotFoundException("CarType", id));
     }
 
     @PostMapping
@@ -52,7 +52,7 @@ public class CarTypeController {
         String name = request.getName();
         if (carTypeService.existsByName(name)) {
             log.error("Car type already exist with name: {}", name);
-            throw new ClientAlreadyExistsException("Car type already exist with name: " + name);
+            throw new AlreadyExistsException("CarType", name);
         }
         CarType carType = carTypeService.create(request, user.getCompanyId());
         log.info("Created new car type {}", request.getName());
@@ -63,7 +63,7 @@ public class CarTypeController {
     @Secured("ROLE_USER")
     public CarTypeResponse update(@PathVariable Long id, @RequestBody @Valid CarTypeRequest carTypeRequest) {
         CarType carType = carTypeService.findById(id)
-                .orElseThrow(() -> new NotFoundException("Car type", id));
+                .orElseThrow(() -> new NotFoundException("CarType", id));
         return CarTypeResponse.fromEntity(carTypeService.update(carType, carTypeRequest));
     }
 
@@ -71,7 +71,7 @@ public class CarTypeController {
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Long id) {
         CarType carType = carTypeService.findById(id)
-                .orElseThrow(() -> new NotFoundException("Car type", id));
+                .orElseThrow(() -> new NotFoundException("CarType", id));
         carTypeService.delete(carType);
     }
 }
