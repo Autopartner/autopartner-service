@@ -7,8 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -39,6 +43,14 @@ public class Company {
     @Column
     @Builder.Default
     Boolean active = true;
+
+    @Column
+    @CreationTimestamp
+    LocalDateTime createdAt;
+
+    @Column
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
 
     public static Company create(CompanyRegistrationRequest request) {
         return Company.builder()

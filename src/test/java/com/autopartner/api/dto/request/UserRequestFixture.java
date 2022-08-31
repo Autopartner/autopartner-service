@@ -1,9 +1,7 @@
 package com.autopartner.api.dto.request;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 public class UserRequestFixture {
-  public static UserRequest createUser(){
+  public static UserRequest createUserRequest(){
     return UserRequest.builder()
             .email("company@gmail.com")
             .firstName("firstName")

@@ -2,36 +2,26 @@ package com.autopartner.domain;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.persistence.*;
+
+import com.autopartner.api.dto.request.CarRequest;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "cars")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class Car {
 
   @Id
-  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cars_seq")
   @SequenceGenerator(name = "cars_seq", sequenceName = "cars_seq", allocationSize = 1)
   Long id;
@@ -44,27 +34,56 @@ public class Car {
   @ManyToOne
   CarModel carModel;
 
-  @Column(name = "reg_number")
-  String regNumber;
+  @Column
+  Long companyId;
 
-  @Column(name = "vin_code")
+  @Column
+  String plateNumber;
+
+  @Column
   String vinCode;
 
-  @Column(name = "notes")
-  String notes;
+  @Column
+  String note;
 
-  @Column(name = "mileage")
-  Double mileage;
+  @Column
+  LocalDate manufactureYear;
 
-  @Column(name = "created_at")
+  @Column
+  @CreationTimestamp
   LocalDateTime createdAt;
 
-  @Column(name = "active")
-  Boolean active;
+  @Column
+  @UpdateTimestamp
+  LocalDateTime updatedAt;
 
-  @PrePersist
-  protected void onCreate() {
-    createdAt = LocalDateTime.now();
+  @Column
+  @Builder.Default
+  Boolean active = true;
+
+  public static Car create(CarRequest request, Client client, CarModel carModel, Long companyId) {
+    return Car.builder()
+            .companyId(companyId)
+            .plateNumber(request.getPlateNumber())
+            .vinCode(request.getVinCode())
+            .note(request.getNote())
+            .manufactureYear(LocalDate.parse(request.getManufactureYear()))
+            .client(client)
+            .carModel(carModel)
+            .build();
+  }
+
+  public void update(CarRequest request, Client client, CarModel carModel) {
+    plateNumber = request.getPlateNumber();
+    vinCode = request.getVinCode();
+    note = request.getNote();
+    manufactureYear = LocalDate.parse(request.getManufactureYear());
+    this.client = client;
+    this.carModel = carModel;
+  }
+
+  public void delete() {
+    active = false;
   }
 
 }
