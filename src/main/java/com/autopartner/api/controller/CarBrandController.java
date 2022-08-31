@@ -4,7 +4,7 @@ import com.autopartner.api.dto.request.CarBrandRequest;
 import com.autopartner.api.dto.response.CarBrandResponse;
 import com.autopartner.domain.CarBrand;
 import com.autopartner.domain.User;
-import com.autopartner.exception.ClientAlreadyExistsException;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.CarBrandService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class CarBrandController {
     String name = request.getName();
     if(carBrandService.existsByName(name)){
       log.error("Car Brand already exist with name: {}", name);
-      throw new ClientAlreadyExistsException("Car Brand already exist with name: " + name);
+      throw new AlreadyExistsException("CarBrand", name);
     }
     CarBrand carBrand = carBrandService.create(request, user.getCompanyId());
     log.info("Created new client {}", request.getName());

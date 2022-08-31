@@ -11,10 +11,7 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -27,39 +24,34 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
-public class CarTypeTest {
+public class CarTypeServiceTest {
+
     @Mock
     CarTypeRepository carTypeRepository;
-
     @InjectMocks
     CarTypeServiceImpl carTypeService;
-
     @Captor
     ArgumentCaptor<CarType> carTypeArgumentCaptor;
-
     @Captor
     ArgumentCaptor<Long> longArgumentCaptor;
-
-    List<CarType> carTypes;
-
-    CarType carType;
+    List<CarType> types;
+    CarType type;
     CarTypeRequest request;
-
     Long id;
 
     @BeforeEach
     public void init() {
-        carType = CarTypeFixture.createCarType();
-        carTypes = List.of(carType, new CarType());
+        type = CarTypeFixture.createCarType();
+        types = List.of(type);
         request = CarTypeRequestFixture.createCarTypeRequest();
         id = 3L;
     }
 
     @Test
     void findAll() {
-        when(carTypeRepository.findByActiveTrue()).thenReturn(carTypes);
+        when(carTypeRepository.findByActiveTrue()).thenReturn(types);
         List<CarType> actualCarTypes = carTypeService.findAll();
-        assertThat(carTypes).isEqualTo(actualCarTypes);
+        assertThat(types).isEqualTo(actualCarTypes);
     }
 
     @Test
@@ -72,16 +64,16 @@ public class CarTypeTest {
 
     @Test
     void findById() {
-        when(carTypeRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(carType));
-        carTypeService.findById(carType.getId());
+        when(carTypeRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(type));
+        carTypeService.findById(type.getId());
         verify(carTypeRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
         id = longArgumentCaptor.getValue();
-        assertThat(id).isEqualTo(carType.getId());
+        assertThat(id).isEqualTo(type.getId());
     }
 
     @Test
     void update() {
-        carTypeService.update(carType, request);
+        carTypeService.update(type, request);
         verify(carTypeRepository).save(carTypeArgumentCaptor.capture());
         CarType actualCarType = carTypeArgumentCaptor.getValue();
         assertThat(actualCarType.getName()).isEqualTo((request.getName()));
@@ -89,10 +81,10 @@ public class CarTypeTest {
 
     @Test
     void delete() {
-        carTypeService.delete(carType);
+        carTypeService.delete(type);
         verify(carTypeRepository).save(carTypeArgumentCaptor.capture());
         CarType actualCarType = carTypeArgumentCaptor.getValue();
-        assertThat(actualCarType).isEqualTo(carType);
+        assertThat(actualCarType).isEqualTo(type);
         assertThat(actualCarType.getActive()).isFalse();
     }
 }
