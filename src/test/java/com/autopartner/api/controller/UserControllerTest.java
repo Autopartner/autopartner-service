@@ -89,7 +89,7 @@ public class UserControllerTest extends AbstractControllerTest {
   void create_InvalidRequest_ReturnsError() throws Exception {
     UserRequest request = createUserRequest();
     when(userService.existsByEmail(request.getEmail())).thenReturn(true);
-    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User already exists with email: " + request.getEmail());
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User with param: " + request.getEmail() + " already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
