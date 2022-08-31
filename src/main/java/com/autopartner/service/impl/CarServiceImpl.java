@@ -4,6 +4,8 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.api.dto.request.CarRequest;
 import com.autopartner.domain.Car;
+import com.autopartner.domain.CarModel;
+import com.autopartner.domain.Client;
 import com.autopartner.repository.CarRepository;
 import com.autopartner.service.CarService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +37,8 @@ public class CarServiceImpl implements CarService {
   }
 
   @Override
-  public Car update(Car car, CarRequest request) {
-    car.update(request);
+  public Car update(Car car, Client client, CarModel carModel, CarRequest request) {
+    car.update(request, client, carModel);
     return save(car);
   }
 
@@ -47,7 +49,7 @@ public class CarServiceImpl implements CarService {
   }
 
   @Override
-  public Car create(CarRequest request, Long companyId) {
-    return save(Car.create(request, companyId));
+  public Car create(CarRequest request, Client client, CarModel carModel, Long companyId) {
+    return save(Car.create(request, client, carModel, companyId));
   }
 }

@@ -61,31 +61,25 @@ public class Car {
   @Builder.Default
   Boolean active = true;
 
-  @PrePersist
-  protected void onCreate() {
-    createdAt = LocalDateTime.now();
-  }
-
-  @PreUpdate
-  protected void onUpdate() {
-    updatedAt = LocalDateTime.now();
-  }
-
-  public static Car create(CarRequest request, Long companyId) {
+  public static Car create(CarRequest request, Client client, CarModel carModel, Long companyId) {
     return Car.builder()
             .companyId(companyId)
             .plateNumber(request.getPlateNumber())
             .vinCode(request.getVinCode())
             .note(request.getNote())
             .manufactureYear(LocalDate.parse(request.getManufactureYear()))
+            .client(client)
+            .carModel(carModel)
             .build();
   }
 
-  public void update(CarRequest request) {
+  public void update(CarRequest request, Client client, CarModel carModel) {
     plateNumber = request.getPlateNumber();
     vinCode = request.getVinCode();
     note = request.getNote();
     manufactureYear = LocalDate.parse(request.getManufactureYear());
+    this.client = client;
+    this.carModel = carModel;
   }
 
   public void delete() {

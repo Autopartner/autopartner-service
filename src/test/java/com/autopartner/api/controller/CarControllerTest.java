@@ -1,11 +1,16 @@
 package com.autopartner.api.controller;
 
+import com.autopartner.api.dto.request.CarModelRequest;
 import com.autopartner.api.dto.request.CarRequest;
-import com.autopartner.api.dto.response.CarResponse;
-import com.autopartner.api.dto.response.ErrorResponse;
-import com.autopartner.domain.Car;
-import com.autopartner.domain.CarFixture;
+import com.autopartner.api.dto.request.CarRequestFixture;
+import com.autopartner.api.dto.request.ClientRequest;
+import com.autopartner.api.dto.response.*;
+import com.autopartner.domain.*;
+import com.autopartner.service.CarBrandService;
+import com.autopartner.service.CarModelService;
 import com.autopartner.service.CarService;
+import com.autopartner.service.ClientService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +23,7 @@ import java.util.Optional;
 
 import static com.autopartner.api.configuration.WebConfiguration.UNAUTHORIZED_RESPONSE;
 import static com.autopartner.api.dto.request.CarRequestFixture.createCarRequest;
+import static com.autopartner.api.dto.request.ClientRequestFixture.createClientRequest;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -32,6 +38,32 @@ public class CarControllerTest extends AbstractControllerTest {
   @MockBean
   CarService carService;
 
+  @MockBean
+  ClientService clientService;
+
+  @MockBean
+  CarModelService carModelService;
+
+  @MockBean
+  CarBrandService carBrandService;
+
+  Car car;
+  CarModel model;
+  Client client;
+  CarRequest request;
+  CarResponse response;
+  Long id;
+
+  @BeforeEach
+  public void init() {
+    car = CarFixture.createCar();
+    model = CarModelFixture.createCarModel();
+    client = ClientFixture.createClient();
+    request = CarRequestFixture.createCarRequest();
+    response = CarResponse.fromEntity(car);
+    id = 1L;
+  }
+
   @Test
   void getAll_NotAuthorized_ReturnsClientError() throws Exception {
     this.mockMvc.perform(get(URL))
@@ -41,7 +73,6 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void getAll_Authorized_ReturnsCars() throws Exception {
-    Car car = CarFixture.createCar();
     List<CarResponse> carResponses = List.of(CarResponse.fromEntity(car));
     when(carService.findAll()).thenReturn(List.of(car));
     this.mockMvc.perform(auth(get(URL)))
@@ -51,31 +82,27 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void get_ValidCarId_ReturnsCar() throws Exception {
-    Car car = CarFixture.createCar();
-    long carId = 1L;
-    when(carService.findById(carId)).thenReturn(Optional.ofNullable(car));
+    when(carService.findById(id)).thenReturn(Optional.ofNullable(car));
     CarResponse carResponse = CarResponse.fromEntity(Objects.requireNonNull(car));
-    this.mockMvc.perform(auth(get(URL + "/" + carId)))
+    this.mockMvc.perform(auth(get(URL + "/" + id)))
             .andExpect(status().is2xxSuccessful())
             .andExpect(content().string(objectMapper.writeValueAsString(carResponse)));
   }
 
   @Test
   void get_InvalidCarId_ReturnsError() throws Exception {
-    long carId = 1L;
-    when(carService.findById(carId)).thenReturn(Optional.empty());
+    when(carService.findById(id)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Car with id=1 is not found");
-    this.mockMvc.perform(auth(get(URL + "/" + carId)))
+    this.mockMvc.perform(auth(get(URL + "/" + id)))
             .andExpect(status().is4xxClientError())
             .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
   void create_ValidRequest_CreatesCar() throws Exception {
-    CarRequest request = createCarRequest();
-    Car car = CarFixture.createCar();
-    CarResponse response = CarResponse.fromEntity(car);
-    when(carService.create(request, car.getCompanyId())).thenReturn(car);
+    when(clientService.findById(request.getClientId())).thenReturn(Optional.ofNullable(client));
+    when(carModelService.findById(request.getCarModelId())).thenReturn(Optional.ofNullable(model));
+    when(carService.create(request, client, model, car.getCompanyId())).thenReturn(car);
     this.mockMvc.perform(auth(post(URL))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
@@ -85,11 +112,9 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void update_InvalidCarId_ReturnsError() throws Exception {
-    CarRequest request = createCarRequest();
-    long carId = 1L;
-    when(carService.findById(carId)).thenReturn(Optional.empty());
+    when(carService.findById(id)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Car with id=1 is not found");
-    this.mockMvc.perform(auth(put(URL + "/" + carId))
+    this.mockMvc.perform(auth(put(URL + "/" + id))
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().is4xxClientError())
@@ -98,13 +123,11 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void update_ValidRequest_UpdatesCar() throws Exception {
-    CarRequest request = createCarRequest();
-    Car car = CarFixture.createCar();
-    long carId = 1L;
-    CarResponse response = CarResponse.fromEntity(car);
-    when(carService.findById(carId)).thenReturn(Optional.of(car));
-    when(carService.update(car, request)).thenReturn(car);
-    this.mockMvc.perform(auth(put(URL + "/" + carId))
+    when(clientService.findById(request.getClientId())).thenReturn(Optional.ofNullable(client));
+    when(carModelService.findById(request.getCarModelId())).thenReturn(Optional.ofNullable(model));
+    when(carService.findById(id)).thenReturn(Optional.of(car));
+    when(carService.update(car, client, model, request)).thenReturn(car);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().is2xxSuccessful())
@@ -113,11 +136,9 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void delete_InvalidCarId_ReturnsError() throws Exception {
-    CarRequest request = createCarRequest();
-    long carId = 1L;
-    when(carService.findById(carId)).thenReturn(Optional.empty());
+    when(carService.findById(id)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Car with id=1 is not found");
-    this.mockMvc.perform(auth(delete(URL + "/" + carId))
+    this.mockMvc.perform(auth(delete(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().is4xxClientError())
@@ -126,10 +147,8 @@ public class CarControllerTest extends AbstractControllerTest {
 
   @Test
   void delete_ValidRequest_DeletesCar() throws Exception {
-    Car car = CarFixture.createCar();
-    long carId = 1L;
-    when(carService.findById(carId)).thenReturn(Optional.of(car));
-    this.mockMvc.perform(auth(delete(URL + "/" + carId)))
+    when(carService.findById(id)).thenReturn(Optional.of(car));
+    this.mockMvc.perform(auth(delete(URL + "/" + id)))
             .andExpect(status().is2xxSuccessful());
   }
 }

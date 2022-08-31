@@ -2,8 +2,7 @@ package com.autopartner.service;
 
 import com.autopartner.api.dto.request.CarRequest;
 import com.autopartner.api.dto.request.CarRequestFixture;
-import com.autopartner.domain.Car;
-import com.autopartner.domain.CarFixture;
+import com.autopartner.domain.*;
 import com.autopartner.repository.CarRepository;
 import com.autopartner.service.impl.CarServiceImpl;
 import lombok.AccessLevel;
@@ -47,6 +46,10 @@ public class CarServiceTest {
 
   CarRequest request;
 
+  Client client;
+
+  CarModel carModel;
+
   Long id;
 
   @BeforeEach
@@ -54,6 +57,8 @@ public class CarServiceTest {
     car = CarFixture.createCar();
     cars = List.of(car, new Car());
     request = CarRequestFixture.createCarRequest();
+    client = ClientFixture.createClient();
+    carModel = CarModelFixture.createCarModel();
     id = 2L;
   }
 
@@ -66,7 +71,7 @@ public class CarServiceTest {
 
   @Test
   public void create() {
-    carService.create(request, id);
+    carService.create(request, client, carModel, id);
     verify(carRepository).save(carArgumentCaptor.capture());
     Car actualCar = carArgumentCaptor.getValue();
     assertThatCarMappedCorrectly(actualCar);
@@ -83,7 +88,7 @@ public class CarServiceTest {
 
   @Test
   void update() {
-    carService.update(car, request);
+    carService.update(car, client, carModel, request);
     verify(carRepository).save(carArgumentCaptor.capture());
     Car actualCar = carArgumentCaptor.getValue();
     assertThatCarMappedCorrectly(actualCar);

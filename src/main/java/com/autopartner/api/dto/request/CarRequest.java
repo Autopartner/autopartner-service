@@ -34,4 +34,10 @@ public class CarRequest {
   @Size(max = 256)
   String note;
 
+  @NotNull
+  Long carModelId;
+
+  @NotNull
+  Long clientId;
+
 }

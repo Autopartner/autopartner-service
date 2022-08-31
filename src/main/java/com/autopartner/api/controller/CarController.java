@@ -4,13 +4,14 @@ import static lombok.AccessLevel.PRIVATE;
 
 import com.autopartner.api.dto.request.CarRequest;
 import com.autopartner.api.dto.response.CarResponse;
-import com.autopartner.domain.Car;
-import com.autopartner.domain.User;
+import com.autopartner.domain.*;
 import com.autopartner.exception.NotFoundException;
+import com.autopartner.service.CarModelService;
 import com.autopartner.service.CarService;
 
 import javax.validation.Valid;
 
+import com.autopartner.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
 public class CarController {
 
   CarService carService;
+  ClientService clientService;
+  CarModelService carModelService;
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
@@ -51,7 +54,11 @@ public class CarController {
   public CarResponse create(@Valid @RequestBody CarRequest request,
                             @AuthenticationPrincipal User user) {
     log.info("Received car registration request {}", request);
-    Car newCar = carService.create(request, user.getCompanyId());
+    Client client = clientService.findById(request.getClientId())
+            .orElseThrow(() -> new NotFoundException("Client", request.getClientId()));
+    CarModel carModel = carModelService.findById(request.getCarModelId())
+            .orElseThrow(() -> new NotFoundException("Car model", request.getCarModelId()));
+    Car newCar = carService.create(request, client, carModel, user.getCompanyId());
     log.info("Created new car {}", newCar.getPlateNumber());
     return CarResponse.fromEntity(newCar);
   }
@@ -62,7 +69,11 @@ public class CarController {
                             @RequestBody @Valid CarRequest request) {
     Car car = carService.findById(id)
             .orElseThrow(() -> new NotFoundException("Car", id));
-    return CarResponse.fromEntity(carService.update(car, request));
+    Client client = clientService.findById(request.getClientId())
+            .orElseThrow(() -> new NotFoundException("Client", request.getClientId()));
+    CarModel carModel = carModelService.findById(request.getCarModelId())
+            .orElseThrow(() -> new NotFoundException("Car model", request.getCarModelId()));
+    return CarResponse.fromEntity(carService.update(car, client, carModel, request));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})

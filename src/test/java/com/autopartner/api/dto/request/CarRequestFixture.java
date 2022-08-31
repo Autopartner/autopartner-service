@@ -8,6 +8,8 @@ public class CarRequestFixture {
             .manufactureYear("2020-02-03")
             .vinCode("Aa1111")
             .note("New car")
+            .clientId(1L)
+            .carModelId(1L)
             .build();
   }
 }

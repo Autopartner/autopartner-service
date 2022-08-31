@@ -52,16 +52,6 @@ public class Company {
     @UpdateTimestamp
     LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
     public static Company create(CompanyRegistrationRequest request) {
         return Company.builder()
                 .name(request.getName())

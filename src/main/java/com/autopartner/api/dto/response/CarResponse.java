@@ -1,6 +1,8 @@
 package com.autopartner.api.dto.response;
 
 import com.autopartner.domain.Car;
+import com.autopartner.domain.CarModel;
+import com.autopartner.domain.Client;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +19,8 @@ public class CarResponse {
   String plateNumber;
   String note;
   LocalDate manufactureYear;
+  CarModelResponse carModelResponse;
+  ClientResponse clientResponse;
 
   public static CarResponse fromEntity(Car car) {
     return CarResponse.builder()
@@ -24,7 +28,8 @@ public class CarResponse {
             .plateNumber(car.getPlateNumber())
             .note(car.getNote())
             .manufactureYear(car.getManufactureYear())
+            .carModelResponse(CarModelResponse.fromEntity(car.getCarModel()))
+            .clientResponse(ClientResponse.fromEntity(car.getClient()))
             .build();
-
   }
 }
