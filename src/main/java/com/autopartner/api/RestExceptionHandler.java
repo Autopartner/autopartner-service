@@ -1,8 +1,8 @@
 package com.autopartner.api;
 
 import com.autopartner.api.dto.response.ErrorResponse;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
-import com.autopartner.exception.UserAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,8 @@ public class RestExceptionHandler {
     return error(NOT_FOUND, NOT_FOUND.value(), e.getMessage());
   }
 
-  @ExceptionHandler(value = {UserAlreadyExistsException.class})
-  public ResponseEntity<ErrorResponse> handleException(UserAlreadyExistsException e) {
+  @ExceptionHandler(value = {AlreadyExistsException.class})
+  public ResponseEntity<ErrorResponse> handleException(AlreadyExistsException e) {
     String error = e.getMessage();
     return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, error);
   }

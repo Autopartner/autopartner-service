@@ -1,12 +1,14 @@
 package com.autopartner.domain;
 
-public class CarBrandFixture {
+import lombok.Builder;
 
-  public static CarBrand createCarBrand() {
-    return CarBrand.builder()
-            .id(1L)
-            .name("Mercedes")
-            .active(true)
-            .build();
-  }
+@Builder
+public class CarBrandFixture {
+    public static CarBrand createCarBrand(){
+        return CarBrand.builder()
+                .id(1L)
+                .name("Audi")
+                .active(true)
+                .build();
+    }
 }

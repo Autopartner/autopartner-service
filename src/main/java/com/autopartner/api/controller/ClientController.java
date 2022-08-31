@@ -4,7 +4,7 @@ import com.autopartner.api.dto.request.ClientRequest;
 import com.autopartner.api.dto.response.ClientResponse;
 import com.autopartner.domain.Client;
 import com.autopartner.domain.User;
-import com.autopartner.exception.ClientAlreadyExistsException;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class ClientController {
         String phone = request.getPhone();
         if(clientService.existsByPhone(phone)){
             log.info("Client already exist with phone: {}", phone);
-            throw new ClientAlreadyExistsException("Client already exist with phone: " + phone);
+            throw new AlreadyExistsException("Client", phone);
         }
         Client client = clientService.create(request, user.getCompanyId());
         log.info("Created new client {}", request.getFirstName());

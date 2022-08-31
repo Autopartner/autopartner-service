@@ -28,29 +28,24 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
 class ClientServiceTest {
+
     @Mock
     ClientRepository clientRepository;
-
     @InjectMocks
     ClientServiceImpl clientService;
-
     @Captor
     ArgumentCaptor<Client> clientArgumentCaptor;
-
     @Captor
     ArgumentCaptor<Long> longArgumentCaptor;
-
     List<Client> clients;
-
     Client client;
     ClientRequest request;
-
     Long id;
 
     @BeforeEach
     public void init() {
         client = ClientFixture.createClient();
-        clients = List.of(client, new Client());
+        clients = List.of(client);
         request = ClientRequestFixture.createClientRequest();
         id = 3L;
     }

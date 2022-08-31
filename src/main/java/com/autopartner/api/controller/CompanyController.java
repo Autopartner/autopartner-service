@@ -4,8 +4,8 @@ import com.autopartner.api.dto.request.CompanyRegistrationRequest;
 import com.autopartner.api.dto.request.CompanyRequest;
 import com.autopartner.api.dto.response.CompanyResponse;
 import com.autopartner.domain.Company;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
-import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.CompanyService;
 import com.autopartner.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class CompanyController {
     String email = request.getEmail();
     if (userService.existsByEmail(email)) {
       log.error("User already exists with email: {}", email);
-      throw new UserAlreadyExistsException("User already exists with email: " + email);
+      throw new AlreadyExistsException("User", email);
     }
 
     Company company = companyService.create(request);

@@ -5,8 +5,8 @@ import static lombok.AccessLevel.PRIVATE;
 import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.api.dto.response.UserResponse;
 import com.autopartner.domain.User;
+import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
-import com.autopartner.exception.UserAlreadyExistsException;
 import com.autopartner.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class UserController {
     String email = request.getEmail();
     if (userService.existsByEmail(email)) {
       log.error("User already exists with email: {}", email);
-      throw new UserAlreadyExistsException("User already exists with email: " + email);
+      throw new AlreadyExistsException("User" , email);
     }
 
     User newUser = userService.create(request, user.getCompanyId());
