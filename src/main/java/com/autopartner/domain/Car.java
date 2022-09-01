@@ -1,16 +1,19 @@
 package com.autopartner.domain;
 
-import static lombok.AccessLevel.PRIVATE;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import javax.persistence.*;
-
 import com.autopartner.api.dto.request.CarRequest;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Data
@@ -63,14 +66,14 @@ public class Car {
 
   public static Car create(CarRequest request, Client client, CarModel carModel, Long companyId) {
     return Car.builder()
-            .companyId(companyId)
-            .plateNumber(request.getPlateNumber())
-            .vinCode(request.getVinCode())
-            .note(request.getNote())
-            .manufactureYear(LocalDate.parse(request.getManufactureYear()))
-            .client(client)
-            .carModel(carModel)
-            .build();
+        .companyId(companyId)
+        .plateNumber(request.getPlateNumber())
+        .vinCode(request.getVinCode())
+        .note(request.getNote())
+        .manufactureYear(LocalDate.parse(request.getManufactureYear()))
+        .client(client)
+        .carModel(carModel)
+        .build();
   }
 
   public void update(CarRequest request, Client client, CarModel carModel) {

@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface CarTypeRepository extends CrudRepository<CarType, Long> {
 
-    List<CarType> findByActiveTrue();
+  List<CarType> findByActiveTrue();
 
-    Optional<CarType> findByIdAndActiveTrue(Long id);
+  Optional<CarType> findByIdAndActiveTrue(Long id);
 
-    boolean existsByNameAndActiveTrue(String name);
+  boolean existsByNameAndActiveTrue(String name);
 }

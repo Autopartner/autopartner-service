@@ -8,16 +8,16 @@ import java.util.Optional;
 
 public interface CarTypeService {
 
-    List<CarType> findAll();
+  List<CarType> findAll();
 
-    Optional<CarType> findById(Long id);
+  Optional<CarType> findById(Long id);
 
-    void delete(CarType carType);
+  void delete(CarType carType);
 
-    CarType create(CarTypeRequest request, Long companyId);
+  CarType create(CarTypeRequest request, Long companyId);
 
-    CarType update(CarType carType, CarTypeRequest request);
+  CarType update(CarType carType, CarTypeRequest request);
 
-    boolean existsByName(String name);
+  boolean existsByName(String name);
 
 }

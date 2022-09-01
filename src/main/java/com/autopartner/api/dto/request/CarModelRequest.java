@@ -1,6 +1,9 @@
 package com.autopartner.api.dto.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
@@ -15,13 +18,13 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 public class CarModelRequest {
 
-    @NotNull
-    @Size(max = 255)
-    String name;
+  @NotNull
+  @Size(max = 255)
+  String name;
 
-    @NotNull
-    Long carBrandId;
+  @NotNull
+  Long carBrandId;
 
-    @NotNull
-    Long carTypeId;
+  @NotNull
+  Long carTypeId;
 }

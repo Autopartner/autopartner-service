@@ -27,53 +27,53 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ClientController {
 
-    ClientService clientService;
+  ClientService clientService;
 
-    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-    @GetMapping
-    public List<ClientResponse> getAll() {
-        return clientService.findAll().stream()
-                .map(ClientResponse::fromEntity)
-                .collect(Collectors.toList());
-    }
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @GetMapping
+  public List<ClientResponse> getAll() {
+    return clientService.findAll().stream()
+        .map(ClientResponse::fromEntity)
+        .collect(Collectors.toList());
+  }
 
-    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-    @GetMapping(value = "/{id}")
-    public ClientResponse get(@PathVariable Long id) {
-        return clientService.findById(id)
-                .map(ClientResponse::fromEntity)
-                .orElseThrow(() -> new NotFoundException("Client", id));
-    }
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @GetMapping(value = "/{id}")
+  public ClientResponse get(@PathVariable Long id) {
+    return clientService.findById(id)
+        .map(ClientResponse::fromEntity)
+        .orElseThrow(() -> new NotFoundException("Client", id));
+  }
 
-    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-    @PostMapping
-    public ClientResponse create(@Valid @RequestBody ClientRequest request,
-                                 @AuthenticationPrincipal User user) {
-        log.error("Received client registration request {}", request);
-        String phone = request.getPhone();
-        if(clientService.existsByPhone(phone)){
-            log.info("Client already exist with phone: {}", phone);
-            throw new AlreadyExistsException("Client", phone);
-        }
-        Client client = clientService.create(request, user.getCompanyId());
-        log.info("Created new client {}", request.getFirstName());
-        return ClientResponse.fromEntity(client);
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @PostMapping
+  public ClientResponse create(@Valid @RequestBody ClientRequest request,
+                               @AuthenticationPrincipal User user) {
+    log.error("Received client registration request {}", request);
+    String phone = request.getPhone();
+    if (clientService.existsByPhone(phone)) {
+      log.info("Client already exist with phone: {}", phone);
+      throw new AlreadyExistsException("Client", phone);
     }
+    Client client = clientService.create(request, user.getCompanyId());
+    log.info("Created new client {}", request.getFirstName());
+    return ClientResponse.fromEntity(client);
+  }
 
-    @PutMapping("/{id}")
-    @Secured("ROLE_USER")
-    public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
-        Client client = clientService.findById(id)
-                .orElseThrow(() -> new NotFoundException("Client", id));
-        return ClientResponse.fromEntity(clientService.update(client, request));
-    }
+  @PutMapping("/{id}")
+  @Secured("ROLE_USER")
+  public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
+    Client client = clientService.findById(id)
+        .orElseThrow(() -> new NotFoundException("Client", id));
+    return ClientResponse.fromEntity(clientService.update(client, request));
+  }
 
-    @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) {
-     Client client = clientService.findById(id)
-             .orElseThrow(() -> new NotFoundException("Client", id));
-     clientService.delete(client);
-    }
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @DeleteMapping(value = "/{id}")
+  public void delete(@PathVariable Long id) {
+    Client client = clientService.findById(id)
+        .orElseThrow(() -> new NotFoundException("Client", id));
+    clientService.delete(client);
+  }
 
 }

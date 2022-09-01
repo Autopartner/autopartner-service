@@ -1,7 +1,5 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.api.dto.request.CarRequest;
 import com.autopartner.domain.Car;
 import com.autopartner.domain.CarModel;
@@ -14,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Repository
 @RequiredArgsConstructor

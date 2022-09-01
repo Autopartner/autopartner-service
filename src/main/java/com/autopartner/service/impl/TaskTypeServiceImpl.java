@@ -1,13 +1,13 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.domain.TaskType;
 import com.autopartner.repository.TaskTypeRepository;
 import com.autopartner.service.TaskTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Repository
 @RequiredArgsConstructor

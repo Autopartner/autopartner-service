@@ -18,27 +18,27 @@ import static org.mockito.Mockito.when;
 @FieldDefaults(level = AccessLevel.PROTECTED)
 public abstract class AbstractControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
+  @Autowired
+  MockMvc mockMvc;
 
-    @Autowired
-    ObjectMapper objectMapper;
+  @Autowired
+  ObjectMapper objectMapper;
 
-    @MockBean
-    JwtVerifier tokenService;
+  @MockBean
+  JwtVerifier tokenService;
 
-    @MockBean
-    UserDetailsService userDetailsService;
+  @MockBean
+  UserDetailsService userDetailsService;
 
-    @BeforeEach
-    void setUp() {
-        String username = "test@username.com";
-        when(tokenService.verify(any())).thenReturn(username);
-        when(userDetailsService.loadUserByUsername(username)).thenReturn(UserFixture.createUser());
-    }
+  protected static MockHttpServletRequestBuilder auth(MockHttpServletRequestBuilder builder) {
+    return builder.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHJha3V0ZW4uY29tIiwiaXNzIjoidGVzdEByYWt1dGVuLmNvbSIsImV4cCI6NzIwMTY0ODA1MzMxMX0.pI4PBB_FvxO2YWw_QOruFYFH_TJ7s6tyMSiYDFHWsZk");
+  }
 
-    protected static MockHttpServletRequestBuilder auth(MockHttpServletRequestBuilder builder) {
-        return builder.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHJha3V0ZW4uY29tIiwiaXNzIjoidGVzdEByYWt1dGVuLmNvbSIsImV4cCI6NzIwMTY0ODA1MzMxMX0.pI4PBB_FvxO2YWw_QOruFYFH_TJ7s6tyMSiYDFHWsZk");
-    }
+  @BeforeEach
+  void setUp() {
+    String username = "test@username.com";
+    when(tokenService.verify(any())).thenReturn(username);
+    when(userDetailsService.loadUserByUsername(username)).thenReturn(UserFixture.createUser());
+  }
 
 }

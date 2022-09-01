@@ -1,7 +1,5 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.domain.User;
 import com.autopartner.repository.UserRepository;
@@ -15,6 +13,8 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Service
 @RequiredArgsConstructor
@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public boolean isEmailUnique(User user) {
-      User u = userRepository.findOneByEmail(user.getEmail());
-      return Objects.equals(u.getId(), user.getId());
+    User u = userRepository.findOneByEmail(user.getEmail());
+    return Objects.equals(u.getId(), user.getId());
   }
 
   @Override

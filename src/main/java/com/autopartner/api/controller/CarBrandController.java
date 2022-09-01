@@ -33,25 +33,25 @@ public class CarBrandController {
   @GetMapping
   public List<CarBrandResponse> getAll() {
     return carBrandService.findAll().stream()
-            .map(CarBrandResponse::fromEntity)
-            .collect(Collectors.toList());
+        .map(CarBrandResponse::fromEntity)
+        .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "/{id}")
   public CarBrandResponse get(@PathVariable Long id) {
     return carBrandService.findById(id)
-            .map(CarBrandResponse::fromEntity)
-            .orElseThrow(() -> new NotFoundException("CarBrand", id));
+        .map(CarBrandResponse::fromEntity)
+        .orElseThrow(() -> new NotFoundException("CarBrand", id));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PostMapping
   public CarBrandResponse create(@Valid @RequestBody CarBrandRequest request,
-                               @AuthenticationPrincipal User user) {
+                                 @AuthenticationPrincipal User user) {
     log.info("Received car brand registration request {}", request);
     String name = request.getName();
-    if(carBrandService.existsByName(name)){
+    if (carBrandService.existsByName(name)) {
       log.error("Car Brand already exist with name: {}", name);
       throw new AlreadyExistsException("CarBrand", name);
     }
@@ -64,7 +64,7 @@ public class CarBrandController {
   @Secured("ROLE_USER")
   public CarBrandResponse update(@PathVariable Long id, @RequestBody @Valid CarBrandRequest request) {
     CarBrand carBrand = carBrandService.findById(id)
-            .orElseThrow(() -> new NotFoundException("CarBrand", id));
+        .orElseThrow(() -> new NotFoundException("CarBrand", id));
     return CarBrandResponse.fromEntity(carBrandService.update(carBrand, request));
   }
 
@@ -72,7 +72,7 @@ public class CarBrandController {
   @DeleteMapping(value = "/{id}")
   public void delete(@PathVariable Long id) {
     CarBrand carBrand = carBrandService.findById(id)
-            .orElseThrow(() -> new NotFoundException("CarBrand", id));
+        .orElseThrow(() -> new NotFoundException("CarBrand", id));
     carBrandService.delete(carBrand);
   }
 }

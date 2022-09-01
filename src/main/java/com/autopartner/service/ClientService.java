@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
-    List<Client> findAll();
+  List<Client> findAll();
 
-    Optional<Client> findById(Long id);
+  Optional<Client> findById(Long id);
 
-    void delete(Client client);
+  void delete(Client client);
 
-    Client create(ClientRequest request, Long companyId);
+  Client create(ClientRequest request, Long companyId);
 
-    Client update(Client client, ClientRequest request);
+  Client update(Client client, ClientRequest request);
 
-    boolean existsByPhone(String phone);
+  boolean existsByPhone(String phone);
 }

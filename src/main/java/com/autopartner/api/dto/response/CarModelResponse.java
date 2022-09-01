@@ -10,18 +10,18 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CarModelResponse {
-    Long id;
-    String name;
-    CarBrandResponse brand;
-    CarTypeResponse type;
+  Long id;
+  String name;
+  CarBrandResponse brand;
+  CarTypeResponse type;
 
-    public static CarModelResponse fromEntity(CarModel model) {
-        return CarModelResponse.builder()
-                .id(model.getId())
-                .name(model.getName())
-                .brand(CarBrandResponse.fromEntity(model.getCarBrand()))
-                .type(CarTypeResponse.fromEntity(model.getCarType()))
-                .build();
-    }
+  public static CarModelResponse fromEntity(CarModel model) {
+    return CarModelResponse.builder()
+        .id(model.getId())
+        .name(model.getName())
+        .brand(CarBrandResponse.fromEntity(model.getCarBrand()))
+        .type(CarTypeResponse.fromEntity(model.getCarType()))
+        .build();
+  }
 }
 

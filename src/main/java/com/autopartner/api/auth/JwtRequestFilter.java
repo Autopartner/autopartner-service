@@ -27,39 +27,39 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtRequestFilter extends OncePerRequestFilter {
-    public static final String TOKEN_PREFIX = "Bearer ";
+  public static final String TOKEN_PREFIX = "Bearer ";
 
-    JwtVerifier tokenService;
+  JwtVerifier tokenService;
 
-    UserDetailsService userDetailsService;
+  UserDetailsService userDetailsService;
 
-    private String getToken(HttpServletRequest request) {
-        final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-        return Strings.isNullOrEmpty(token) ? null : token.replace(TOKEN_PREFIX, "");
-    }
+  private String getToken(HttpServletRequest request) {
+    final String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+    return Strings.isNullOrEmpty(token) ? null : token.replace(TOKEN_PREFIX, "");
+  }
 
-    @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain chain) throws ServletException, IOException {
+  @Override
+  protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                  @NonNull HttpServletResponse response,
+                                  @NonNull FilterChain chain) throws ServletException, IOException {
 
-        final String token = getToken(request);
-        if (!Strings.isNullOrEmpty(token)) {
-            try {
-                String username = tokenService.verify(JWT.decode(token));
-                UserDetails user = userDetailsService.loadUserByUsername(username);
-                if (user != null) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        user, null, user.getAuthorities());
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                }
-            } catch (Exception e) {
-                log.warn("Invalid token {}. Msg {}", token, e.getMessage());
-            }
+    final String token = getToken(request);
+    if (!Strings.isNullOrEmpty(token)) {
+      try {
+        String username = tokenService.verify(JWT.decode(token));
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+        if (user != null) {
+          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+              user, null, user.getAuthorities());
+          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authToken);
         }
-        chain.doFilter(request, response);
-
+      } catch (Exception e) {
+        log.warn("Invalid token {}. Msg {}", token, e.getMessage());
+      }
     }
+    chain.doFilter(request, response);
+
+  }
 
 }

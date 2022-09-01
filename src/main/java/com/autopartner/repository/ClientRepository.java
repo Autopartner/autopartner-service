@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface ClientRepository extends CrudRepository<Client, Long> {
 
-    List<Client> findByActiveTrue();
+  List<Client> findByActiveTrue();
 
-    Optional<Client> findByIdAndActiveTrue(Long id);
+  Optional<Client> findByIdAndActiveTrue(Long id);
 
-    boolean existsByPhoneAndActiveTrue(String phone);
+  boolean existsByPhoneAndActiveTrue(String phone);
 }

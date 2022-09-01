@@ -1,17 +1,5 @@
 package com.autopartner.domain;
 
-import static lombok.AccessLevel.PRIVATE;
-
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
 import com.autopartner.api.dto.request.CompanyRegistrationRequest;
 import com.autopartner.api.dto.request.UserRequest;
 import lombok.*;
@@ -19,6 +7,12 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Date;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -66,6 +60,28 @@ public class User implements UserDetails {
   @Column
   String phone;
 
+  public static User createWithCompany(CompanyRegistrationRequest request, String password, Long companyId) {
+    return User.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .password(password)
+        .companyId(companyId)
+        .build();
+  }
+
+  public static User create(UserRequest request, String password, Long companyId) {
+    return User.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .password(password)
+        .companyId(companyId)
+        .build();
+  }
+
   @Override
   public String getUsername() {
     return email;
@@ -93,28 +109,6 @@ public class User implements UserDetails {
 
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-  }
-
-  public static User createWithCompany(CompanyRegistrationRequest request, String password, Long companyId) {
-    return User.builder()
-        .firstName(request.getFirstName())
-        .lastName(request.getLastName())
-        .email(request.getEmail())
-        .phone(request.getPhone())
-        .password(password)
-        .companyId(companyId)
-        .build();
-  }
-
-  public static User create(UserRequest request, String password, Long companyId) {
-    return User.builder()
-            .firstName(request.getFirstName())
-            .lastName(request.getLastName())
-            .email(request.getEmail())
-            .phone(request.getPhone())
-            .password(password)
-            .companyId(companyId)
-            .build();
   }
 
   public void update(UserRequest request) {

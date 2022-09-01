@@ -18,41 +18,41 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarBrandServiceImpl implements CarBrandService {
 
-    CarBrandRepository carBrandRepository;
+  CarBrandRepository carBrandRepository;
 
-    @Override
-    public List<CarBrand> findAll() {
-        return carBrandRepository.findByActiveTrue();
-    }
+  @Override
+  public List<CarBrand> findAll() {
+    return carBrandRepository.findByActiveTrue();
+  }
 
-    @Override
-    public Optional<CarBrand> findById(Long id) {
-        return carBrandRepository.findByIdAndActiveTrue(id);
-    }
+  @Override
+  public Optional<CarBrand> findById(Long id) {
+    return carBrandRepository.findByIdAndActiveTrue(id);
+  }
 
-    private CarBrand save(CarBrand carBrand) {
-        return carBrandRepository.save(carBrand);
-    }
+  private CarBrand save(CarBrand carBrand) {
+    return carBrandRepository.save(carBrand);
+  }
 
-    @Override
-    public CarBrand update(CarBrand carBrand, CarBrandRequest request) {
-        carBrand.update(request);
-        return save(carBrand);
-    }
+  @Override
+  public CarBrand update(CarBrand carBrand, CarBrandRequest request) {
+    carBrand.update(request);
+    return save(carBrand);
+  }
 
-    @Override
-    public void delete(CarBrand carBrand) {
-        carBrand.delete();
-        save(carBrand);
-    }
+  @Override
+  public void delete(CarBrand carBrand) {
+    carBrand.delete();
+    save(carBrand);
+  }
 
-    @Override
-    public CarBrand create(CarBrandRequest request, Long companyId) {
-        return save(CarBrand.create(request, companyId));
-    }
+  @Override
+  public CarBrand create(CarBrandRequest request, Long companyId) {
+    return save(CarBrand.create(request, companyId));
+  }
 
-    @Override
-    public boolean existsByName(String name) {
-        return carBrandRepository.existsByNameAndActiveTrue(name);
-    }
+  @Override
+  public boolean existsByName(String name) {
+    return carBrandRepository.existsByNameAndActiveTrue(name);
+  }
 }

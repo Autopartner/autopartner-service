@@ -10,16 +10,16 @@ import java.util.Optional;
 
 public interface CarModelService {
 
-    List<CarModel> findAll();
+  List<CarModel> findAll();
 
-    Optional<CarModel> findById(Long id);
+  Optional<CarModel> findById(Long id);
 
-    void delete(CarModel carBrand);
+  void delete(CarModel carBrand);
 
-    CarModel create(CarModelRequest request, CarBrand brand, CarType type, Long companyId);
+  CarModel create(CarModelRequest request, CarBrand brand, CarType type, Long companyId);
 
-    CarModel update(CarModel model, CarBrand brand, CarType type, CarModelRequest request);
+  CarModel update(CarModel model, CarBrand brand, CarType type, CarModelRequest request);
 
-    boolean existsByName(String name);
+  boolean existsByName(String name);
 
 }

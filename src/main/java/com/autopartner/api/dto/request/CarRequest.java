@@ -9,8 +9,6 @@ import lombok.experimental.FieldDefaults;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import java.time.LocalDateTime;
-
 import static lombok.AccessLevel.PRIVATE;
 
 @Data

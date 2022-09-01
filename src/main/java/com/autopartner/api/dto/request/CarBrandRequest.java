@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 public class CarBrandRequest {
 
-    @NotNull
-    @Size(min = 3, max = 255)
-    String name;
+  @NotNull
+  @Size(min = 3, max = 255)
+  String name;
 }

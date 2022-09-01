@@ -1,10 +1,7 @@
 package com.autopartner.api.controller;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.domain.OrderMaterial;
 import com.autopartner.service.OrderMaterialService;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.validation.Valid;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Controller
 @RequiredArgsConstructor

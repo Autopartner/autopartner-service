@@ -29,65 +29,65 @@ import static org.mockito.Mockito.when;
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class CarBrandServiceTest {
 
-    @Mock
-    CarBrandRepository carBrandRepository;
-    @InjectMocks
-    CarBrandServiceImpl carBrandService;
-    @Captor
-    ArgumentCaptor<CarBrand> carBrandArgumentCaptor;
-    @Captor
-    ArgumentCaptor<Long> longArgumentCaptor;
-    List<CarBrand> brands;
-    CarBrand brand;
-    CarBrandRequest request;
-    Long id;
+  @Mock
+  CarBrandRepository carBrandRepository;
+  @InjectMocks
+  CarBrandServiceImpl carBrandService;
+  @Captor
+  ArgumentCaptor<CarBrand> carBrandArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> longArgumentCaptor;
+  List<CarBrand> brands;
+  CarBrand brand;
+  CarBrandRequest request;
+  Long id;
 
-    @BeforeEach
-    public void init() {
-        brand = CarBrandFixture.createCarBrand();
-        brands = List.of(brand);
-        request = CarBrandRequestFixture.createCarBrandRequest();
-        id = 1L;
-    }
+  @BeforeEach
+  public void init() {
+    brand = CarBrandFixture.createCarBrand();
+    brands = List.of(brand);
+    request = CarBrandRequestFixture.createCarBrandRequest();
+    id = 1L;
+  }
 
-    @Test
-    void findAll() {
-        when(carBrandRepository.findByActiveTrue()).thenReturn(brands);
-        List<CarBrand> actualCarBrands = carBrandService.findAll();
-        assertThat(brands).isEqualTo(actualCarBrands);
-    }
+  @Test
+  void findAll() {
+    when(carBrandRepository.findByActiveTrue()).thenReturn(brands);
+    List<CarBrand> actualCarBrands = carBrandService.findAll();
+    assertThat(brands).isEqualTo(actualCarBrands);
+  }
 
-    @Test
-    void create() {
-        carBrandService.create(request, id);
-        verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
-        CarBrand actualCarBrands = carBrandArgumentCaptor.getValue();
-        assertThat(actualCarBrands.getName()).isEqualTo((request.getName()));
-    }
+  @Test
+  void create() {
+    carBrandService.create(request, id);
+    verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
+    CarBrand actualCarBrands = carBrandArgumentCaptor.getValue();
+    assertThat(actualCarBrands.getName()).isEqualTo((request.getName()));
+  }
 
-   @Test
-    void findById() {
-        when(carBrandRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(brand));
-        carBrandService.findById(brand.getId());
-        verify(carBrandRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-        id = longArgumentCaptor.getValue();
-        assertThat(id).isEqualTo(brand.getId());
-    }
+  @Test
+  void findById() {
+    when(carBrandRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(brand));
+    carBrandService.findById(brand.getId());
+    verify(carBrandRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
+    id = longArgumentCaptor.getValue();
+    assertThat(id).isEqualTo(brand.getId());
+  }
 
-    @Test
-    void update() {
-        carBrandService.update(brand, request);
-        verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
-        CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
-        assertThat(actualCarBrand.getName()).isEqualTo((request.getName()));
-    }
+  @Test
+  void update() {
+    carBrandService.update(brand, request);
+    verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
+    CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
+    assertThat(actualCarBrand.getName()).isEqualTo((request.getName()));
+  }
 
-    @Test
-    void delete() {
-        carBrandService.delete(brand);
-        verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
-        CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
-        assertThat(actualCarBrand).isEqualTo(brand);
-        assertThat(actualCarBrand.getActive()).isFalse();
-    }
+  @Test
+  void delete() {
+    carBrandService.delete(brand);
+    verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
+    CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
+    assertThat(actualCarBrand).isEqualTo(brand);
+    assertThat(actualCarBrand.getActive()).isFalse();
+  }
 }

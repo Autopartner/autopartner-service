@@ -10,14 +10,14 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CarTypeResponse {
-    Long id;
-    String name;
+  Long id;
+  String name;
 
-    public static CarTypeResponse fromEntity(CarType carType) {
-        return CarTypeResponse.builder()
-                .id(carType.getId())
-                .name(carType.getName())
-                .build();
-    }
+  public static CarTypeResponse fromEntity(CarType carType) {
+    return CarTypeResponse.builder()
+        .id(carType.getId())
+        .name(carType.getName())
+        .build();
+  }
 
 }

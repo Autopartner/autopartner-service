@@ -9,13 +9,13 @@ import java.util.Optional;
 
 public interface CompanyService {
 
-    List<Company> findAll();
+  List<Company> findAll();
 
-    Optional<Company> findById(Long id);
+  Optional<Company> findById(Long id);
 
-    Company update(Company company, CompanyRequest request);
+  Company update(Company company, CompanyRequest request);
 
-    void delete(Company company);
+  void delete(Company company);
 
-    Company create(CompanyRegistrationRequest request);
+  Company create(CompanyRegistrationRequest request);
 }

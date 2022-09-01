@@ -35,8 +35,8 @@ public class UserControllerTest extends AbstractControllerTest {
   @Test
   void getAll_NotAuthorized_ReturnsClientError() throws Exception {
     this.mockMvc.perform(get(URL))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content().string(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE)));
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE)));
   }
 
   @Test
@@ -45,8 +45,8 @@ public class UserControllerTest extends AbstractControllerTest {
     List<UserResponse> userResponses = List.of(UserResponse.fromEntity(user));
     when(userService.findAll()).thenReturn(List.of(user));
     this.mockMvc.perform(auth(get(URL)))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content().string(objectMapper.writeValueAsString(userResponses)));
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(userResponses)));
   }
 
   @Test
@@ -56,8 +56,8 @@ public class UserControllerTest extends AbstractControllerTest {
     when(userService.findById(userId)).thenReturn(Optional.ofNullable(user));
     UserResponse userResponse = UserResponse.fromEntity(Objects.requireNonNull(user));
     this.mockMvc.perform(auth(get(URL + "/" + userId)))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content().string(objectMapper.writeValueAsString(userResponse)));
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(userResponse)));
   }
 
   @Test
@@ -66,8 +66,8 @@ public class UserControllerTest extends AbstractControllerTest {
     when(userService.findById(userId)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "User with id=1 is not found");
     this.mockMvc.perform(auth(get(URL + "/" + userId)))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
@@ -78,11 +78,11 @@ public class UserControllerTest extends AbstractControllerTest {
     UserResponse userResponse = UserResponse.fromEntity(user);
     when(userService.create(request, user.getCompanyId())).thenReturn(user);
     this.mockMvc.perform(auth(post(URL))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content()
-                    .string(objectMapper.writeValueAsString(userResponse)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content()
+            .string(objectMapper.writeValueAsString(userResponse)));
   }
 
   @Test
@@ -93,8 +93,8 @@ public class UserControllerTest extends AbstractControllerTest {
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
@@ -104,11 +104,11 @@ public class UserControllerTest extends AbstractControllerTest {
     when(userService.findById(userId)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "User with id=1 is not found");
     this.mockMvc.perform(auth(put(URL + "/" + userId))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content()
-                    .string(objectMapper.writeValueAsString(errorResponse)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content()
+            .string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
@@ -120,11 +120,11 @@ public class UserControllerTest extends AbstractControllerTest {
     when(userService.findById(userId)).thenReturn(Optional.of(user));
     when(userService.update(user, request)).thenReturn(user);
     this.mockMvc.perform(auth(put(URL + "/" + userId))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is2xxSuccessful())
-            .andExpect(content()
-                    .string(objectMapper.writeValueAsString(userResponse)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content()
+            .string(objectMapper.writeValueAsString(userResponse)));
   }
 
   @Test
@@ -134,11 +134,11 @@ public class UserControllerTest extends AbstractControllerTest {
     when(userService.findById(userId)).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "User with id=1 is not found");
     this.mockMvc.perform(auth(delete(URL + "/" + userId))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().is4xxClientError())
-            .andExpect(content()
-                    .string(objectMapper.writeValueAsString(errorResponse)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content()
+            .string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
@@ -147,7 +147,7 @@ public class UserControllerTest extends AbstractControllerTest {
     long userId = 1L;
     when(userService.findById(userId)).thenReturn(Optional.of(user));
     this.mockMvc.perform(auth(delete(URL + "/" + userId)))
-            .andExpect(status().is2xxSuccessful());
+        .andExpect(status().is2xxSuccessful());
   }
 
 }

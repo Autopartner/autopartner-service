@@ -24,10 +24,10 @@ public class UserResponse {
 
   public static UserResponse fromEntity(User user) {
     return UserResponse.builder()
-            .id(user.getId())
-            .email(user.getEmail())
-            .firstName(user.getFirstName())
-            .lastName(user.getLastName())
-            .build();
+        .id(user.getId())
+        .email(user.getEmail())
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .build();
   }
 }

@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static javax.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @Configuration
 @EnableWebSecurity
@@ -41,6 +41,11 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
   ObjectMapper objectMapper;
 
+  @Bean
+  public static PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
   @Autowired
   @Override
   public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)
@@ -48,11 +53,6 @@ public class WebConfiguration extends WebSecurityConfigurerAdapter {
     authenticationManagerBuilder
         .userDetailsService(userDetailsService)
         .passwordEncoder(passwordEncoder());
-  }
-
-  @Bean
-  public static PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
   }
 
   @Bean

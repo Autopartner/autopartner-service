@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface CompanyRepository extends CrudRepository<Company, Long> {
-    List<Company> findAllByActiveTrue();
-    Optional<Company> findByIdAndActiveTrue(Long id);
+  List<Company> findAllByActiveTrue();
+
+  Optional<Company> findByIdAndActiveTrue(Long id);
 }
