@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -31,7 +32,7 @@ public abstract class AbstractControllerTest {
   UserDetailsService userDetailsService;
 
   protected static MockHttpServletRequestBuilder auth(MockHttpServletRequestBuilder builder) {
-    return builder.header("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHJha3V0ZW4uY29tIiwiaXNzIjoidGVzdEByYWt1dGVuLmNvbSIsImV4cCI6NzIwMTY0ODA1MzMxMX0.pI4PBB_FvxO2YWw_QOruFYFH_TJ7s6tyMSiYDFHWsZk");
+    return builder.header(HttpHeaders.AUTHORIZATION, "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHJha3V0ZW4uY29tIiwiaXNzIjoidGVzdEByYWt1dGVuLmNvbSIsImV4cCI6NzIwMTY0ODA1MzMxMX0.pI4PBB_FvxO2YWw_QOruFYFH_TJ7s6tyMSiYDFHWsZk");
   }
 
   @BeforeEach
