@@ -27,6 +27,8 @@ jobs:
       - image: cimg/openjdk:17.0.2
     working_directory: ~/repo
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
       - checkout
       - restore_cache:
           key: jdk-dependencies-{{ checksum "build.gradle" }}
