@@ -52,6 +52,9 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+    if (System.properties['test.profile'] != 'integration') {
+        exclude '**/*IntegrationTest*'
+    }
 }
 
 jib {
