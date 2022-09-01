@@ -7,7 +7,6 @@ import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.domain.Client;
 import com.autopartner.domain.ClientFixture;
 import com.autopartner.service.ClientService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,121 +24,129 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = ClientController.class)
 @AutoConfigureMockMvc
-public class ClientControllerTest extends AbstractControllerTest {
+public class ClientControllerTest extends AbstractControllerTest{
 
-  public static final String URL = "/api/v1/clients";
+    public static final String URL = "/api/v1/clients";
 
-  @MockBean
-  ClientService clientService;
-  Client client;
-  ClientRequest request;
-  ClientResponse response;
-  Long id;
+    @MockBean
+    ClientService clientService;
 
-  @BeforeEach
-  public void init() {
-    client = ClientFixture.createClient();
-    request = ClientRequestFixture.createClientRequest();
-    response = ClientResponse.fromEntity(client);
-    id = 1L;
-  }
+    @Test
+    void getAll_NotAuthorized_ReturnsClientError() throws Exception {
+        this.mockMvc.perform(get(URL))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE)));
+    }
 
-  @Test
-  void getAll_NotAuthorized_ReturnsClientError() throws Exception {
-    this.mockMvc.perform(get(URL))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content().string(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE)));
-  }
+    @Test
+    void getAll_Authorized_ReturnsClients() throws Exception {
+        Client client = ClientFixture.createClient();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        List<ClientResponse> responses = List.of(response);
+        when(clientService.findAll()).thenReturn(List.of(client));
+        this.mockMvc.perform(auth(get(URL)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(objectMapper.writeValueAsString(responses)));
+    }
 
-  @Test
-  void getAll_Authorized_ReturnsClients() throws Exception {
-    List<ClientResponse> responses = List.of(response);
-    when(clientService.findAll()).thenReturn(List.of(client));
-    this.mockMvc.perform(auth(get(URL)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content().string(objectMapper.writeValueAsString(responses)));
-  }
+    @Test
+    void get_ValidCompanyId_ReturnsClient() throws Exception {
+        Client client = ClientFixture.createClient();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.of(client));
+        this.mockMvc.perform(auth(get(URL + "/" + id)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(objectMapper.writeValueAsString(response)));
+    }
 
-  @Test
-  void get_ValidCompanyId_ReturnsClient() throws Exception {
-    when(clientService.findById(id)).thenReturn(Optional.ofNullable(client));
-    this.mockMvc.perform(auth(get(URL + "/" + id)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content().string(objectMapper.writeValueAsString(response)));
-  }
+    @Test
+    void get_InvalidClientId_ReturnsError() throws Exception {
+        long id = 1L;
+        when(clientService.findById(5L)).thenReturn(Optional.empty());
+        ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
+        this.mockMvc.perform(auth(get(URL + "/" + id)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+    }
 
-  @Test
-  void get_InvalidClientId_ReturnsError() throws Exception {
-    when(clientService.findById(5L)).thenReturn(Optional.empty());
-    ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
-    this.mockMvc.perform(auth(get(URL + "/" + id)))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
-  }
+    @Test
+    void create_ClientAlreadyExists_ReturnsError() throws Exception {
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        when(clientService.existsByPhone(request.getPhone())).thenReturn(true);
+        ErrorResponse errorResponse = new ErrorResponse(400, 402, "Client with param: +380997776655 already exists");
+        this.mockMvc.perform(auth(post(URL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+    }
 
-  @Test
-  void create_ClientAlreadyExists_ReturnsError() throws Exception {
-    when(clientService.existsByPhone(request.getPhone())).thenReturn(true);
-    ErrorResponse errorResponse = new ErrorResponse(400, 402, "Client with param: +380997776655 already exists");
-    this.mockMvc.perform(auth(post(URL))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
-  }
+    @Test
+    void create_ValidRequest_CreatesClient() throws Exception {
+        Client client = ClientFixture.createClient();
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        when(clientService.existsByPhone(request.getPhone())).thenReturn(false);
+        when(clientService.create(request, client.getCompanyId())).thenReturn(client);
+        this.mockMvc.perform(auth(post(URL))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content()
+                        .string(objectMapper.writeValueAsString(response)));
+    }
 
-  @Test
-  void create_ValidRequest_CreatesClient() throws Exception {
-    when(clientService.existsByPhone(request.getPhone())).thenReturn(false);
-    when(clientService.create(request, client.getCompanyId())).thenReturn(client);
-    this.mockMvc.perform(auth(post(URL))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content()
-            .string(objectMapper.writeValueAsString(response)));
-  }
+    @Test
+    void update_InvalidClientId_ReturnsError() throws Exception {
+        ClientRequest  request = ClientRequestFixture.createClientRequest();
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.empty());
+        ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
+        this.mockMvc.perform(auth(put(URL + "/" + id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .string(objectMapper.writeValueAsString(errorResponse)));
+    }
 
-  @Test
-  void update_InvalidClientId_ReturnsError() throws Exception {
-    when(clientService.findById(id)).thenReturn(Optional.empty());
-    ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
-    this.mockMvc.perform(auth(put(URL + "/" + id))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content()
-            .string(objectMapper.writeValueAsString(errorResponse)));
-  }
+    @Test
+    void update_ValidRequest_UpdatesClient() throws Exception {
+        Client  client = ClientFixture.createClient();
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.of(client));
+        when(clientService.update(client, request)).thenReturn(client);
+        this.mockMvc.perform(auth(put(URL + "/" + id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content()
+                        .string(objectMapper.writeValueAsString(response)));
+    }
 
-  @Test
-  void update_ValidRequest_UpdatesClient() throws Exception {
-    when(clientService.findById(id)).thenReturn(Optional.of(client));
-    when(clientService.update(client, request)).thenReturn(client);
-    this.mockMvc.perform(auth(put(URL + "/" + id))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content()
-            .string(objectMapper.writeValueAsString(response)));
-  }
+    @Test
+    void delete_InvalidClientId_ReturnsError() throws Exception {
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.empty());
+        ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
+        this.mockMvc.perform(auth(delete(URL + "/" + id))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content()
+                        .string(objectMapper.writeValueAsString(errorResponse)));
+    }
 
-  @Test
-  void delete_InvalidClientId_ReturnsError() throws Exception {
-    when(clientService.findById(id)).thenReturn(Optional.empty());
-    ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
-    this.mockMvc.perform(auth(delete(URL + "/" + id))
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content()
-            .string(objectMapper.writeValueAsString(errorResponse)));
-  }
-
-  @Test
-  void delete_ValidRequest_DeletesClient() throws Exception {
-    when(clientService.findById(id)).thenReturn(Optional.of(client));
-    this.mockMvc.perform(auth(delete(URL + "/" + id)))
-        .andExpect(status().is2xxSuccessful());
-  }
+    @Test
+    void delete_ValidRequest_DeletesClient() throws Exception {
+        Client  client = ClientFixture.createClient();
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.of(client));
+        this.mockMvc.perform(auth(delete(URL + "/" + id)))
+                .andExpect(status().is2xxSuccessful());
+    }
 }

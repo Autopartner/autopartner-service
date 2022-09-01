@@ -27,53 +27,51 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CompanyController {
 
-  CompanyService companyService;
-  UserService userService;
+    CompanyService companyService;
+    UserService userService;
 
-  @Secured("ROLE_ADMIN")
-  @GetMapping()
-  public List<CompanyResponse> getAll() {
-    return companyService.findAll().stream()
-        .map(CompanyResponse::fromEntity)
-        .collect(Collectors.toList());
-  }
-
-  @Secured("ROLE_USER")
-  @GetMapping(value = "/{id}")
-  public CompanyResponse get(@PathVariable Long id) {
-    return companyService.findById(id)
-        .map(CompanyResponse::fromEntity)
-        .orElseThrow(() -> new NotFoundException("Company", id));
-  }
-
-  @PostMapping
-  public CompanyResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
-    log.info("Received company registration request {}", request);
-    String email = request.getEmail();
-    if (userService.existsByEmail(email)) {
-      log.error("User already exists with email: {}", email);
-      throw new AlreadyExistsException("User", email);
+    @Secured("ROLE_ADMIN")
+    @GetMapping()
+    public List<CompanyResponse> getAll() {
+        return companyService.findAll().stream()
+                .map(CompanyResponse::fromEntity)
+                .collect(Collectors.toList());
     }
 
-    Company company = companyService.create(request);
-    log.info("Created new company {}", request.getName());
-    return CompanyResponse.fromEntity(company);
-  }
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/{id}")
+    public CompanyResponse get(@PathVariable Long id) {
+        return companyService.findById(id)
+                .map(CompanyResponse::fromEntity)
+                .orElseThrow(() -> new NotFoundException("Company", id));
+    }
 
-  @PutMapping("/{id}")
-  @Secured("ROLE_USER")
-  public CompanyResponse update(@PathVariable Long id, @RequestBody @Valid CompanyRequest companyRequest) {
-    Company company = companyService.findById(id)
-        .orElseThrow(() -> new NotFoundException("Company", id));
-    return CompanyResponse.fromEntity(companyService.update(company, companyRequest));
-  }
+    @PostMapping
+    public CompanyResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
+        log.info("Received company registration request {}", request);
+        String email = request.getEmail();
+        if (userService.existsByEmail(email)) {
+            throw new AlreadyExistsException("User", email);
+        }
+        Company company = companyService.create(request);
+        log.info("Created new company {}", request.getName());
+        return CompanyResponse.fromEntity(company);
+    }
 
-  @Secured("ROLE_ADMIN")
-  @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id) {
-    Company company = companyService.findById(id)
-        .orElseThrow(() -> new NotFoundException("Company", id));
-    companyService.delete(company);
-  }
+    @PutMapping("/{id}")
+    @Secured("ROLE_USER")
+    public CompanyResponse update(@PathVariable Long id, @RequestBody @Valid CompanyRequest companyRequest) {
+        Company company = companyService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Company", id));
+        return CompanyResponse.fromEntity(companyService.update(company, companyRequest));
+    }
+
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        Company company = companyService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Company", id));
+        companyService.delete(company);
+    }
 
 }
