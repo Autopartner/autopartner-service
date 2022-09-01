@@ -53,7 +53,6 @@ public class CarModelController {
         log.info("Received car model registration request {}", request);
         String name = request.getName();
         if (carModelService.existsByName(name)) {
-            log.error("Car model already exist with name: {}", name);
             throw new AlreadyExistsException("CarModel", name);
         }
         CarBrand brand = carBrandService.findById(request.getCarBrandId())

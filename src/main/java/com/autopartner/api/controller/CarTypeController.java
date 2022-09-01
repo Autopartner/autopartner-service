@@ -51,7 +51,6 @@ public class CarTypeController {
         log.info("Received car type registration request {}", request);
         String name = request.getName();
         if (carTypeService.existsByName(name)) {
-            log.error("Car type already exist with name: {}", name);
             throw new AlreadyExistsException("CarType", name);
         }
         CarType carType = carTypeService.create(request, user.getCompanyId());

@@ -51,8 +51,7 @@ public class ClientController {
                                  @AuthenticationPrincipal User user) {
         log.error("Received client registration request {}", request);
         String phone = request.getPhone();
-        if(clientService.existsByPhone(phone)){
-            log.info("Client already exist with phone: {}", phone);
+        if (clientService.existsByPhone(phone)) {
             throw new AlreadyExistsException("Client", phone);
         }
         Client client = clientService.create(request, user.getCompanyId());
@@ -71,9 +70,8 @@ public class ClientController {
     @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable Long id) {
-     Client client = clientService.findById(id)
-             .orElseThrow(() -> new NotFoundException("Client", id));
-     clientService.delete(client);
+        Client client = clientService.findById(id)
+                .orElseThrow(() -> new NotFoundException("Client", id));
+        clientService.delete(client);
     }
-
 }
