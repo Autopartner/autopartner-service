@@ -8,7 +8,6 @@ plugins {
 
 group 'com.autopartner'
 version '0.0.2-SNAPSHOT'
-sourceCompatibility = '17'
 
 ext {
     set('springCloudGcpVersion', "3.3.0")
@@ -40,7 +39,7 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    testImplementation "org.testcontainers:testcontainers:1.17.3"
+    testImplementation "org.testcontainers:junit-jupiter:1.17.3"
     testImplementation "org.testcontainers:postgresql:1.17.3"
 
 }
@@ -53,6 +52,9 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+    if (System.properties['test.profile'] != 'integration') {
+        exclude '**/*IntegrationTest*'
+    }
 }
 
 jib {
