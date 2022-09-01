@@ -7,7 +7,6 @@ import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.domain.Client;
 import com.autopartner.domain.ClientFixture;
 import com.autopartner.service.ClientService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,18 +30,6 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @MockBean
     ClientService clientService;
-    Client client;
-    ClientRequest request;
-    ClientResponse response;
-    Long id;
-
-    @BeforeEach
-    public void init() {
-        client = ClientFixture.createClient();
-        request = ClientRequestFixture.createClientRequest();
-        response = ClientResponse.fromEntity(client);
-        id = 1L;
-    }
 
     @Test
     void getAll_NotAuthorized_ReturnsClientError() throws Exception {
@@ -53,6 +40,8 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void getAll_Authorized_ReturnsClients() throws Exception {
+        Client client = ClientFixture.createClient();
+        ClientResponse response = ClientResponse.fromEntity(client);
         List<ClientResponse> responses = List.of(response);
         when(clientService.findAll()).thenReturn(List.of(client));
         this.mockMvc.perform(auth(get(URL)))
@@ -62,7 +51,10 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void get_ValidCompanyId_ReturnsClient() throws Exception {
-        when(clientService.findById(id)).thenReturn(Optional.ofNullable(client));
+        Client client = ClientFixture.createClient();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        long id = 1L;
+        when(clientService.findById(id)).thenReturn(Optional.of(client));
         this.mockMvc.perform(auth(get(URL + "/" + id)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(objectMapper.writeValueAsString(response)));
@@ -70,6 +62,7 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void get_InvalidClientId_ReturnsError() throws Exception {
+        long id = 1L;
         when(clientService.findById(5L)).thenReturn(Optional.empty());
         ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
         this.mockMvc.perform(auth(get(URL + "/" + id)))
@@ -79,6 +72,7 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void create_ClientAlreadyExists_ReturnsError() throws Exception {
+        ClientRequest request = ClientRequestFixture.createClientRequest();
         when(clientService.existsByPhone(request.getPhone())).thenReturn(true);
         ErrorResponse errorResponse = new ErrorResponse(400, 402, "Client with param: +380997776655 already exists");
         this.mockMvc.perform(auth(post(URL))
@@ -90,6 +84,9 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void create_ValidRequest_CreatesClient() throws Exception {
+        Client client = ClientFixture.createClient();
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        ClientResponse response = ClientResponse.fromEntity(client);
         when(clientService.existsByPhone(request.getPhone())).thenReturn(false);
         when(clientService.create(request, client.getCompanyId())).thenReturn(client);
         this.mockMvc.perform(auth(post(URL))
@@ -102,6 +99,8 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void update_InvalidClientId_ReturnsError() throws Exception {
+        ClientRequest  request = ClientRequestFixture.createClientRequest();
+        long id = 1L;
         when(clientService.findById(id)).thenReturn(Optional.empty());
         ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
         this.mockMvc.perform(auth(put(URL + "/" + id))
@@ -114,6 +113,10 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void update_ValidRequest_UpdatesClient() throws Exception {
+        Client  client = ClientFixture.createClient();
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        ClientResponse response = ClientResponse.fromEntity(client);
+        long id = 1L;
         when(clientService.findById(id)).thenReturn(Optional.of(client));
         when(clientService.update(client, request)).thenReturn(client);
         this.mockMvc.perform(auth(put(URL + "/" + id))
@@ -126,6 +129,8 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void delete_InvalidClientId_ReturnsError() throws Exception {
+        ClientRequest request = ClientRequestFixture.createClientRequest();
+        long id = 1L;
         when(clientService.findById(id)).thenReturn(Optional.empty());
         ErrorResponse errorResponse = new ErrorResponse(404, 404, "Client with id=1 is not found");
         this.mockMvc.perform(auth(delete(URL + "/" + id))
@@ -138,6 +143,8 @@ public class ClientControllerTest extends AbstractControllerTest{
 
     @Test
     void delete_ValidRequest_DeletesClient() throws Exception {
+        Client  client = ClientFixture.createClient();
+        long id = 1L;
         when(clientService.findById(id)).thenReturn(Optional.of(client));
         this.mockMvc.perform(auth(delete(URL + "/" + id)))
                 .andExpect(status().is2xxSuccessful());
