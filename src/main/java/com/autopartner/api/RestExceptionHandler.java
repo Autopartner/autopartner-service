@@ -25,17 +25,21 @@ public class RestExceptionHandler {
         .map(error -> error.getField() + "=" + error.getRejectedValue() + ", " + error.getDefaultMessage())
         .findFirst()
         .orElse("Argument Not Valid");
+    log.info(message);
     return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, message);
   }
 
   @ExceptionHandler(value = {NotFoundException.class})
   public ResponseEntity<ErrorResponse> handleException(NotFoundException e) {
-    return error(NOT_FOUND, NOT_FOUND.value(), e.getMessage());
+    String error = e.getMessage();
+    log.info(error);
+    return error(NOT_FOUND, NOT_FOUND.value(), error);
   }
 
   @ExceptionHandler(value = {AlreadyExistsException.class})
   public ResponseEntity<ErrorResponse> handleException(AlreadyExistsException e) {
     String error = e.getMessage();
+    log.info(error);
     return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, error);
   }
 
