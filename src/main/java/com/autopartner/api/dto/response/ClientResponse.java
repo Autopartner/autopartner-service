@@ -33,7 +33,7 @@ public class ClientResponse {
         .phone(client.getPhone())
         .email(client.getEmail())
         .productDiscount(client.getProductDiscount())
-        .taskDiscount(client.getProductDiscount())
+        .taskDiscount(client.getTaskDiscount())
         .clientType(client.getClientType())
         .note(client.getNote())
         .build();

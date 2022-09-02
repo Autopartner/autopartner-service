@@ -1,33 +1,26 @@
 package com.autopartner.integration;
 
-import com.autopartner.api.auth.JwtVerifier;
-import com.autopartner.domain.UserFixture;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.BeforeAll;
+import com.autopartner.api.dto.response.AuthenticationResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.token.TokenService;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.support.TestPropertySourceUtils;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Collections;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static com.autopartner.api.dto.request.AuthenticationRequestFixture.createAuthRequest;
+import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.createCompanyRegistrationRequest;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ContextConfiguration(initializers = AbstractIntegrationTest.DataSourceInitializer.class)
+@AutoConfigureMockMvc
 @Testcontainers
 public abstract class AbstractIntegrationTest {
 
@@ -38,39 +31,36 @@ public abstract class AbstractIntegrationTest {
   }
 
   @Autowired
-  protected TestRestTemplate testRestTemplate;
+  MockMvc mockMvc;
 
-  @MockBean
-  JwtVerifier tokenService;
+  @Autowired
+  ObjectMapper objectMapper;
 
-  @MockBean
-  UserDetailsService userDetailsService;
+  String token;
 
   @BeforeEach
-  void setUp() {
-    testRestTemplate.getRestTemplate().setInterceptors(
-        Collections.singletonList((request, body, execution) -> {
-          request.getHeaders()
-              .add(HttpHeaders.AUTHORIZATION, "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QHJha3V0ZW4uY29tIiwiaXNzIjoidGVzdEByYWt1dGVuLmNvbSIsImV4cCI6NzIwMTY0ODA1MzMxMX0.pI4PBB_FvxO2YWw_QOruFYFH_TJ7s6tyMSiYDFHWsZk");
-          return execution.execute(request, body);
-        }));
+  void setUp() throws Exception {
 
-    String username = "test@username.com";
-    when(tokenService.verify(any())).thenReturn(username);
-    when(userDetailsService.loadUserByUsername(username)).thenReturn(UserFixture.createUser());
+    this.mockMvc.perform(post("/api/v1/companies")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(createCompanyRegistrationRequest())))
+        .andExpect(status().is2xxSuccessful());
+
+    MvcResult result = this.mockMvc.perform(post("/api/v1/auth")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(createAuthRequest())))
+        .andExpect(status().is2xxSuccessful()).andReturn();
+
+    String response = result.getResponse().getContentAsString();
+    token = "Bearer " + objectMapper.readValue(response, AuthenticationResponse.class).getToken();
+
   }
 
-  public static class DataSourceInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-    @Override
-    public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
-      TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-          applicationContext,
-          "spring.datasource.url=" + DB_CONTAINER.getJdbcUrl(),
-          "spring.datasource.username=" + DB_CONTAINER.getUsername(),
-          "spring.datasource.password=" + DB_CONTAINER.getPassword()
-      );
-    }
+  @DynamicPropertySource
+  public static void dynamicPropertySource(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", DB_CONTAINER::getJdbcUrl);
+    registry.add("spring.datasource.username", DB_CONTAINER::getUsername);
+    registry.add("spring.datasource.password", DB_CONTAINER::getPassword);
   }
 
 }
