@@ -41,7 +41,6 @@ public class CarBrandControllerTest extends AbstractControllerTest {
   @Test
   void getAll_Authorized_ReturnsCaBrands() throws Exception {
     CarBrand brand = CarBrandFixture.createCarBrand();
-    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
     CarBrandResponse response = CarBrandResponse.fromEntity(brand);
     List<CarBrandResponse> responses = List.of(response);
     when(carBrandService.findAll()).thenReturn(List.of(brand));
@@ -53,7 +52,6 @@ public class CarBrandControllerTest extends AbstractControllerTest {
   @Test
   void get_ValidCarBrandId_ReturnsCarBrand() throws Exception {
     CarBrand brand = CarBrandFixture.createCarBrand();
-    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
     CarBrandResponse response = CarBrandResponse.fromEntity(brand);
     long id = 1L;
     when(carBrandService.findById(id)).thenReturn(Optional.of(brand));
@@ -75,7 +73,6 @@ public class CarBrandControllerTest extends AbstractControllerTest {
   @Test
   void create_CarBrandAlreadyExists_ReturnsError() throws Exception {
     CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
-    long id = 1L;
     when(carBrandService.existsByName(request.getName())).thenReturn(true);
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarBrand with param: Audi already exists");
     this.mockMvc.perform(auth(post(URL))

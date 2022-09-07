@@ -1,43 +1,83 @@
 package com.autopartner.api.controller;
 
-import com.autopartner.domain.TaskType;
-import com.autopartner.service.TaskTypeService;
+import com.autopartner.api.dto.request.TaskCategoryRequest;
+import com.autopartner.api.dto.response.TaskCategoryResponse;
+import com.autopartner.domain.TaskCategory;
+import com.autopartner.domain.User;
+import com.autopartner.exception.AlreadyExistsException;
+import com.autopartner.exception.NotFoundException;
+import com.autopartner.service.TaskCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
 
-@Controller
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/tasks/categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class TaskTypeController {
 
-  TaskTypeService taskTypeService;
+  TaskCategoryService taskCategoryService;
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = {"/api/task/type"}, method = RequestMethod.GET)
-  public ResponseEntity<Iterable<TaskType>> getAll() {
-    return ResponseEntity.ok(taskTypeService.getByActiveTrue());
+  @GetMapping
+  public List<TaskCategoryResponse> getAll() {
+    return taskCategoryService.findAll().stream()
+        .map(TaskCategoryResponse::fromEntity)
+        .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/task/type/{id}", method = RequestMethod.GET)
-  public ResponseEntity<TaskType> get(@PathVariable Long id) {
-    return ResponseEntity.ok(taskTypeService.getTaskTypeById(id));
+  @GetMapping(value = "/{id}")
+  public TaskCategoryResponse get(@PathVariable Long id) {
+    return taskCategoryService
+        .findById(id)
+        .map(TaskCategoryResponse::fromEntity)
+        .orElseThrow(() -> new NotFoundException("TaskCategory", id));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @RequestMapping(value = "/api/task/type", method = RequestMethod.POST)
-  public ResponseEntity<TaskType> save(@Valid @RequestBody TaskType taskType) {
-    return ResponseEntity.ok(taskTypeService.saveTaskType(taskType));
+  @PostMapping
+  public TaskCategoryResponse create(
+      @Valid @RequestBody TaskCategoryRequest request, @AuthenticationPrincipal User user) {
+    log.error("Received task category registration request {}", request);
+    String name = request.getName();
+    if (taskCategoryService.existsByName(name)) {
+      throw new AlreadyExistsException("TaskCategory", name);
+    }
+    TaskCategory category = taskCategoryService.create(request, user.getCompanyId());
+    log.info("Created new task category {}", request.getName());
+    return TaskCategoryResponse.fromEntity(category);
+  }
+
+  @PutMapping("/{id}")
+  @Secured("ROLE_USER")
+  public TaskCategoryResponse update(
+      @PathVariable Long id, @RequestBody @Valid TaskCategoryRequest request) {
+    TaskCategory category = taskCategoryService.findById(id)
+            .orElseThrow(() -> new NotFoundException("TaskCategory", id));
+    String name = request.getName();
+    if (taskCategoryService.existsByName(name)) {
+      throw new AlreadyExistsException("TaskCategory", name);
+    }
+    return TaskCategoryResponse.fromEntity(taskCategoryService.update(category, request));
+  }
+
+  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
+  @DeleteMapping(value = "/{id}")
+  public void delete(@PathVariable Long id) {
+    TaskCategory category = taskCategoryService.findById(id)
+            .orElseThrow(() -> new NotFoundException("TaskCategory", id));
+    taskCategoryService.delete(category);
   }
 }
