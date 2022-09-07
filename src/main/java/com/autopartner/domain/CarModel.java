@@ -2,10 +2,7 @@ package com.autopartner.domain;
 
 import com.autopartner.api.dto.request.CarModelRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -14,7 +11,9 @@ import java.util.List;
 import static lombok.AccessLevel.PRIVATE;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "car_models")

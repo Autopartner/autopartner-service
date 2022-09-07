@@ -2,10 +2,7 @@ package com.autopartner.domain;
 
 import com.autopartner.api.dto.request.CompanyRegistrationRequest;
 import com.autopartner.api.dto.request.CompanyRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,7 +14,9 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Table(name = "companies")
-@Data
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor

@@ -24,14 +24,14 @@ public class Task {
   @SequenceGenerator(name = "tasks_seq", sequenceName = "tasks_seq", allocationSize = 1)
   Long id;
 
-  @JoinColumn(name = "task_type_id")
+  @JoinColumn(name = "task_category_id")
   @ManyToOne
-  TaskType taskType;
+  TaskCategory taskCategory;
 
-  @Column(name = "name")
+  @Column
   String name;
 
-  @Column(name = "active")
+  @Column
   Boolean active;
 
 }

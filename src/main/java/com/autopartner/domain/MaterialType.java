@@ -1,6 +1,5 @@
 package com.autopartner.domain;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,12 +22,16 @@ public class MaterialType {
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "material_types_seq")
-  @SequenceGenerator(name = "material_types_seq", sequenceName = "material_types_seq", allocationSize = 1)
+  @SequenceGenerator(
+      name = "material_types_seq",
+      sequenceName = "material_types_seq",
+      allocationSize = 1)
   Long id;
 
   @Column(name = "name")
   String name;
 
+  @ToString.Exclude
   @OneToMany(mappedBy = "materialType", cascade = CascadeType.ALL)
   @OrderBy("id asc")
   @JsonIgnore
@@ -36,5 +39,4 @@ public class MaterialType {
 
   @Column(name = "active")
   Boolean active;
-
 }

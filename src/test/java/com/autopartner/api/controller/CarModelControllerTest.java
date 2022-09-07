@@ -77,7 +77,6 @@ public class CarModelControllerTest extends AbstractControllerTest {
 
   @Test
   void create_CarModelAlreadyExists_ReturnsError() throws Exception {
-    CarModel model = CarModelFixture.createCarModel();
     CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
     when(carModelService.existsByName(request.getName())).thenReturn(true);
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarModel with param: Q5 already exists");
