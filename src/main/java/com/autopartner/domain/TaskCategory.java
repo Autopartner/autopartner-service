@@ -32,20 +32,28 @@ public class TaskCategory {
       allocationSize = 1)
   Long id;
 
-  @Column Long companyId;
+  @Column
+  Long companyId;
 
-  @Column Long parentId;
+  @Column
+  Long parentId;
 
-  @Column String name;
+  @Column
+  String name;
 
+  @ToString.Exclude
   @OneToMany(mappedBy = "taskCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Task> tasks;
 
-  @Column @CreationTimestamp LocalDateTime createdAt;
+  @Column
+  @CreationTimestamp
+  LocalDateTime createdAt;
 
-  @Column @Builder.Default Boolean active = true;
+  @Column
+  @Builder.Default
+  Boolean active = true;
 
   public static TaskCategory create(TaskCategoryRequest request, Long companyId) {
     return TaskCategory.builder()

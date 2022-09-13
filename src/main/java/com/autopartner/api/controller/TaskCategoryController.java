@@ -22,10 +22,10 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/tasks/categories")
+@RequestMapping("/api/v1/task-categories")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
-public class TaskTypeController {
+public class TaskCategoryController {
 
   TaskCategoryService taskCategoryService;
 
