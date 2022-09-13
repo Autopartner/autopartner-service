@@ -43,8 +43,6 @@ class CompanyServiceTest {
   ArgumentCaptor<Company> companyArgumentCaptor;
   @Captor
   ArgumentCaptor<User> userArgumentCaptor;
-  @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
   CompanyRegistrationRequest companyRegistrationRequest;
   List<Company> companies;
   Company company;

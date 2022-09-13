@@ -6,14 +6,14 @@ import com.autopartner.repository.TaskCategoryRepository;
 import com.autopartner.service.TaskCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
-@Repository
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class TaskCategoryServiceImpl implements TaskCategoryService {
@@ -32,7 +32,8 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
 
   @Override
   public void delete(TaskCategory category) {
-    taskCategoryRepository.delete(category);
+    category.delete();
+    save(category);
   }
 
   private TaskCategory save(TaskCategory category) {
