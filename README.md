@@ -47,3 +47,17 @@ Run application
 ```bash
   java -jar build/libs/autopartner-be-0.0.2-SNAPSHOT.jar
 ```
+
+##### Tests
+
+Run unit tests
+
+```bash
+ $ ./gradlew test --info 
+```
+
+Run unit tests and integration tests (testcontainers used, docker must be run)
+
+```bash
+ $ ./gradlew test -Dtest.profile=integration --info 
+```

@@ -27,6 +27,6 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
         .andExpect(jsonPath("$.name",
             is(taskCategoryRequest.getName())))
         .andExpect(jsonPath("$.parentId",
-            is(taskCategoryRequest.getParentId())));
+            is(taskCategoryRequest.getParentId()), Long.class));
   }
 }
