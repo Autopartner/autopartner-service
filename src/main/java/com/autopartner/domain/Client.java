@@ -107,6 +107,7 @@ public class Client {
     email = request.getEmail();
     productDiscount = request.getProductDiscount();
     taskDiscount = request.getTaskDiscount();
+    clientType = request.getClientType();
     note = request.getNote();
   }
 

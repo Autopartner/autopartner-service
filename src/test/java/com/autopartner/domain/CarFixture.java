@@ -12,7 +12,7 @@ public class CarFixture {
         .vinCode("Aa1111")
         .active(true)
         .note("New car")
-        .client(ClientFixture.createClient())
+        .client(ClientFixture.createPersonClient())
         .carModel(CarModelFixture.createCarModel())
         .build();
   }

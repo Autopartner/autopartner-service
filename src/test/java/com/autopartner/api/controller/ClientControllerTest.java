@@ -40,7 +40,7 @@ public class ClientControllerTest extends AbstractControllerTest {
 
   @Test
   void getAll_Authorized_ReturnsClients() throws Exception {
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     ClientResponse response = ClientResponse.fromEntity(client);
     List<ClientResponse> responses = List.of(response);
     when(clientService.findAll()).thenReturn(List.of(client));
@@ -51,7 +51,7 @@ public class ClientControllerTest extends AbstractControllerTest {
 
   @Test
   void get_ValidCompanyId_ReturnsClient() throws Exception {
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     ClientResponse response = ClientResponse.fromEntity(client);
     long id = 1L;
     when(clientService.findById(id)).thenReturn(Optional.of(client));
@@ -84,7 +84,7 @@ public class ClientControllerTest extends AbstractControllerTest {
 
   @Test
   void create_ValidRequest_CreatesClient() throws Exception {
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     ClientRequest request = ClientRequestFixture.createClientRequest();
     ClientResponse response = ClientResponse.fromEntity(client);
     when(clientService.existsByPhone(request.getPhone())).thenReturn(false);
@@ -113,7 +113,7 @@ public class ClientControllerTest extends AbstractControllerTest {
 
   @Test
   void update_ValidRequest_UpdatesClient() throws Exception {
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     ClientRequest request = ClientRequestFixture.createClientRequest();
     ClientResponse response = ClientResponse.fromEntity(client);
     long id = 1L;
@@ -143,7 +143,7 @@ public class ClientControllerTest extends AbstractControllerTest {
 
   @Test
   void delete_ValidRequest_DeletesClient() throws Exception {
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     long id = 1L;
     when(clientService.findById(id)).thenReturn(Optional.of(client));
     this.mockMvc.perform(auth(delete(URL + "/" + id)))

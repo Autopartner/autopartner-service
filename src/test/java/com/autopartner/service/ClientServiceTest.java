@@ -44,7 +44,7 @@ class ClientServiceTest {
 
   @BeforeEach
   public void init() {
-    client = ClientFixture.createClient();
+    client = ClientFixture.createPersonClient();
     clients = List.of(client);
     request = ClientRequestFixture.createClientRequest();
     id = 3L;
