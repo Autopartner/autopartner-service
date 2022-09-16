@@ -1,7 +1,9 @@
 package com.autopartner.integration;
 
 import com.autopartner.api.dto.response.AuthenticationResponse;
+import com.autopartner.service.CompanyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,6 +21,7 @@ import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Testcontainers
@@ -36,16 +39,20 @@ public abstract class AbstractIntegrationTest {
   @Autowired
   ObjectMapper objectMapper;
 
+  @Autowired
+  CompanyService companyService;
+
   String token;
 
   @BeforeEach
   void setUp() throws Exception {
+    if (companyService.findAll().isEmpty()) {
+      companyService.create(createCompanyRegistrationRequest());
+    }
+    auth();
+  }
 
-    this.mockMvc.perform(post("/api/v1/companies")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(createCompanyRegistrationRequest())))
-        .andExpect(status().is2xxSuccessful());
-
+  private void auth() throws Exception {
     MvcResult result = this.mockMvc.perform(post("/api/v1/auth")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(createAuthRequest())))
@@ -53,7 +60,6 @@ public abstract class AbstractIntegrationTest {
 
     String response = result.getResponse().getContentAsString();
     token = "Bearer " + objectMapper.readValue(response, AuthenticationResponse.class).getToken();
-
   }
 
   @DynamicPropertySource
