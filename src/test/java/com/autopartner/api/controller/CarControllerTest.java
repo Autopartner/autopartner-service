@@ -79,7 +79,7 @@ public class CarControllerTest extends AbstractControllerTest {
   void create_ValidRequest_CreatesCar() throws Exception {
     Car car = CarFixture.createCar();
     CarModel model = CarModelFixture.createCarModel();
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     CarRequest request = CarRequestFixture.createCarRequest();
     CarResponse response = CarResponse.fromEntity(car);
     when(clientService.findById(request.getClientId())).thenReturn(Optional.ofNullable(client));
@@ -109,7 +109,7 @@ public class CarControllerTest extends AbstractControllerTest {
   void update_ValidRequest_UpdatesCar() throws Exception {
     Car car = CarFixture.createCar();
     CarModel model = CarModelFixture.createCarModel();
-    Client client = ClientFixture.createClient();
+    Client client = ClientFixture.createPersonClient();
     CarRequest request = CarRequestFixture.createCarRequest();
     CarResponse response = CarResponse.fromEntity(car);
     long id = 1L;

@@ -7,7 +7,6 @@ import com.autopartner.repository.CarRepository;
 import com.autopartner.service.impl.CarServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,73 +40,71 @@ public class CarServiceTest {
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
 
-  List<Car> cars;
-
-  Car car;
-
-  CarRequest request;
-
-  Client client;
-
-  CarModel carModel;
-
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    car = CarFixture.createCar();
-    cars = List.of(car, new Car());
-    request = CarRequestFixture.createCarRequest();
-    client = ClientFixture.createClient();
-    carModel = CarModelFixture.createCarModel();
-    id = 2L;
-  }
-
   @Test
   public void findAll() {
+    List<Car> cars = List.of(CarFixture.createCar(), CarFixture.createCar());
     when(carRepository.findAllByActiveTrue()).thenReturn(cars);
+
     List<Car> actualCars = carService.findAll();
-    assertThat(cars).isEqualTo(actualCars);
+
+    assertThat(actualCars).isEqualTo(cars);
   }
 
   @Test
   public void create() {
-    carService.create(request, client, carModel, id);
+    CarRequest carRequest = CarRequestFixture.createCarRequest();
+    Client client = ClientFixture.createPersonClient();
+    CarModel carModel = CarModelFixture.createCarModel();
+
+    carService.create(carRequest, client, carModel, 2L);
+
     verify(carRepository).save(carArgumentCaptor.capture());
     Car actualCar = carArgumentCaptor.getValue();
-    assertThatCarMappedCorrectly(actualCar);
+    assertThatCarMappedCorrectly(actualCar, carRequest);
   }
 
   @Test
   void findById() {
+    Car car = CarFixture.createCar();
     when(carRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(car));
-    carService.findById(car.getId());
+
+    carService.findById(Objects.requireNonNull(car).getId());
+
     verify(carRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    Long id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(car.getId());
   }
 
   @Test
   void update() {
-    carService.update(car, client, carModel, request);
+    CarRequest carRequest = CarRequestFixture.createCarRequest();
+    Client client = ClientFixture.createPersonClient();
+    CarModel carModel = CarModelFixture.createCarModel();
+    Car car = CarFixture.createCar();
+
+    carService.update(car, client, carModel, carRequest);
+
     verify(carRepository).save(carArgumentCaptor.capture());
     Car actualCar = carArgumentCaptor.getValue();
-    assertThatCarMappedCorrectly(actualCar);
+    assertThatCarMappedCorrectly(actualCar, carRequest);
   }
 
   @Test
   void delete() {
+    Car car = CarFixture.createCar();
+
     carService.delete(car);
+
     verify(carRepository).save(carArgumentCaptor.capture());
     Car actualCar = carArgumentCaptor.getValue();
     assertThat(actualCar).isEqualTo(car);
     assertThat(actualCar.getActive()).isFalse();
   }
 
-  private void assertThatCarMappedCorrectly(Car actualCar) {
-    assertThat(actualCar.getPlateNumber()).isEqualTo(request.getPlateNumber());
-    assertThat(actualCar.getManufactureYear()).isEqualTo(request.getManufactureYear());
-    assertThat(actualCar.getVinCode()).isEqualTo(request.getVinCode());
-    assertThat(actualCar.getNote()).isEqualTo(request.getNote());
+  private void assertThatCarMappedCorrectly(Car actualCar, CarRequest carRequest) {
+    assertThat(actualCar.getPlateNumber()).isEqualTo(carRequest.getPlateNumber());
+    assertThat(actualCar.getManufactureYear()).isEqualTo(carRequest.getManufactureYear());
+    assertThat(actualCar.getVinCode()).isEqualTo(carRequest.getVinCode());
+    assertThat(actualCar.getNote()).isEqualTo(carRequest.getNote());
   }
 }

@@ -64,6 +64,7 @@ public class ClientController {
   public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
     Client client = clientService.findById(id)
         .orElseThrow(() -> new NotFoundException("Client", id));
+    // todo unique validation, add integration test
     return ClientResponse.fromEntity(clientService.update(client, request));
   }
 

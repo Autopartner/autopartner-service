@@ -1,7 +1,7 @@
 package com.autopartner.domain;
 
 public class ClientFixture {
-  public static Client createClient() {
+  public static Client createPersonClient() {
     return Client.builder()
         .id(1L)
         .firstName("Dani")
@@ -15,6 +15,21 @@ public class ClientFixture {
         .clientType(ClientType.PERSON)
         .note("NewOwner")
         .active(true)
+        .build();
+  }
+
+  public static Client createCompanyClient() {
+    return Client.builder()
+        .firstName("Serhii")
+        .lastName("Kolo")
+        .companyName("AutoPartner")
+        .address("Odesa")
+        .phone("+3800000000000")
+        .email("serhii@gamail.com")
+        .productDiscount(50)
+        .taskDiscount(50)
+        .clientType(ClientType.COMPANY)
+        .note("Owner")
         .build();
   }
 }
