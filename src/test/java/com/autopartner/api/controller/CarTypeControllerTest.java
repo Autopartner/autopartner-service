@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CarTypeControllerTest extends AbstractControllerTest {
 
-  public static final String URL = "/api/v1/cars/types";
+  public static final String URL = "/api/v1/car-types";
 
   @MockBean
   CarTypeService carTypeService;

@@ -26,7 +26,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/cars/models")
+@RequestMapping("/api/v1/car-models")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarModelController {
