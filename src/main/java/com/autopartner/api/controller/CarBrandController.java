@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/cars/brands")
+@RequestMapping("/api/v1/car-brands")
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class CarBrandController {

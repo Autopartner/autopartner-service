@@ -55,6 +55,11 @@ test {
     if (System.properties['test.profile'] != 'integration') {
         exclude '**/*IntegrationTest*'
     }
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
 }
 
 jib {

@@ -53,11 +53,11 @@ Run application
 Run unit tests
 
 ```bash
- $ ./gradlew test --info 
+ $ ./gradlew test --info
 ```
 
 Run unit tests and integration tests (testcontainers used, docker must be run)
 
 ```bash
- $ ./gradlew test -Dtest.profile=integration --info 
+ $ ./gradlew test -Dtest.profile=integration --info
 ```
