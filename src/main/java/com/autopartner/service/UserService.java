@@ -20,9 +20,5 @@ public interface UserService {
 
   void delete(User user);
 
-  boolean isEmailUnique(User user);
-
-  Optional<User> findByEmail(String username);
-
-  boolean existsByEmail(String email);
+  Optional<Long> findIdByEmail(String email);
 }

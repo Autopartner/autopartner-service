@@ -18,6 +18,6 @@ public interface CarBrandService {
 
   CarBrand update(CarBrand carType, CarBrandRequest request);
 
-  boolean existsByName(String name);
+  Optional<Long> findIdByName(String name);
 
 }

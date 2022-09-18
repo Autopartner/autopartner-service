@@ -57,22 +57,9 @@ public class UserServiceImpl implements UserService {
     save(user);
   }
 
-  // TODO refactor
   @Override
-  @Transactional
-  public boolean isEmailUnique(User user) {
-    User u = userRepository.findOneByEmail(user.getEmail());
-    return Objects.equals(u.getId(), user.getId());
-  }
-
-  @Override
-  public Optional<User> findByEmail(String username) {
-    return Optional.of(userRepository.findOneByEmail(username));
-  }
-
-  @Override
-  public boolean existsByEmail(String email) {
-    return userRepository.existsByEmail(email);
+  public Optional<Long> findIdByEmail(String email) {
+    return userRepository.findIdByEmailAndActiveTrue(email);
   }
 
 }

@@ -1,6 +1,7 @@
 package com.autopartner.repository;
 
 import com.autopartner.domain.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +16,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
   Optional<User> findByIdAndActiveTrue(Long id);
 
-  boolean existsByEmail(String email);
+  @Query(value = "select id from users where email=? and active=true", nativeQuery = true)
+  Optional<Long> findIdByEmailAndActiveTrue(String email);
 }

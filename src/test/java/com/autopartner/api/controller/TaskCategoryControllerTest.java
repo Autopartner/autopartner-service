@@ -74,7 +74,7 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
   @Test
   void create_ClientAlreadyExists_ReturnsError() throws Exception {
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
-    when(taskCategoryService.existsByName(request.getName())).thenReturn(true);
+    when(taskCategoryService.findIdByName(request.getName())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "TaskCategory with param: TaskCategory already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -88,7 +88,7 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
     TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
     TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
-    when(taskCategoryService.existsByName(request.getName())).thenReturn(false);
+    when(taskCategoryService.findIdByName(request.getName())).thenReturn(Optional.empty());
     when(taskCategoryService.create(request, taskCategory.getCompanyId())).thenReturn(taskCategory);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -110,6 +110,21 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
         .andExpect(status().is4xxClientError())
         .andExpect(content()
             .string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_ClientAlreadyExists_ReturnsError() throws Exception {
+    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    long id = 1L;
+    when(taskCategoryService.findById(id)).thenReturn(Optional.of(taskCategory));
+    when(taskCategoryService.findIdByName(request.getName())).thenReturn(Optional.of(12L));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "TaskCategory with param: TaskCategory already exists");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
