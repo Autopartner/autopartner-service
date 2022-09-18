@@ -52,8 +52,8 @@ public class CarTypeServiceImpl implements CarTypeService {
   }
 
   @Override
-  public boolean existsByName(String name) {
-    return carTypeRepository.existsByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name) {
+    return carTypeRepository.findIdByNameAndActiveTrue(name);
   }
 
 }

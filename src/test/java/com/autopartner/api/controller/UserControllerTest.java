@@ -73,7 +73,7 @@ public class UserControllerTest extends AbstractControllerTest {
   @Test
   void create_ValidRequest_CreatesUser() throws Exception {
     UserRequest request = createUserRequest();
-    when(userService.existsByEmail(request.getEmail())).thenReturn(false);
+    when(userService.findIdByEmail(request.getEmail())).thenReturn(Optional.empty());
     User user = UserFixture.createUser();
     UserResponse userResponse = UserResponse.fromEntity(user);
     when(userService.create(request, user.getCompanyId())).thenReturn(user);
@@ -88,7 +88,7 @@ public class UserControllerTest extends AbstractControllerTest {
   @Test
   void create_InvalidRequest_ReturnsError() throws Exception {
     UserRequest request = createUserRequest();
-    when(userService.existsByEmail(request.getEmail())).thenReturn(true);
+    when(userService.findIdByEmail(request.getEmail())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "User with param: " + request.getEmail() + " already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -109,6 +109,21 @@ public class UserControllerTest extends AbstractControllerTest {
         .andExpect(status().is4xxClientError())
         .andExpect(content()
             .string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_InvalidRequest_ReturnsError() throws Exception {
+    User user = UserFixture.createUser();
+    UserRequest request = createUserRequest();
+    long id = 1L;
+    when(userService.findById(id)).thenReturn(Optional.of(user));
+    when(userService.findIdByEmail(request.getEmail())).thenReturn(Optional.of(12L));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "User with param: " + request.getEmail() + " already exists");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

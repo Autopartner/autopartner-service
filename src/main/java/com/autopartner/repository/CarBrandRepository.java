@@ -1,6 +1,7 @@
 package com.autopartner.repository;
 
 import com.autopartner.domain.CarBrand;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public interface CarBrandRepository extends CrudRepository<CarBrand, Long> {
 
   Optional<CarBrand> findByIdAndActiveTrue(Long id);
 
-  boolean existsByNameAndActiveTrue(String name);
+  @Query(value = "select id from car_brands where name=? and active=true", nativeQuery = true)
+  Optional<Long> findIdByNameAndActiveTrue(String name);
 }

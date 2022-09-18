@@ -50,7 +50,7 @@ public class CompanyController {
   public CompanyResponse create(@Valid @RequestBody CompanyRegistrationRequest request) {
     log.info("Received company registration request {}", request);
     String email = request.getEmail();
-    if (userService.existsByEmail(email)) {
+    if (userService.findIdByEmail(email).isPresent()) {
       throw new AlreadyExistsException("User", email);
     }
     Company company = companyService.create(request);

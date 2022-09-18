@@ -73,7 +73,7 @@ public class CarTypeControllerTest extends AbstractControllerTest {
   @Test
   void create_CarTypeAlreadyExists_ReturnsError() throws Exception {
     CarTypeRequest request = CarTypeRequestFixture.createCarTypeRequest();
-    when(carTypeService.existsByName(request.getName())).thenReturn(true);
+    when(carTypeService.findIdByName(request.getName())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarType with param: Sedan already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +87,7 @@ public class CarTypeControllerTest extends AbstractControllerTest {
     CarType type = CarTypeFixture.createCarType();
     CarTypeRequest request = CarTypeRequestFixture.createCarTypeRequest();
     CarTypeResponse response = CarTypeResponse.fromEntity(type);
-    when(carTypeService.existsByName(request.getName())).thenReturn(false);
+    when(carTypeService.findIdByName(request.getName())).thenReturn(Optional.empty());
     when(carTypeService.create(request, type.getCompanyId())).thenReturn(type);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -109,6 +109,21 @@ public class CarTypeControllerTest extends AbstractControllerTest {
         .andExpect(status().is4xxClientError())
         .andExpect(content()
             .string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_CarTypeAlreadyExists_ReturnsError() throws Exception {
+    CarType type = CarTypeFixture.createCarType();
+    CarTypeRequest request = CarTypeRequestFixture.createCarTypeRequest();
+    long id = 1L;
+    when(carTypeService.findById(id)).thenReturn(Optional.of(type));
+    when(carTypeService.findIdByName(request.getName())).thenReturn(Optional.of(12L));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarType with param: Sedan already exists");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

@@ -23,7 +23,6 @@ import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +36,6 @@ class UserServiceTest {
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
   @Captor
-  ArgumentCaptor<String> stringArgumentCaptor;
   CompanyRegistrationRequest companyRegistrationRequest;
   UserRequest request;
   List<User> users;
@@ -96,51 +94,5 @@ class UserServiceTest {
     User actualUser = userArgumentCaptor.getValue();
     assertThat(actualUser).isEqualTo(user);
     assertThat(actualUser.getActive()).isFalse();
-  }
-
-  @Test
-  void isUnique_whenTheSameUser_thanReturnsTrue() {
-    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
-    boolean result = userService.isEmailUnique(user);
-    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
-    String email = stringArgumentCaptor.getValue();
-    assertThat(email).isEqualTo(user.getEmail());
-    assertThat(result).isEqualTo(true);
-  }
-
-  @Test
-  void isUnique_whenEmailIsUnique_thanReturnsTrue() {
-    User user1 = UserFixture.createUser();
-    user1.setEmail("userTest@gmail.com");
-    user1.setId(2L);
-    userService.save(user1);
-    when(userRepository.findOneByEmail(anyString())).thenReturn(user1);
-    boolean result = userService.isEmailUnique(user1);
-    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
-    String email = stringArgumentCaptor.getValue();
-    assertThat(email).isEqualTo(user1.getEmail());
-    assertThat(result).isEqualTo(true);
-  }
-
-  @Test
-  void isUnique_whenEmailIsNotUnique_thanReturnsFalse() {
-    User user1 = UserFixture.createUser();
-    user1.setId(4L);
-    userService.save(user1);
-    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
-    boolean result = userService.isEmailUnique(user1);
-    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
-    String username = stringArgumentCaptor.getValue();
-    assertThat(username).isEqualTo(user1.getEmail());
-    assertThat(result).isEqualTo(false);
-  }
-
-  @Test
-  void getUserByUsername() {
-    when(userRepository.findOneByEmail(anyString())).thenReturn(user);
-    userService.findByEmail(user.getEmail());
-    verify(userRepository).findOneByEmail(stringArgumentCaptor.capture());
-    String username = stringArgumentCaptor.getValue();
-    assertThat(username).isEqualTo(user.getEmail());
   }
 }

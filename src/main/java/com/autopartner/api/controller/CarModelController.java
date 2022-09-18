@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -57,7 +58,7 @@ public class CarModelController {
                                  @AuthenticationPrincipal User user) {
     log.info("Received car model registration request {}", request);
     String name = request.getName();
-    if (carModelService.existsByName(name)) {
+    if (carModelService.findIdByName(name).isPresent()) {
       throw new AlreadyExistsException("CarModel", name);
     }
     CarBrand brand = carBrandService.findById(request.getCarBrandId())
@@ -78,6 +79,10 @@ public class CarModelController {
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
     CarType type = carTypeService.findById(request.getCarTypeId())
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
+    Optional<Long> foundId = carModelService.findIdByName(request.getName());
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
+      throw new AlreadyExistsException("CarModel", request.getName());
+    }
     return CarModelResponse.fromEntity(carModelService.update(model, brand, type, request));
   }
 

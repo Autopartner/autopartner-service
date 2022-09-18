@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -49,7 +50,7 @@ public class UserController {
                              @AuthenticationPrincipal User user) {
     log.info("Received user registration request {}", request);
     String email = request.getEmail();
-    if (userService.existsByEmail(email)) {
+    if (userService.findIdByEmail(email).isPresent()) {
       throw new AlreadyExistsException("User", email);
     }
     User newUser = userService.create(request, user.getCompanyId());
@@ -62,6 +63,10 @@ public class UserController {
   public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
     User user = userService.findById(id)
         .orElseThrow(() -> new NotFoundException("User", id));
+    Optional<Long> foundId = userService.findIdByEmail(request.getEmail());
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
+      throw new AlreadyExistsException("User", request.getEmail());
+    }
     log.info("Updated user {}", user.getEmail());
     return UserResponse.fromEntity(userService.update(user, request));
   }

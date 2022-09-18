@@ -52,7 +52,7 @@ public class CarBrandServiceImpl implements CarBrandService {
   }
 
   @Override
-  public boolean existsByName(String name) {
-    return carBrandRepository.existsByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name) {
+    return carBrandRepository.findIdByNameAndActiveTrue(name);
   }
 }

@@ -20,6 +20,6 @@ public interface CarModelService {
 
   CarModel update(CarModel model, CarBrand brand, CarType type, CarModelRequest request);
 
-  boolean existsByName(String name);
+  Optional<Long> findIdByName(String name);
 
 }

@@ -52,7 +52,7 @@ public class TaskCategoryController {
       @Valid @RequestBody TaskCategoryRequest request, @AuthenticationPrincipal User user) {
     log.error("Received task category registration request {}", request);
     String name = request.getName();
-    if (taskCategoryService.existsByName(name)) {
+    if (taskCategoryService.findIdByName(name).isPresent()) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
     TaskCategory category = taskCategoryService.create(request, user.getCompanyId());
@@ -67,7 +67,7 @@ public class TaskCategoryController {
     TaskCategory category = taskCategoryService.findById(id)
             .orElseThrow(() -> new NotFoundException("TaskCategory", id));
     String name = request.getName();
-    if (taskCategoryService.existsByName(name)) {
+    if (taskCategoryService.findIdByName(name).isPresent()) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
     return TaskCategoryResponse.fromEntity(taskCategoryService.update(category, request));

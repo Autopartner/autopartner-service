@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -50,7 +51,7 @@ public class CarTypeController {
                                 @AuthenticationPrincipal User user) {
     log.info("Received car type registration request {}", request);
     String name = request.getName();
-    if (carTypeService.existsByName(name)) {
+    if (carTypeService.findIdByName(name).isPresent()) {
       throw new AlreadyExistsException("CarType", name);
     }
     CarType carType = carTypeService.create(request, user.getCompanyId());
@@ -60,10 +61,14 @@ public class CarTypeController {
 
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
-  public CarTypeResponse update(@PathVariable Long id, @RequestBody @Valid CarTypeRequest carTypeRequest) {
+  public CarTypeResponse update(@PathVariable Long id, @RequestBody @Valid CarTypeRequest request) {
     CarType carType = carTypeService.findById(id)
         .orElseThrow(() -> new NotFoundException("CarType", id));
-    return CarTypeResponse.fromEntity(carTypeService.update(carType, carTypeRequest));
+    Optional<Long> foundId = carTypeService.findIdByName(request.getName());
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
+      throw new AlreadyExistsException("CarType", request.getName());
+    }
+    return CarTypeResponse.fromEntity(carTypeService.update(carType, request));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})

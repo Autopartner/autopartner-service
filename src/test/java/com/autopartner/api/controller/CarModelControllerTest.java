@@ -78,7 +78,7 @@ public class CarModelControllerTest extends AbstractControllerTest {
   @Test
   void create_CarModelAlreadyExists_ReturnsError() throws Exception {
     CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
-    when(carModelService.existsByName(request.getName())).thenReturn(true);
+    when(carModelService.findIdByName(request.getName())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarModel with param: Q5 already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class CarModelControllerTest extends AbstractControllerTest {
   void create_InvalidCarTypeId_CreatesCarModel() throws Exception {
     CarBrand brand = CarBrandFixture.createCarBrand();
     CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
-    when(carModelService.existsByName(request.getName())).thenReturn(false);
+    when(carModelService.findIdByName(request.getName())).thenReturn(Optional.empty());
     when(carBrandService.findById(request.getCarBrandId())).thenReturn(Optional.ofNullable(brand));
     when(carTypeService.findById(request.getCarTypeId())).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "CarType with id=1 is not found");
@@ -106,7 +106,7 @@ public class CarModelControllerTest extends AbstractControllerTest {
   @Test
   void create_InvalidCarBrandId_CreatesCarModel() throws Exception {
     CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
-    when(carModelService.existsByName(request.getName())).thenReturn(false);
+    when(carModelService.findIdByName(request.getName())).thenReturn(Optional.empty());
     when(carBrandService.findById(request.getCarBrandId())).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "CarBrand with id=1 is not found");
     this.mockMvc.perform(auth(post(URL))
@@ -124,7 +124,7 @@ public class CarModelControllerTest extends AbstractControllerTest {
     CarBrand brand = CarBrandFixture.createCarBrand();
     CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
     CarModelResponse response = CarModelResponse.fromEntity(model);
-    when(carModelService.existsByName(request.getName())).thenReturn(false);
+    when(carModelService.findIdByName(request.getName())).thenReturn(Optional.empty());
     when(carBrandService.findById(request.getCarBrandId())).thenReturn(Optional.ofNullable(brand));
     when(carTypeService.findById(request.getCarTypeId())).thenReturn(Optional.ofNullable(type));
     when(carModelService.create(request, brand, type, model.getCompanyId())).thenReturn(model);
@@ -182,6 +182,25 @@ public class CarModelControllerTest extends AbstractControllerTest {
         .andExpect(status().is4xxClientError())
         .andExpect(content()
             .string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_CarModelAlreadyExists_ReturnsError() throws Exception {
+    CarModel model = CarModelFixture.createCarModel();
+    CarBrand brand = CarBrandFixture.createCarBrand();
+    CarType type = CarTypeFixture.createCarType();
+    long id = 1L;
+    CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
+    when(carModelService.findById(id)).thenReturn(Optional.of(model));
+    when(carTypeService.findById(request.getCarTypeId())).thenReturn(Optional.ofNullable(type));
+    when(carBrandService.findById(id)).thenReturn(Optional.of(brand));
+    when(carModelService.findIdByName(request.getName())).thenReturn(Optional.of(12L));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "CarModel with param: Q5 already exists");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

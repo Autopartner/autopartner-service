@@ -18,6 +18,6 @@ public interface TaskCategoryService {
 
   TaskCategory update(TaskCategory category, TaskCategoryRequest request);
 
-  boolean existsByName(String name);
+  Optional<Long> findIdByName(String name);
 
 }

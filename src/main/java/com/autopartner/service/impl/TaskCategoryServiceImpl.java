@@ -52,7 +52,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
   }
 
   @Override
-  public boolean existsByName(String name) {
-    return taskCategoryRepository.existsByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name) {
+    return taskCategoryRepository.findIdByNameAndActiveTrue(name);
   }
 }
