@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -51,7 +52,7 @@ public class ClientController {
                                @AuthenticationPrincipal User user) {
     log.error("Received client registration request {}", request);
     String phone = request.getPhone();
-    if (clientService.existsByPhone(phone)) {
+    if (clientService.existsByPhone(phone) != null) {
       throw new AlreadyExistsException("Client", phone);
     }
     Client client = clientService.create(request, user.getCompanyId());
@@ -64,7 +65,10 @@ public class ClientController {
   public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
     Client client = clientService.findById(id)
         .orElseThrow(() -> new NotFoundException("Client", id));
-    // todo unique validation, add integration test
+    Long foundId = clientService.existsByPhone(request.getPhone());
+    if (foundId != null && !foundId.equals(id)) {
+      throw new AlreadyExistsException("Client", request.getPhone());
+    }
     return ClientResponse.fromEntity(clientService.update(client, request));
   }
 

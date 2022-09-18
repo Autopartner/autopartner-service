@@ -52,8 +52,12 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
-  public boolean existsByPhone(String phone) {
-    return clientRepository.existsByPhoneAndActiveTrue(phone);
+  public Long existsByPhone(String phone) {
+    Optional<Client> client = clientRepository.findByPhoneAndActiveTrue(phone);
+    if(client.isEmpty()){
+      return null;
+    }
+    return client.get().getId();
   }
 
 }

@@ -12,5 +12,5 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
 
   Optional<Client> findByIdAndActiveTrue(Long id);
 
-  boolean existsByPhoneAndActiveTrue(String phone);
+  Optional<Client> findByPhoneAndActiveTrue(String phone);
 }
