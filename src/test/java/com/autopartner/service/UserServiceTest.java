@@ -35,7 +35,6 @@ class UserServiceTest {
   ArgumentCaptor<User> userArgumentCaptor;
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
-  @Captor
   CompanyRegistrationRequest companyRegistrationRequest;
   UserRequest request;
   List<User> users;
