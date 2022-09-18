@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -63,7 +64,7 @@ public class ClientIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void givenDuplicatedClientRequest_whenCreateClient_thenReturnAlreadyExistsError() throws Exception {
+  void givenDuplicatedClientPhone_whenCreateClient_thenReturn400() throws Exception {
 
     clientRepository.save(ClientFixture.createPersonClient());
     ClientRequest clientRequest = ClientRequestFixture.createClientRequest();
@@ -120,6 +121,21 @@ public class ClientIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void givenInvalidClientId_whenGetClientById_thenReturn404() throws Exception{
+
+    Client client = clientRepository.save(ClientFixture.createPersonClient());
+    long id = client.getId() + 100;
+
+    ResultActions response = mockMvc.perform(get(CLIENTS_URL + "/{id}", id)
+        .header(HttpHeaders.AUTHORIZATION, token));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("Client with id=" + id +" is not found")));
+  }
+
+  @Test
   public void givenUpdatedClientRequest_whenUpdateClient_thenReturnUpdateClientResponse() throws Exception{
 
     Client client = ClientFixture.createCompanyClient();
@@ -159,6 +175,42 @@ public class ClientIntegrationTest extends AbstractIntegrationTest {
   }
 
   @Test
+  public void givenInvalidClientId_whenUpdateClient_thenReturn404() throws Exception{
+
+    Client client = clientRepository.save(ClientFixture.createPersonClient());
+    long id = client.getId() + 100;
+    ClientRequest clientRequest = ClientRequestFixture.createClientRequest();
+
+    ResultActions response = mockMvc.perform(put(CLIENTS_URL + "/{id}", id)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(HttpHeaders.AUTHORIZATION, token)
+        .content(objectMapper.writeValueAsString(clientRequest)));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("Client with id=" + id +" is not found")));
+  }
+
+  @Test
+  public void givenDuplicatedClientPhone_whenUpdateClient_thenReturn400() throws Exception{
+
+    Client client1 = clientRepository.save(ClientFixture.createPersonClient());
+    Client client2 = clientRepository.save(ClientFixture.createCompanyClient());
+    ClientRequest clientRequest = ClientRequestFixture.createClientRequest().withPhone(client2.getPhone());
+
+    ResultActions response = mockMvc.perform(put(CLIENTS_URL + "/{id}", client1.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(HttpHeaders.AUTHORIZATION, token)
+        .content(objectMapper.writeValueAsString(clientRequest)));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("Client with param: +380000000000 already exists")));
+  }
+
+  @Test
   void givenClientId_whenDeleteClient_thenReturn200() throws Exception {
 
     Client client = clientRepository.save(ClientFixture.createCompanyClient());
@@ -171,6 +223,19 @@ public class ClientIntegrationTest extends AbstractIntegrationTest {
         .andExpect(status().isOk());
   }
 
-  // TODO: NotFound cases, not unique update
+  @Test
+  public void givenInvalidClientId_whenDeleteClient_thenReturn404() throws Exception{
+
+    Client client = clientRepository.save(ClientFixture.createPersonClient());
+    long id = client.getId() + 100;
+
+    ResultActions response = mockMvc.perform(delete(CLIENTS_URL + "/{id}", id)
+        .header(HttpHeaders.AUTHORIZATION, token));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("Client with id=" + id +" is not found")));
+  }
 
 }

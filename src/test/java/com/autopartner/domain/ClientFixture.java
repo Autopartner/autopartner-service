@@ -24,7 +24,7 @@ public class ClientFixture {
         .lastName("Kolo")
         .companyName("AutoPartner")
         .address("Odesa")
-        .phone("+3800000000000")
+        .phone("+380000000000")
         .email("serhii@gamail.com")
         .productDiscount(50)
         .taskDiscount(50)

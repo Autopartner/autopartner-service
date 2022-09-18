@@ -4,6 +4,7 @@ import com.autopartner.domain.ClientType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.With;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
@@ -11,6 +12,7 @@ import javax.validation.constraints.*;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
+@With
 @FieldDefaults(level = PRIVATE)
 @AllArgsConstructor
 @Builder
