@@ -73,7 +73,7 @@ public class ClientControllerTest extends AbstractControllerTest {
   @Test
   void create_ClientAlreadyExists_ReturnsError() throws Exception {
     ClientRequest request = ClientRequestFixture.createClientRequest();
-    when(clientService.existsByPhone(request.getPhone())).thenReturn(true);
+    when(clientService.findIdByPhone(request.getPhone())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "Client with param: +380997776655 already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +87,7 @@ public class ClientControllerTest extends AbstractControllerTest {
     Client client = ClientFixture.createPersonClient();
     ClientRequest request = ClientRequestFixture.createClientRequest();
     ClientResponse response = ClientResponse.fromEntity(client);
-    when(clientService.existsByPhone(request.getPhone())).thenReturn(false);
+    when(clientService.findIdByPhone(request.getPhone())).thenReturn(Optional.empty());
     when(clientService.create(request, client.getCompanyId())).thenReturn(client);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)

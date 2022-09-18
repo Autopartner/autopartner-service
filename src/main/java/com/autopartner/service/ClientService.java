@@ -17,5 +17,5 @@ public interface ClientService {
 
   Client update(Client client, ClientRequest request);
 
-  Long existsByPhone(String phone);
+  Optional<Long> findIdByPhone(String phone);
 }
