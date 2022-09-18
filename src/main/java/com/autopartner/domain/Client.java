@@ -73,6 +73,7 @@ public class Client {
   @Column
   String note;
 
+  @ToString.Exclude
   @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
   @OrderBy("id asc")
   @JsonIgnore

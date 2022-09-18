@@ -63,12 +63,12 @@ public class ClientController {
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
   public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
+    Client client = clientService.findById(id)
+        .orElseThrow(() -> new NotFoundException("Client", id));
     Optional<Long> foundId = clientService.findIdByPhone(request.getPhone());
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("Client", request.getPhone());
     }
-    Client client = clientService.findById(id)
-        .orElseThrow(() -> new NotFoundException("Client", id));
     return ClientResponse.fromEntity(clientService.update(client, request));
   }
 
