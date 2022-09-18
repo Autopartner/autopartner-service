@@ -1,6 +1,7 @@
 package com.autopartner.repository;
 
 import com.autopartner.domain.Client;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -12,5 +13,6 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
 
   Optional<Client> findByIdAndActiveTrue(Long id);
 
-  boolean existsByPhoneAndActiveTrue(String phone);
+  @Query(value = "select id from clients where phone=? and active=true", nativeQuery = true)
+  Optional<Long> findIdByPhoneAndActiveTrue(String phone);
 }
