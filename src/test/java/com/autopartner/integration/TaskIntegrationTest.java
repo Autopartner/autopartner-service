@@ -134,15 +134,13 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
 
   @Test
   public void givenUpdatedTakRequest_whenUpdateTask_thenReturnUpdateTaskResponse() throws Exception {
-    TaskCategory category = TaskCategoryFixture.createTaskCategory();
-    categoryRepository.save(category);
-    Task task = TaskFixture.createTask();
-    taskRepository.save(task);
+    TaskCategory category = categoryRepository.save(TaskCategoryFixture.createTaskCategory());
+    Task task = taskRepository.save(TaskFixture.createTask(category));
 
     TaskRequest taskRequest = TaskRequest.builder()
         .name("New")
         .price(200)
-        .taskCategoryId(2L)
+        .taskCategoryId(category.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(TASKS_URL + "/{id}", task.getId())
