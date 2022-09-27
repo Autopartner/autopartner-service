@@ -159,16 +159,15 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
 
   @Test
   public void givenInvalidTaskId_whenUpdateTask_thenReturn404() throws Exception {
-    TaskCategory category = TaskCategoryFixture.createTaskCategory();
-    categoryRepository.save(category);
-    Task task = TaskFixture.createTask();
+    TaskCategory category = categoryRepository.save(TaskCategoryFixture.createTaskCategory());
+    Task task = TaskFixture.createTask(category);
     taskRepository.save(task);
     long id = task.getId() + 100;
 
     TaskRequest taskRequest = TaskRequest.builder()
         .name("New")
         .price(200)
-        .taskCategoryId(2L)
+        .taskCategoryId(category.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(TASKS_URL + "/{id}", id)
