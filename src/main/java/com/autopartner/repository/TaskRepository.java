@@ -11,5 +11,5 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
 
   Optional<Task> findByIdAndActiveTrue(Long id);
 
-  Optional<Task> findByTaskCategoryIdAndActiveTrue(Long id);
+  Optional<Task> findByTaskCategoryIdAndNameAndActiveTrue(Long categoryId, String name);
 }

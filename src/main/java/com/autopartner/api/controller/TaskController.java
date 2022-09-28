@@ -10,6 +10,8 @@ import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.TaskCategoryService;
 import com.autopartner.service.TaskService;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -67,16 +69,21 @@ public class TaskController {
   @PostMapping
   public TaskResponse create(@Valid @RequestBody TaskRequest request,
       @AuthenticationPrincipal User user) {
-    log.info("Received task registration request {}", request);
+
+    Long companyId = user.getCompanyId();
+    log.info("CompanyId: {}, received task registration request {}", companyId, request);
+
+    Long taskCategoryId = request.getTaskCategoryId();
+    TaskCategory category = taskCategoryService.findById(taskCategoryId)
+        .orElseThrow(() -> new NotFoundException("TaskCategory", taskCategoryId));
+
     String name = request.getName();
-    if (taskService.findByCategoryId(request.getTaskCategoryId()).isPresent() &&
-        taskService.findByCategoryId(request.getTaskCategoryId()).get().getName().equals(request.getName())) {
+    if (taskService.findByCategoryIdAndName(taskCategoryId, name).isPresent()) {
       throw new AlreadyExistsException("Task", name);
     }
-    TaskCategory category = taskCategoryService.findById(request.getTaskCategoryId())
-        .orElseThrow(() -> new NotFoundException("TaskСategory", request.getTaskCategoryId()));
-    Task newTask = taskService.create(request, category, user.getCompanyId());
-    log.info("Created new task {}", request.getName());
+
+    Task newTask = taskService.create(request, category, companyId);
+    log.info("CompanyId: {}, Created new task {}", companyId, name);
     return TaskResponse.fromEntity(newTask);
   }
 

@@ -22,6 +22,6 @@ public interface TaskService {
 
   void delete(Task task);
 
-  Optional<Task> findByCategoryId(Long id);
+  Optional<Task> findByCategoryIdAndName(Long id, String name);
 
 }

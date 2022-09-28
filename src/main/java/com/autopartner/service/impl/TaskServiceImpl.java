@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Optional<Task> findByCategoryId(Long id) {
-    return taskRepository.findByTaskCategoryIdAndActiveTrue(id);
+  public Optional<Task> findByCategoryIdAndName(Long categoryId, String name) {
+    return taskRepository.findByTaskCategoryIdAndNameAndActiveTrue(categoryId, name);
   }
 }

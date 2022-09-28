@@ -1,10 +1,5 @@
 package com.autopartner.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import com.autopartner.api.dto.request.TaskRequest;
 import com.autopartner.api.dto.request.TaskRequestFixture;
 import com.autopartner.domain.Task;
@@ -13,9 +8,6 @@ import com.autopartner.domain.TaskCategoryFixture;
 import com.autopartner.domain.TaskFixture;
 import com.autopartner.repository.TaskRepository;
 import com.autopartner.service.impl.TaskServiceImpl;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
@@ -25,6 +17,16 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
@@ -40,7 +42,10 @@ public class TaskServiceTest {
   ArgumentCaptor<Task> taskArgumentCaptor;
 
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
+  ArgumentCaptor<Long> idCaptor;
+
+  @Captor
+  ArgumentCaptor<String> nameCaptor;
 
   @Test
   void findAll() {
@@ -56,8 +61,8 @@ public class TaskServiceTest {
     Task task = TaskFixture.createTask();
     when(repository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(task));
     service.findById(Objects.requireNonNull(task).getId());
-    verify(repository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    Long id = longArgumentCaptor.getValue();
+    verify(repository).findByIdAndActiveTrue(idCaptor.capture());
+    Long id = idCaptor.getValue();
     assertThat(task.getId()).isEqualTo(id);
   }
 
@@ -68,7 +73,7 @@ public class TaskServiceTest {
     service.create(request, category, 1L);
     verify(repository).save(taskArgumentCaptor.capture());
     Task actualTask = taskArgumentCaptor.getValue();
-    assertThatCarMappedCorrectly(actualTask, request);
+    assertThatTaskMappedCorrectly(actualTask, request);
   }
 
   @Test
@@ -79,7 +84,7 @@ public class TaskServiceTest {
     service.update(task, category, request);
     verify(repository).save(taskArgumentCaptor.capture());
     Task actualTask = taskArgumentCaptor.getValue();
-    assertThatCarMappedCorrectly(actualTask, request);
+    assertThatTaskMappedCorrectly(actualTask, request);
   }
 
   @Test
@@ -93,16 +98,21 @@ public class TaskServiceTest {
   }
 
   @Test
-  void findByCategoryId() {
+  void findByCategoryIdAndName() {
     Task task = TaskFixture.createTask();
-    when(repository.findByTaskCategoryIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(task));
-    service.findByCategoryId(Objects.requireNonNull(task).getTaskCategory().getId());
-    verify(repository).findByTaskCategoryIdAndActiveTrue(longArgumentCaptor.capture());
-    Long id = longArgumentCaptor.getValue();
-    assertThat(task.getTaskCategory().getId()).isEqualTo(id);
+    Long categoryId = Objects.requireNonNull(task).getTaskCategory().getId();
+    String name = task.getName();
+    when(repository.findByTaskCategoryIdAndNameAndActiveTrue(eq(categoryId), eq(name)))
+        .thenReturn(Optional.of(task));
+
+    service.findByCategoryIdAndName(categoryId, name);
+
+    verify(repository).findByTaskCategoryIdAndNameAndActiveTrue(idCaptor.capture(), nameCaptor.capture());
+    assertThat(task.getTaskCategory().getId()).isEqualTo(idCaptor.getValue());
+    assertThat(task.getName()).isEqualTo(nameCaptor.getValue());
   }
 
-  private void assertThatCarMappedCorrectly(Task actualTask, TaskRequest request) {
+  private void assertThatTaskMappedCorrectly(Task actualTask, TaskRequest request) {
     assertThat(actualTask.getName()).isEqualTo(request.getName());
     assertThat(actualTask.getTaskCategory().getId()).isEqualTo(request.getTaskCategoryId());
     assertThat(actualTask.getPrice()).isEqualTo(request.getPrice());

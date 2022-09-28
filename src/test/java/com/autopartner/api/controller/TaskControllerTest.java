@@ -1,6 +1,7 @@
 package com.autopartner.api.controller;
 
 import static com.autopartner.api.configuration.WebConfiguration.UNAUTHORIZED_RESPONSE;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -83,8 +84,10 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskCategory category = TaskCategoryFixture.createTaskCategory();
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     TaskResponse response = TaskResponse.fromEntity(task);
-    when(categoryService.findById(request.getTaskCategoryId())).thenReturn(Optional.ofNullable(category));
-    when(taskService.create(request, category, task.getCompanyId())).thenReturn(task);
+    Long taskCategoryId = request.getTaskCategoryId();
+    when(categoryService.findById(eq(taskCategoryId))).thenReturn(Optional.ofNullable(category));
+    when(taskService.findByCategoryIdAndName(eq(taskCategoryId), eq(request.getName()))).thenReturn(Optional.empty());
+    when(taskService.create(eq(request), eq(category), any())).thenReturn(task);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
