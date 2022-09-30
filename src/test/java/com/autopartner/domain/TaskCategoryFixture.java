@@ -9,4 +9,12 @@ public class TaskCategoryFixture {
                 .active(true)
                 .build();
     }
+
+    public static TaskCategory createTaskCategoryWithDifferentName(){
+        return TaskCategory.builder()
+            .parentId(1L)
+            .name("NewTaskCategory")
+            .active(true)
+            .build();
+    }
 }

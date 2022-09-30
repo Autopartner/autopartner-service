@@ -37,21 +37,10 @@ public class CarBrandServiceTest {
   ArgumentCaptor<CarBrand> carBrandArgumentCaptor;
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
-  List<CarBrand> brands;
-  CarBrand brand;
-  CarBrandRequest request;
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    brand = CarBrandFixture.createCarBrand();
-    brands = List.of(brand);
-    request = CarBrandRequestFixture.createCarBrandRequest();
-    id = 1L;
-  }
 
   @Test
   void findAll() {
+    List<CarBrand> brands = List.of(CarBrandFixture.createCarBrand());
     when(carBrandRepository.findByActiveTrue()).thenReturn(brands);
     List<CarBrand> actualCarBrands = carBrandService.findAll();
     assertThat(brands).isEqualTo(actualCarBrands);
@@ -59,6 +48,8 @@ public class CarBrandServiceTest {
 
   @Test
   void create() {
+    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
+    long id = 1L;
     carBrandService.create(request, id);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrands = carBrandArgumentCaptor.getValue();
@@ -67,15 +58,18 @@ public class CarBrandServiceTest {
 
   @Test
   void findById() {
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
     when(carBrandRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(brand));
     carBrandService.findById(brand.getId());
     verify(carBrandRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    long id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(brand.getId());
   }
 
   @Test
   void update() {
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
+    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
     carBrandService.update(brand, request);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
@@ -84,6 +78,7 @@ public class CarBrandServiceTest {
 
   @Test
   void delete() {
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
     carBrandService.delete(brand);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();

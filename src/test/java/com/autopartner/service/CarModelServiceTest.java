@@ -36,25 +36,10 @@ public class CarModelServiceTest {
   ArgumentCaptor<CarModel> carModelArgumentCaptor;
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
-  List<CarModel> models;
-  CarModel model;
-  CarBrand brand;
-  CarType type;
-  CarModelRequest request;
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    brand = CarBrandFixture.createCarBrand();
-    type = CarTypeFixture.createCarType();
-    model = CarModelFixture.createCarModel();
-    models = List.of(model);
-    request = CarModelRequestFixture.createCarModelRequest();
-    id = 1L;
-  }
 
   @Test
   void findAll() {
+    List<CarModel> models = List.of(CarModelFixture.createCarModel());
     when(carModelRepository.findByActiveTrue()).thenReturn(models);
     List<CarModel> actualCarBrands = carModelService.findAll();
     assertThat(models).isEqualTo(actualCarBrands);
@@ -62,6 +47,10 @@ public class CarModelServiceTest {
 
   @Test
   void create() {
+    CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
+    CarType type = CarTypeFixture.createCarTypeWithDifferentName();
+    long id = 1L;
     carModelService.create(request, brand, type, id);
     verify(carModelRepository).save(carModelArgumentCaptor.capture());
     CarModel actualCarModel = carModelArgumentCaptor.getValue();
@@ -72,15 +61,20 @@ public class CarModelServiceTest {
 
   @Test
   void findById() {
+    CarModel model = CarModelFixture.createCarModel();
     when(carModelRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(model));
     carModelService.findById(model.getId());
     verify(carModelRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    long id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(model.getId());
   }
 
   @Test
   void update() {
+    CarModel model = CarModelFixture.createCarModel();
+    CarModelRequest request = CarModelRequestFixture.createCarModelRequest();
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
+    CarType type = CarTypeFixture.createCarTypeWithDifferentName();
     carModelService.update(model, brand, type, request);
     verify(carModelRepository).save(carModelArgumentCaptor.capture());
     CarModel actualCarModel = carModelArgumentCaptor.getValue();
@@ -91,6 +85,7 @@ public class CarModelServiceTest {
 
   @Test
   void delete() {
+    CarModel model = CarModelFixture.createCarModel();
     carModelService.delete(model);
     verify(carModelRepository).save(carModelArgumentCaptor.capture());
     CarModel actualCarModel = carModelArgumentCaptor.getValue();
