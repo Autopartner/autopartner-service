@@ -37,21 +37,10 @@ public class CarTypeServiceTest {
   ArgumentCaptor<CarType> carTypeArgumentCaptor;
   @Captor
   ArgumentCaptor<Long> longArgumentCaptor;
-  List<CarType> types;
-  CarType type;
-  CarTypeRequest request;
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    type = CarTypeFixture.createCarType();
-    types = List.of(type);
-    request = CarTypeRequestFixture.createCarTypeRequest();
-    id = 3L;
-  }
 
   @Test
   void findAll() {
+    List<CarType> types = List.of(CarTypeFixture.createCarType());
     when(carTypeRepository.findByActiveTrue()).thenReturn(types);
     List<CarType> actualCarTypes = carTypeService.findAll();
     assertThat(types).isEqualTo(actualCarTypes);
@@ -59,6 +48,8 @@ public class CarTypeServiceTest {
 
   @Test
   void create() {
+    CarTypeRequest request = CarTypeRequestFixture.createCarTypeRequest();
+    long id = 1L;
     carTypeService.create(request, id);
     verify(carTypeRepository).save(carTypeArgumentCaptor.capture());
     CarType actualCarType = carTypeArgumentCaptor.getValue();
@@ -67,15 +58,18 @@ public class CarTypeServiceTest {
 
   @Test
   void findById() {
+    CarType type = CarTypeFixture.createCarTypeWithDifferentName();
     when(carTypeRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(type));
     carTypeService.findById(type.getId());
     verify(carTypeRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    long id = longArgumentCaptor.getValue();
     assertThat(id).isEqualTo(type.getId());
   }
 
   @Test
   void update() {
+    CarType type = CarTypeFixture.createCarTypeWithDifferentName();
+    CarTypeRequest request = CarTypeRequestFixture.createCarTypeRequest();
     carTypeService.update(type, request);
     verify(carTypeRepository).save(carTypeArgumentCaptor.capture());
     CarType actualCarType = carTypeArgumentCaptor.getValue();
@@ -84,6 +78,7 @@ public class CarTypeServiceTest {
 
   @Test
   void delete() {
+    CarType type = CarTypeFixture.createCarTypeWithDifferentName();
     carTypeService.delete(type);
     verify(carTypeRepository).save(carTypeArgumentCaptor.capture());
     CarType actualCarType = carTypeArgumentCaptor.getValue();
