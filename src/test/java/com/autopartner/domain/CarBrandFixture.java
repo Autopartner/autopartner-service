@@ -9,7 +9,7 @@ public class CarBrandFixture {
   }
   public static CarBrand createCarBrandWithDifferentName() {
     return CarBrand.builder()
-        .id(2L)
+        .id(1L)
         .name("BMW")
         .active(true)
         .build();
