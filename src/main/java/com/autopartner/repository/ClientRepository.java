@@ -9,10 +9,12 @@ import java.util.Optional;
 
 public interface ClientRepository extends CrudRepository<Client, Long> {
 
-  List<Client> findByActiveTrue();
+  @Query(value = "select * from clients where company_id=? and active=true", nativeQuery = true)
+  List<Client> findAll(Long companyId);
 
-  Optional<Client> findByIdAndActiveTrue(Long id);
+  @Query(value = "select * from clients where id=?1 and company_id=?2 and active=true", nativeQuery = true)
+  Optional<Client> findById(Long id, Long companyId);
 
-  @Query(value = "select id from clients where phone=? and active=true", nativeQuery = true)
-  Optional<Long> findIdByPhoneAndActiveTrue(String phone);
+  @Query(value = "select id from clients where phone=?1 and company_id=?2 and active=true", nativeQuery = true)
+  Optional<Long> findIdByPhone(String phone, Long companyId);
 }

@@ -32,16 +32,16 @@ public class ClientController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
-  public List<ClientResponse> getAll() {
-    return clientService.findAll().stream()
+  public List<ClientResponse> getAll(@AuthenticationPrincipal User user) {
+    return clientService.findAll(user.getCompanyId()).stream()
         .map(ClientResponse::fromEntity)
         .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "/{id}")
-  public ClientResponse get(@PathVariable Long id) {
-    return clientService.findById(id)
+  public ClientResponse get(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    return clientService.findById(id, user.getCompanyId())
         .map(ClientResponse::fromEntity)
         .orElseThrow(() -> new NotFoundException("Client", id));
   }
@@ -52,7 +52,7 @@ public class ClientController {
                                @AuthenticationPrincipal User user) {
     log.error("Received client registration request {}", request);
     String phone = request.getPhone();
-    if (clientService.findIdByPhone(phone).isPresent()) {
+    if (clientService.findIdByPhone(phone, user.getCompanyId()).isPresent()) {
       throw new AlreadyExistsException("Client", phone);
     }
     Client client = clientService.create(request, user.getCompanyId());
@@ -62,10 +62,11 @@ public class ClientController {
 
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
-  public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request) {
-    Client client = clientService.findById(id)
+  public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request,
+                               @AuthenticationPrincipal User user) {
+    Client client = clientService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("Client", id));
-    Optional<Long> foundId = clientService.findIdByPhone(request.getPhone());
+    Optional<Long> foundId = clientService.findIdByPhone(request.getPhone(), user.getCompanyId());
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("Client", request.getPhone());
     }
@@ -74,8 +75,8 @@ public class ClientController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable Long id) {
-    Client client = clientService.findById(id)
+  public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    Client client = clientService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("Client", id));
     clientService.delete(client);
   }

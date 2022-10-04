@@ -10,12 +10,15 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
+
   User findOneByEmail(String email);
 
-  List<User> findAllByActiveTrue();
+  @Query(value = "select * from users where company_id=? and active=true", nativeQuery = true)
+  List<User> findAll(Long companyId);
 
-  Optional<User> findByIdAndActiveTrue(Long id);
+  @Query(value = "select * from users where id=?1 and company_id=?2 and active=true", nativeQuery = true)
+  Optional<User> findById(Long id, Long companyId);
 
   @Query(value = "select id from users where email=? and active=true", nativeQuery = true)
-  Optional<Long> findIdByEmailAndActiveTrue(String email);
+  Optional<Long> findIdByEmail(String email);
 }

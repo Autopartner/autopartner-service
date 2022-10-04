@@ -32,16 +32,16 @@ public class CarBrandController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
-  public List<CarBrandResponse> getAll() {
-    return carBrandService.findAll().stream()
+  public List<CarBrandResponse> getAll( @AuthenticationPrincipal User user) {
+    return carBrandService.findAll(user.getCompanyId()).stream()
         .map(CarBrandResponse::fromEntity)
         .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "/{id}")
-  public CarBrandResponse get(@PathVariable Long id) {
-    return carBrandService.findById(id)
+  public CarBrandResponse get(@PathVariable Long id,  @AuthenticationPrincipal User user) {
+    return carBrandService.findById(id, user.getCompanyId())
         .map(CarBrandResponse::fromEntity)
         .orElseThrow(() -> new NotFoundException("CarBrand", id));
   }
@@ -52,7 +52,7 @@ public class CarBrandController {
                                  @AuthenticationPrincipal User user) {
     log.info("Received car brand registration request {}", request);
     String name = request.getName();
-    if (carBrandService.findIdByName(name).isPresent()) {
+    if (carBrandService.findIdByName(name, user.getCompanyId()).isPresent()) {
       throw new AlreadyExistsException("CarBrand", name);
     }
     CarBrand carBrand = carBrandService.create(request, user.getCompanyId());
@@ -62,10 +62,11 @@ public class CarBrandController {
 
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
-  public CarBrandResponse update(@PathVariable Long id, @RequestBody @Valid CarBrandRequest request) {
-    CarBrand carBrand = carBrandService.findById(id)
+  public CarBrandResponse update(@PathVariable Long id, @RequestBody @Valid CarBrandRequest request,
+                                 @AuthenticationPrincipal User user) {
+    CarBrand carBrand = carBrandService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", id));
-    Optional<Long> foundId = carBrandService.findIdByName(request.getName());
+    Optional<Long> foundId = carBrandService.findIdByName(request.getName(), user.getCompanyId());
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("CarBrand", request.getName());
     }
@@ -74,8 +75,8 @@ public class CarBrandController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable Long id) {
-    CarBrand carBrand = carBrandService.findById(id)
+  public void delete(@PathVariable Long id,  @AuthenticationPrincipal User user) {
+    CarBrand carBrand = carBrandService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", id));
     carBrandService.delete(carBrand);
   }

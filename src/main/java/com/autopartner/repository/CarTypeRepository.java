@@ -9,10 +9,12 @@ import java.util.Optional;
 
 public interface CarTypeRepository extends CrudRepository<CarType, Long> {
 
-  List<CarType> findByActiveTrue();
+  @Query(value = "select * from car_types where company_id=? and active=true", nativeQuery = true)
+  List<CarType> findAll(Long companyId);
 
-  Optional<CarType> findByIdAndActiveTrue(Long id);
+  @Query(value = "select * from car_types where id=?1 and company_id=?2 and active=true", nativeQuery = true)
+  Optional<CarType> findById(Long id, Long companyId);
 
-  @Query(value = "select id from car_types where name=? and active=true", nativeQuery = true)
-  Optional<Long> findIdByNameAndActiveTrue(String name);
+  @Query(value = "select id from car_types where name=?1 and company_id=?2 and active=true ", nativeQuery = true)
+  Optional<Long> findIdByName(String name, Long companyId);
 }

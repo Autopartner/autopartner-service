@@ -63,7 +63,7 @@ public class CarModelController {
     }
     CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
-    CarType type = carTypeService.findById(request.getCarTypeId())
+    CarType type = carTypeService.findById(request.getCarTypeId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
     CarModel model = carModelService.create(request, brand, type, user.getCompanyId());
     log.info("Created new car model {}", request.getName());
@@ -78,7 +78,7 @@ public class CarModelController {
         .orElseThrow(() -> new NotFoundException("CarModel", id));
     CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
-    CarType type = carTypeService.findById(request.getCarTypeId())
+    CarType type = carTypeService.findById(request.getCarTypeId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
     Optional<Long> foundId = carModelService.findIdByName(request.getName(), user.getCompanyId());
     if (foundId.isPresent() && !foundId.get().equals(id)) {

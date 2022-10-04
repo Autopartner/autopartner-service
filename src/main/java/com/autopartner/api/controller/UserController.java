@@ -30,16 +30,16 @@ public class UserController {
 
   @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER"})
   @GetMapping
-  public List<UserResponse> getAll() {
-    return userService.findAll().stream()
+  public List<UserResponse> getAll(@AuthenticationPrincipal User user) {
+    return userService.findAll(user.getCompanyId()).stream()
         .map(UserResponse::fromEntity)
         .toList();
   }
 
   @Secured({"ROLE_USER", "ROLE_ADMIN"})
   @GetMapping("/{id}")
-  public UserResponse get(@PathVariable Long id) {
-    return userService.findById(id)
+  public UserResponse get(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    return userService.findById(id, user.getCompanyId())
         .map(UserResponse::fromEntity)
         .orElseThrow(() -> new NotFoundException("User", id));
   }
@@ -60,23 +60,24 @@ public class UserController {
 
   @Secured("ROLE_ADMIN")
   @PutMapping("{id}")
-  public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request) {
-    User user = userService.findById(id)
+  public UserResponse update(@PathVariable Long id, @RequestBody @Valid UserRequest request,
+                             @AuthenticationPrincipal User user) {
+    User currentUser = userService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("User", id));
     Optional<Long> foundId = userService.findIdByEmail(request.getEmail());
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("User", request.getEmail());
     }
-    log.info("Updated user {}", user.getEmail());
-    return UserResponse.fromEntity(userService.update(user, request));
+    log.info("Updated user {}", currentUser.getEmail());
+    return UserResponse.fromEntity(userService.update(currentUser, request));
   }
 
   @Secured("ROLE_ADMIN")
   @DeleteMapping("/{id}")
-  public void delete(@PathVariable Long id) {
-    User user = userService.findById(id)
+  public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    User currentUser = userService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("User", id));
-    log.info("Deleted user {}", user.getEmail());
-    userService.delete(user);
+    log.info("Deleted user {}", currentUser.getEmail());
+    userService.delete(currentUser);
   }
 }
