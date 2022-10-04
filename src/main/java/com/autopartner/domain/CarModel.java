@@ -47,7 +47,8 @@ public class CarModel {
   List<Car> cars;
 
   @Column
-  Boolean active;
+  @Builder.Default
+  Boolean active = true;
 
   public static CarModel create(CarModelRequest request, CarBrand brand, CarType type, Long companyId) {
     return CarModel.builder()

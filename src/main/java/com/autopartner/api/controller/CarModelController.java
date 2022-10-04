@@ -38,16 +38,16 @@ public class CarModelController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
-  public List<CarModelResponse> getAll() {
-    return carModelService.findAll().stream()
+  public List<CarModelResponse> getAll(@AuthenticationPrincipal User user) {
+    return carModelService.findAll(user.getCompanyId()).stream()
         .map(CarModelResponse::fromEntity)
         .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "/{id}")
-  public CarModelResponse get(@PathVariable Long id) {
-    return carModelService.findById(id)
+  public CarModelResponse get(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    return carModelService.findById(id, user.getCompanyId())
         .map(CarModelResponse::fromEntity)
         .orElseThrow(() -> new NotFoundException("CarModel", id));
   }
@@ -58,10 +58,10 @@ public class CarModelController {
                                  @AuthenticationPrincipal User user) {
     log.info("Received car model registration request {}", request);
     String name = request.getName();
-    if (carModelService.findIdByName(name).isPresent()) {
+    if (carModelService.findIdByName(name, user.getCompanyId()).isPresent()) {
       throw new AlreadyExistsException("CarModel", name);
     }
-    CarBrand brand = carBrandService.findById(request.getCarBrandId())
+    CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
     CarType type = carTypeService.findById(request.getCarTypeId())
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
@@ -72,14 +72,15 @@ public class CarModelController {
 
   @PutMapping("/{id}")
   @Secured("ROLE_USER")
-  public CarModelResponse update(@PathVariable Long id, @RequestBody @Valid CarModelRequest request) {
-    CarModel model = carModelService.findById(id)
+  public CarModelResponse update(@PathVariable Long id, @RequestBody @Valid CarModelRequest request,
+                                 @AuthenticationPrincipal User user) {
+    CarModel model = carModelService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarModel", id));
-    CarBrand brand = carBrandService.findById(request.getCarBrandId())
+    CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
     CarType type = carTypeService.findById(request.getCarTypeId())
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
-    Optional<Long> foundId = carModelService.findIdByName(request.getName());
+    Optional<Long> foundId = carModelService.findIdByName(request.getName(), user.getCompanyId());
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("CarModel", request.getName());
     }
@@ -88,8 +89,8 @@ public class CarModelController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable Long id) {
-    CarModel carModel = carModelService.findById(id)
+  public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    CarModel carModel = carModelService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("CarModel", id));
     carModelService.delete(carModel);
   }
