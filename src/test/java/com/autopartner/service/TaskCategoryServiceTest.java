@@ -27,16 +27,24 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class TaskCategoryServiceTest {
-  @Mock TaskCategoryRepository taskCategoryRepository;
-  @InjectMocks TaskCategoryServiceImpl taskCategoryService;
-  @Captor ArgumentCaptor<TaskCategory> taskCategoryArgumentCaptor;
-  @Captor ArgumentCaptor<Long> longArgumentCaptor;
+  @Mock
+  TaskCategoryRepository taskCategoryRepository;
+  @InjectMocks
+  TaskCategoryServiceImpl taskCategoryService;
+  @Captor
+  ArgumentCaptor<TaskCategory> taskCategoryArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> taskCategoryIdArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
+
 
   @Test
   void findAll() {
+    long companyId = 1L;
     List<TaskCategory> taskCategories = List.of(TaskCategoryFixture.createTaskCategory());
-    when(taskCategoryRepository.findByActiveTrue()).thenReturn(taskCategories);
-    List<TaskCategory> actualTaskCategories = taskCategoryService.findAll();
+    when(taskCategoryRepository.findAll(companyId)).thenReturn(taskCategories);
+    List<TaskCategory> actualTaskCategories = taskCategoryService.findAll(companyId);
     assertThat(taskCategories).isEqualTo(actualTaskCategories);
   }
 
@@ -51,13 +59,16 @@ public class TaskCategoryServiceTest {
 
   @Test
   void findById() {
+    Long companyId = 1L;
     TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
-    when(taskCategoryRepository.findByIdAndActiveTrue(anyLong()))
+    when(taskCategoryRepository.findById(anyLong(), anyLong()))
         .thenReturn(Optional.ofNullable(taskCategory));
-    taskCategoryService.findById(taskCategory.getId());
-    verify(taskCategoryRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    Long id = longArgumentCaptor.getValue();
+    taskCategoryService.findById(taskCategory.getId(), companyId);
+    verify(taskCategoryRepository).findById(taskCategoryIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    Long currentCompanyId = companyIdArgumentCaptor.getValue();
+    Long id = taskCategoryIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(taskCategory.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test

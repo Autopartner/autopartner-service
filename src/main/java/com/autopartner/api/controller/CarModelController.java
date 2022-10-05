@@ -58,14 +58,15 @@ public class CarModelController {
                                  @AuthenticationPrincipal User user) {
     log.info("Received car model registration request {}", request);
     String name = request.getName();
-    if (carModelService.findIdByName(name, user.getCompanyId()).isPresent()) {
+    Long companyId = user.getCompanyId();
+    if (carModelService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("CarModel", name);
     }
-    CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
+    CarBrand brand = carBrandService.findById(request.getCarBrandId(), companyId)
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
-    CarType type = carTypeService.findById(request.getCarTypeId(), user.getCompanyId())
+    CarType type = carTypeService.findById(request.getCarTypeId(), companyId)
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
-    CarModel model = carModelService.create(request, brand, type, user.getCompanyId());
+    CarModel model = carModelService.create(request, brand, type, companyId);
     log.info("Created new car model {}", request.getName());
     return CarModelResponse.fromEntity(model);
   }
@@ -74,13 +75,14 @@ public class CarModelController {
   @Secured("ROLE_USER")
   public CarModelResponse update(@PathVariable Long id, @RequestBody @Valid CarModelRequest request,
                                  @AuthenticationPrincipal User user) {
-    CarModel model = carModelService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    CarModel model = carModelService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("CarModel", id));
-    CarBrand brand = carBrandService.findById(request.getCarBrandId(), user.getCompanyId())
+    CarBrand brand = carBrandService.findById(request.getCarBrandId(), companyId)
         .orElseThrow(() -> new NotFoundException("CarBrand", request.getCarBrandId()));
-    CarType type = carTypeService.findById(request.getCarTypeId(), user.getCompanyId())
+    CarType type = carTypeService.findById(request.getCarTypeId(), companyId)
         .orElseThrow(() -> new NotFoundException("CarType", request.getCarTypeId()));
-    Optional<Long> foundId = carModelService.findIdByName(request.getName(), user.getCompanyId());
+    Optional<Long> foundId = carModelService.findIdByName(request.getName(), companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("CarModel", request.getName());
     }

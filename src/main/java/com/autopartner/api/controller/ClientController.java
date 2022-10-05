@@ -52,10 +52,11 @@ public class ClientController {
                                @AuthenticationPrincipal User user) {
     log.error("Received client registration request {}", request);
     String phone = request.getPhone();
-    if (clientService.findIdByPhone(phone, user.getCompanyId()).isPresent()) {
+    Long companyId = user.getCompanyId();
+    if (clientService.findIdByPhone(phone, companyId).isPresent()) {
       throw new AlreadyExistsException("Client", phone);
     }
-    Client client = clientService.create(request, user.getCompanyId());
+    Client client = clientService.create(request, companyId);
     log.info("Created new client {}", request.getFirstName());
     return ClientResponse.fromEntity(client);
   }
@@ -64,9 +65,10 @@ public class ClientController {
   @Secured("ROLE_USER")
   public ClientResponse update(@PathVariable Long id, @RequestBody @Valid ClientRequest request,
                                @AuthenticationPrincipal User user) {
-    Client client = clientService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    Client client = clientService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("Client", id));
-    Optional<Long> foundId = clientService.findIdByPhone(request.getPhone(), user.getCompanyId());
+    Optional<Long> foundId = clientService.findIdByPhone(request.getPhone(), companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("Client", request.getPhone());
     }

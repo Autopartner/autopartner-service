@@ -51,10 +51,11 @@ public class CarTypeController {
                                 @AuthenticationPrincipal User user) {
     log.info("Received car type registration request {}", request);
     String name = request.getName();
-    if (carTypeService.findIdByName(name, user.getCompanyId()).isPresent()) {
+    Long companyId = user.getCompanyId();
+    if (carTypeService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("CarType", name);
     }
-    CarType carType = carTypeService.create(request, user.getCompanyId());
+    CarType carType = carTypeService.create(request, companyId);
     log.info("Created new car type {}", request.getName());
     return CarTypeResponse.fromEntity(carType);
   }
@@ -63,9 +64,10 @@ public class CarTypeController {
   @Secured("ROLE_USER")
   public CarTypeResponse update(@PathVariable Long id, @RequestBody @Valid CarTypeRequest request,
                                 @AuthenticationPrincipal User user) {
-    CarType carType = carTypeService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    CarType carType = carTypeService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("CarType", id));
-    Optional<Long> foundId = carTypeService.findIdByName(request.getName(), user.getCompanyId());
+    Optional<Long> foundId = carTypeService.findIdByName(request.getName(), companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("CarType", request.getName());
     }

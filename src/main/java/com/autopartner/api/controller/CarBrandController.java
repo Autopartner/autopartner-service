@@ -52,10 +52,11 @@ public class CarBrandController {
                                  @AuthenticationPrincipal User user) {
     log.info("Received car brand registration request {}", request);
     String name = request.getName();
-    if (carBrandService.findIdByName(name, user.getCompanyId()).isPresent()) {
+    Long companyId = user.getCompanyId();
+    if (carBrandService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("CarBrand", name);
     }
-    CarBrand carBrand = carBrandService.create(request, user.getCompanyId());
+    CarBrand carBrand = carBrandService.create(request, companyId);
     log.info("Created new client {}", request.getName());
     return CarBrandResponse.fromEntity(carBrand);
   }
@@ -64,9 +65,10 @@ public class CarBrandController {
   @Secured("ROLE_USER")
   public CarBrandResponse update(@PathVariable Long id, @RequestBody @Valid CarBrandRequest request,
                                  @AuthenticationPrincipal User user) {
-    CarBrand carBrand = carBrandService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    CarBrand carBrand = carBrandService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("CarBrand", id));
-    Optional<Long> foundId = carBrandService.findIdByName(request.getName(), user.getCompanyId());
+    Optional<Long> foundId = carBrandService.findIdByName(request.getName(), companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("CarBrand", request.getName());
     }

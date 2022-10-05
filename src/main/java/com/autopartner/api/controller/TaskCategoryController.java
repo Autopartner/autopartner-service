@@ -52,10 +52,11 @@ public class TaskCategoryController {
       @Valid @RequestBody TaskCategoryRequest request, @AuthenticationPrincipal User user) {
     log.error("Received task category registration request {}", request);
     String name = request.getName();
-    if (taskCategoryService.findIdByName(name, user.getCompanyId()).isPresent()) {
+    Long companyId = user.getCompanyId();
+    if (taskCategoryService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
-    TaskCategory category = taskCategoryService.create(request, user.getCompanyId());
+    TaskCategory category = taskCategoryService.create(request, companyId);
     log.info("Created new task category {}", request.getName());
     return TaskCategoryResponse.fromEntity(category);
   }
@@ -64,10 +65,11 @@ public class TaskCategoryController {
   @Secured("ROLE_USER")
   public TaskCategoryResponse update(@PathVariable Long id, @RequestBody @Valid TaskCategoryRequest request,
                                      @AuthenticationPrincipal User user) {
-    TaskCategory category = taskCategoryService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    TaskCategory category = taskCategoryService.findById(id, companyId)
             .orElseThrow(() -> new NotFoundException("TaskCategory", id));
     String name = request.getName();
-    if (taskCategoryService.findIdByName(name, user.getCompanyId()).isPresent()) {
+    if (taskCategoryService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
     return TaskCategoryResponse.fromEntity(taskCategoryService.update(category, request));

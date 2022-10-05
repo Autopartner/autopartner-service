@@ -53,18 +53,18 @@ public class CarController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PostMapping
-  public CarResponse create(@Valid @RequestBody CarRequest request,
-                            @AuthenticationPrincipal User user) {
+  public CarResponse create(@Valid @RequestBody CarRequest request, @AuthenticationPrincipal User user) {
     log.info("Received car registration request {}", request);
+    Long companyId = user.getCompanyId();
     String vinCode = request.getVinCode();
-    if (carService.findIdByVinCode(vinCode, user.getCompanyId()).isPresent()) {
+    if (carService.findIdByVinCode(vinCode, companyId).isPresent()) {
       throw new AlreadyExistsException("Car", vinCode);
     }
-    Client client = clientService.findById(request.getClientId(), user.getCompanyId())
+    Client client = clientService.findById(request.getClientId(), companyId)
         .orElseThrow(() -> new NotFoundException("Client", request.getClientId()));
-    CarModel carModel = carModelService.findById(request.getCarModelId(), user.getCompanyId())
+    CarModel carModel = carModelService.findById(request.getCarModelId(), companyId)
         .orElseThrow(() -> new NotFoundException("Car model", request.getCarModelId()));
-    Car newCar = carService.create(request, client, carModel, user.getCompanyId());
+    Car newCar = carService.create(request, client, carModel, companyId);
     log.info("Created new car {}", newCar.getPlateNumber());
     return CarResponse.fromEntity(newCar);
   }
@@ -73,11 +73,12 @@ public class CarController {
   @Secured("ROLE_USER")
   public CarResponse update(@PathVariable Long id,
                             @RequestBody @Valid CarRequest request, @AuthenticationPrincipal User user) {
-    Car car = carService.findById(id, user.getCompanyId())
+    Long companyId = user.getCompanyId();
+    Car car = carService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("Car", id));
-    Client client = clientService.findById(request.getClientId(), user.getCompanyId())
+    Client client = clientService.findById(request.getClientId(), companyId)
         .orElseThrow(() -> new NotFoundException("Client", request.getClientId()));
-    CarModel carModel = carModelService.findById(request.getCarModelId(), user.getCompanyId())
+    CarModel carModel = carModelService.findById(request.getCarModelId(), companyId)
         .orElseThrow(() -> new NotFoundException("Car model", request.getCarModelId()));
     return CarResponse.fromEntity(carService.update(car, client, carModel, request));
   }

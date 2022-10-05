@@ -8,7 +8,6 @@ import com.autopartner.repository.ClientRepository;
 import com.autopartner.service.impl.ClientServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,29 +35,23 @@ class ClientServiceTest {
   @Captor
   ArgumentCaptor<Client> clientArgumentCaptor;
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
-  List<Client> clients;
-  Client client;
-  ClientRequest request;
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    client = ClientFixture.createPersonClient();
-    clients = List.of(client);
-    request = ClientRequestFixture.createClientRequest();
-    id = 3L;
-  }
+  ArgumentCaptor<Long> clientIdArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
 
   @Test
   void findAll() {
-    when(clientRepository.findByActiveTrue()).thenReturn(clients);
-    List<Client> actualClients = clientService.findAll();
+    long companyId = 1L;
+    List<Client> clients = List.of(ClientFixture.createPersonClient());
+    when(clientRepository.findAll(companyId)).thenReturn(clients);
+    List<Client> actualClients = clientService.findAll(companyId);
     assertThat(clients).isEqualTo(actualClients);
   }
 
   @Test
   void create() {
+    long id = 1L;
+    ClientRequest request = ClientRequestFixture.createClientRequest();
     clientService.create(request, id);
     verify(clientRepository).save(clientArgumentCaptor.capture());
     Client actualClient = clientArgumentCaptor.getValue();
@@ -67,15 +60,21 @@ class ClientServiceTest {
 
   @Test
   void findById() {
-    when(clientRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(client));
-    clientService.findById(client.getId());
-    verify(clientRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    long companyId = 1L;
+    Client client = ClientFixture.createPersonClient();
+    when(clientRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(client));
+    clientService.findById(client.getId(), companyId);
+    verify(clientRepository).findById(clientIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    long id = clientIdArgumentCaptor.getValue();
+    long currentCompanyId = companyIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(client.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test
   void update() {
+    Client client = ClientFixture.createPersonClient();
+    ClientRequest request = ClientRequestFixture.createClientRequest();
     clientService.update(client, request);
     verify(clientRepository).save(clientArgumentCaptor.capture());
     Client actualClient = clientArgumentCaptor.getValue();
@@ -84,6 +83,7 @@ class ClientServiceTest {
 
   @Test
   void delete() {
+    Client client = ClientFixture.createPersonClient();
     clientService.delete(client);
     verify(clientRepository).save(clientArgumentCaptor.capture());
     Client actualClient = clientArgumentCaptor.getValue();
@@ -92,6 +92,7 @@ class ClientServiceTest {
   }
 
   private void assertThatClientMappedCorrectly(Client actualClient) {
+    ClientRequest request = ClientRequestFixture.createClientRequest();
     assertThat(actualClient.getFirstName()).isEqualTo((request.getFirstName()));
     assertThat(actualClient.getLastName()).isEqualTo(request.getLastName());
     assertThat(actualClient.getCompanyName()).isEqualTo(request.getCompanyName());

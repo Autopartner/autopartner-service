@@ -53,6 +53,6 @@ public class CarBrandServiceImpl implements CarBrandService {
 
   @Override
   public Optional<Long> findIdByName(String name, Long companyId) {
-    return carBrandRepository.findIdByNameAndActiveTrue(name, companyId);
+    return carBrandRepository.findIdByName(name, companyId);
   }
 }
