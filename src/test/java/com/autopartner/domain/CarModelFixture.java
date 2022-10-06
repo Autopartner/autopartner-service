@@ -4,6 +4,7 @@ public class CarModelFixture {
   public static CarModel createCarModel() {
     return CarModel.builder()
         .id(1L)
+        .companyId(1L)
         .name("Q5")
         .carBrand(CarBrandFixture.createCarBrand())
         .carType(CarTypeFixture.createCarType())
@@ -14,6 +15,7 @@ public class CarModelFixture {
   public static CarModel createCarModel(CarBrand brand, CarType type) {
     return CarModel.builder()
         .id(1L)
+        .companyId(1L)
         .name("Q5")
         .carBrand(brand)
         .carType(type)
@@ -24,6 +26,7 @@ public class CarModelFixture {
   public static CarModel createCarModelWithDifferentName(CarBrand brand, CarType type) {
     return CarModel.builder()
         .id(1L)
+        .companyId(1L)
         .name("Q6")
         .carBrand(brand)
         .carType(type)
