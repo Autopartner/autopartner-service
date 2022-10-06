@@ -7,7 +7,6 @@ import com.autopartner.repository.CarModelRepository;
 import com.autopartner.service.impl.CarModelServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -35,13 +34,16 @@ public class CarModelServiceTest {
   @Captor
   ArgumentCaptor<CarModel> carModelArgumentCaptor;
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
+  ArgumentCaptor<Long> carModelIdArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
 
   @Test
   void findAll() {
+    Long companyId = 1L;
     List<CarModel> models = List.of(CarModelFixture.createCarModel());
-    when(carModelRepository.findByActiveTrue()).thenReturn(models);
-    List<CarModel> actualCarBrands = carModelService.findAll();
+    when(carModelRepository.findAll(companyId)).thenReturn(models);
+    List<CarModel> actualCarBrands = carModelService.findAll(companyId);
     assertThat(models).isEqualTo(actualCarBrands);
   }
 
@@ -61,12 +63,15 @@ public class CarModelServiceTest {
 
   @Test
   void findById() {
+    Long companyId = 1L;
     CarModel model = CarModelFixture.createCarModel();
-    when(carModelRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(model));
-    carModelService.findById(model.getId());
-    verify(carModelRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    long id = longArgumentCaptor.getValue();
+    when(carModelRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(model));
+    carModelService.findById(model.getId(), companyId);
+    verify(carModelRepository).findById(carModelIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    long id = carModelIdArgumentCaptor.getValue();
+    long currentCompanyId = companyIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(model.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test

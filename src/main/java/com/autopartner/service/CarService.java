@@ -10,14 +10,15 @@ import java.util.Optional;
 
 public interface CarService {
 
-  List<Car> findAll();
+  List<Car> findAll(Long companyId);
 
-  Optional<Car> findById(Long id);
+  Optional<Car> findById(Long id, Long companyId);
 
   void delete(Car car);
 
   Car create(CarRequest request, Client client, CarModel carModel, Long companyId);
 
   Car update(Car car, Client client, CarModel carModel, CarRequest request);
+  Optional<Long> findIdByVinCode(String vinCode, Long companyId);
 
 }

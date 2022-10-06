@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientService {
-  List<Client> findAll();
+  List<Client> findAll(Long companyId);
 
-  Optional<Client> findById(Long id);
+  Optional<Client> findById(Long id, Long companyId);
 
   void delete(Client client);
 
@@ -17,5 +17,5 @@ public interface ClientService {
 
   Client update(Client client, ClientRequest request);
 
-  Optional<Long> findIdByPhone(String phone);
+  Optional<Long> findIdByPhone(String phone, Long companyId);
 }

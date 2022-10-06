@@ -8,7 +8,6 @@ import com.autopartner.repository.CarBrandRepository;
 import com.autopartner.service.impl.CarBrandServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,13 +35,16 @@ public class CarBrandServiceTest {
   @Captor
   ArgumentCaptor<CarBrand> carBrandArgumentCaptor;
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
+  ArgumentCaptor<Long> carBrandIdArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
 
   @Test
   void findAll() {
+    Long companyId = 1L;
     List<CarBrand> brands = List.of(CarBrandFixture.createCarBrand());
-    when(carBrandRepository.findByActiveTrue()).thenReturn(brands);
-    List<CarBrand> actualCarBrands = carBrandService.findAll();
+    when(carBrandRepository.findAll(companyId)).thenReturn(brands);
+    List<CarBrand> actualCarBrands = carBrandService.findAll(companyId);
     assertThat(brands).isEqualTo(actualCarBrands);
   }
 
@@ -58,12 +60,15 @@ public class CarBrandServiceTest {
 
   @Test
   void findById() {
+    Long companyId = 1L;
     CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
-    when(carBrandRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(brand));
-    carBrandService.findById(brand.getId());
-    verify(carBrandRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    long id = longArgumentCaptor.getValue();
+    when(carBrandRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(brand));
+    carBrandService.findById(brand.getId(), companyId);
+    verify(carBrandRepository).findById(carBrandIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    long id = carBrandIdArgumentCaptor.getValue();
+    long currentCompanyId = companyIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(brand.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test

@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface CarModelService {
 
-  List<CarModel> findAll();
+  List<CarModel> findAll(Long companyId);
 
-  Optional<CarModel> findById(Long id);
+  Optional<CarModel> findById(Long id, Long companyId);
 
   void delete(CarModel carBrand);
 
@@ -20,6 +20,6 @@ public interface CarModelService {
 
   CarModel update(CarModel model, CarBrand brand, CarType type, CarModelRequest request);
 
-  Optional<Long> findIdByName(String name);
+  Optional<Long> findIdByName(String name, Long companyId);
 
 }

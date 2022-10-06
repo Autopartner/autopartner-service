@@ -23,13 +23,13 @@ public class CarServiceImpl implements CarService {
   CarRepository carRepository;
 
   @Override
-  public List<Car> findAll() {
-    return carRepository.findAllByActiveTrue();
+  public List<Car> findAll(Long companyId) {
+    return carRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<Car> findById(Long id) {
-    return carRepository.findByIdAndActiveTrue(id);
+  public Optional<Car> findById(Long id, Long companyId) {
+    return carRepository.findById(id, companyId);
   }
 
   private Car save(Car car) {
@@ -40,6 +40,11 @@ public class CarServiceImpl implements CarService {
   public Car update(Car car, Client client, CarModel carModel, CarRequest request) {
     car.update(request, client, carModel);
     return save(car);
+  }
+
+  @Override
+  public Optional<Long> findIdByVinCode(String vinCode, Long companyId) {
+    return carRepository.findIdByVinCode(vinCode, companyId);
   }
 
   @Override

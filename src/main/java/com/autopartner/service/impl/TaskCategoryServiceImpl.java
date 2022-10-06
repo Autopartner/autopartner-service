@@ -21,13 +21,13 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
   TaskCategoryRepository taskCategoryRepository;
 
   @Override
-  public List<TaskCategory> findAll() {
-    return taskCategoryRepository.findByActiveTrue();
+  public List<TaskCategory> findAll(Long companyId) {
+    return taskCategoryRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<TaskCategory> findById(Long id) {
-    return taskCategoryRepository.findByIdAndActiveTrue(id);
+  public Optional<TaskCategory> findById(Long id, Long companyId) {
+    return taskCategoryRepository.findById(id, companyId);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class TaskCategoryServiceImpl implements TaskCategoryService {
   }
 
   @Override
-  public Optional<Long> findIdByName(String name) {
-    return taskCategoryRepository.findIdByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name, Long companyId) {
+    return taskCategoryRepository.findIdByName(name, companyId);
   }
 }
