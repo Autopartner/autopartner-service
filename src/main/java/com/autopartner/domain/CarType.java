@@ -39,9 +39,13 @@ public class CarType {
   @JsonIgnore
   List<CarModel> models;
 
-  @Column @Builder.Default Boolean active = true;
+  @Column
+  @Builder.Default
+  Boolean active = true;
 
-  @Column @CreationTimestamp LocalDateTime createdAt;
+  @Column
+  @CreationTimestamp
+  LocalDateTime createdAt;
 
   public static CarType create(CarTypeRequest request, Long companyId) {
     return CarType.builder().companyId(companyId).name(request.getName()).build();

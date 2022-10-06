@@ -107,6 +107,10 @@ public class User implements UserDetails {
     return active;
   }
 
+  public String getAuthoritiesString() {
+    return authorities;
+  }
+
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
   }

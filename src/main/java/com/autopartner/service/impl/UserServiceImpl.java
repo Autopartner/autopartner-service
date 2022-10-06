@@ -9,9 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -26,13 +24,13 @@ public class UserServiceImpl implements UserService {
   PasswordEncoder passwordEncoder;
 
   @Override
-  public List<User> findAll() {
-    return userRepository.findAllByActiveTrue();
+  public List<User> findAll(Long companyId) {
+    return userRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<User> findById(Long id) {
-    return userRepository.findByIdAndActiveTrue(id);
+  public Optional<User> findById(Long id, Long companyId) {
+    return userRepository.findById(id, companyId);
   }
 
   @Override
@@ -59,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<Long> findIdByEmail(String email) {
-    return userRepository.findIdByEmailAndActiveTrue(email);
+    return userRepository.findIdByEmail(email);
   }
 
 }

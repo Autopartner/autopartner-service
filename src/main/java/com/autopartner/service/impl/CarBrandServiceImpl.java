@@ -21,13 +21,13 @@ public class CarBrandServiceImpl implements CarBrandService {
   CarBrandRepository carBrandRepository;
 
   @Override
-  public List<CarBrand> findAll() {
-    return carBrandRepository.findByActiveTrue();
+  public List<CarBrand> findAll(Long companyId) {
+    return carBrandRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<CarBrand> findById(Long id) {
-    return carBrandRepository.findByIdAndActiveTrue(id);
+  public Optional<CarBrand> findById(Long id, Long companyId) {
+    return carBrandRepository.findById(id, companyId);
   }
 
   private CarBrand save(CarBrand carBrand) {
@@ -52,7 +52,7 @@ public class CarBrandServiceImpl implements CarBrandService {
   }
 
   @Override
-  public Optional<Long> findIdByName(String name) {
-    return carBrandRepository.findIdByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name, Long companyId) {
+    return carBrandRepository.findIdByName(name, companyId);
   }
 }

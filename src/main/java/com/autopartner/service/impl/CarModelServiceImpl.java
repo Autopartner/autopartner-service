@@ -24,13 +24,13 @@ public class CarModelServiceImpl implements CarModelService {
 
 
   @Override
-  public List<CarModel> findAll() {
-    return carModelRepository.findByActiveTrue();
+  public List<CarModel> findAll(Long companyId) {
+    return carModelRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<CarModel> findById(Long id) {
-    return carModelRepository.findByIdAndActiveTrue(id);
+  public Optional<CarModel> findById(Long id, Long companyId) {
+    return carModelRepository.findById(id, companyId);
   }
 
   private CarModel save(CarModel carModel) {
@@ -55,7 +55,7 @@ public class CarModelServiceImpl implements CarModelService {
   }
 
   @Override
-  public Optional<Long> findIdByName(String name) {
-    return carModelRepository.findIdByNameAndActiveTrue(name);
+  public Optional<Long> findIdByName(String name, Long companyId) {
+    return carModelRepository.findIdByName(name, companyId);
   }
 }

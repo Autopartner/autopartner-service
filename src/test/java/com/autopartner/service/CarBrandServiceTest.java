@@ -8,7 +8,6 @@ import com.autopartner.repository.CarBrandRepository;
 import com.autopartner.service.impl.CarBrandServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -36,29 +35,23 @@ public class CarBrandServiceTest {
   @Captor
   ArgumentCaptor<CarBrand> carBrandArgumentCaptor;
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
-  List<CarBrand> brands;
-  CarBrand brand;
-  CarBrandRequest request;
-  Long id;
-
-  @BeforeEach
-  public void init() {
-    brand = CarBrandFixture.createCarBrand();
-    brands = List.of(brand);
-    request = CarBrandRequestFixture.createCarBrandRequest();
-    id = 1L;
-  }
+  ArgumentCaptor<Long> carBrandIdArgumentCaptor;
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
 
   @Test
   void findAll() {
-    when(carBrandRepository.findByActiveTrue()).thenReturn(brands);
-    List<CarBrand> actualCarBrands = carBrandService.findAll();
+    Long companyId = 1L;
+    List<CarBrand> brands = List.of(CarBrandFixture.createCarBrand());
+    when(carBrandRepository.findAll(companyId)).thenReturn(brands);
+    List<CarBrand> actualCarBrands = carBrandService.findAll(companyId);
     assertThat(brands).isEqualTo(actualCarBrands);
   }
 
   @Test
   void create() {
+    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
+    long id = 1L;
     carBrandService.create(request, id);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrands = carBrandArgumentCaptor.getValue();
@@ -67,15 +60,21 @@ public class CarBrandServiceTest {
 
   @Test
   void findById() {
-    when(carBrandRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(brand));
-    carBrandService.findById(brand.getId());
-    verify(carBrandRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    id = longArgumentCaptor.getValue();
+    Long companyId = 1L;
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
+    when(carBrandRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(brand));
+    carBrandService.findById(brand.getId(), companyId);
+    verify(carBrandRepository).findById(carBrandIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    long id = carBrandIdArgumentCaptor.getValue();
+    long currentCompanyId = companyIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(brand.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test
   void update() {
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
+    CarBrandRequest request = CarBrandRequestFixture.createCarBrandRequest();
     carBrandService.update(brand, request);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();
@@ -84,6 +83,7 @@ public class CarBrandServiceTest {
 
   @Test
   void delete() {
+    CarBrand brand = CarBrandFixture.createCarBrandWithDifferentName();
     carBrandService.delete(brand);
     verify(carBrandRepository).save(carBrandArgumentCaptor.capture());
     CarBrand actualCarBrand = carBrandArgumentCaptor.getValue();

@@ -21,13 +21,13 @@ public class ClientServiceImpl implements ClientService {
   ClientRepository clientRepository;
 
   @Override
-  public List<Client> findAll() {
-    return clientRepository.findByActiveTrue();
+  public List<Client> findAll(Long companyId) {
+    return clientRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<Client> findById(Long id) {
-    return clientRepository.findByIdAndActiveTrue(id);
+  public Optional<Client> findById(Long id, Long companyId) {
+    return clientRepository.findById(id, companyId);
   }
 
   private Client save(Client client) {
@@ -52,8 +52,8 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
-  public Optional<Long> findIdByPhone(String phone) {
-    return clientRepository.findIdByPhoneAndActiveTrue(phone);
+  public Optional<Long> findIdByPhone(String phone, Long companyId) {
+    return clientRepository.findIdByPhone(phone, companyId);
   }
 
 }

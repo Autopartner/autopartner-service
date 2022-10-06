@@ -4,6 +4,7 @@ public class ClientFixture {
   public static Client createPersonClient() {
     return Client.builder()
         .id(1L)
+        .companyId(1L)
         .firstName("Dani")
         .lastName("Kolo")
         .companyName("Imagine")
@@ -20,6 +21,7 @@ public class ClientFixture {
 
   public static Client createCompanyClient() {
     return Client.builder()
+        .companyId(1L)
         .firstName("Serhii")
         .lastName("Kolo")
         .companyName("AutoPartner")

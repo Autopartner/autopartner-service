@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface TaskCategoryService {
 
-  List<TaskCategory> findAll();
+  List<TaskCategory> findAll(Long companyId);
 
-  Optional<TaskCategory> findById(Long id);
+  Optional<TaskCategory> findById(Long id, Long companyId);
 
   void delete(TaskCategory category);
 
@@ -18,6 +18,6 @@ public interface TaskCategoryService {
 
   TaskCategory update(TaskCategory category, TaskCategoryRequest request);
 
-  Optional<Long> findIdByName(String name);
+  Optional<Long> findIdByName(String name, Long companyId);
 
 }

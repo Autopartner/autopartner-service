@@ -38,15 +38,17 @@ public class CarServiceTest {
   ArgumentCaptor<Car> carArgumentCaptor;
 
   @Captor
-  ArgumentCaptor<Long> longArgumentCaptor;
+  ArgumentCaptor<Long> carIdArgumentCaptor;
+
+  @Captor
+  ArgumentCaptor<Long> companyIdArgumentCaptor;
 
   @Test
   public void findAll() {
+    Long companyId = 1L;
     List<Car> cars = List.of(CarFixture.createCar(), CarFixture.createCar());
-    when(carRepository.findAllByActiveTrue()).thenReturn(cars);
-
-    List<Car> actualCars = carService.findAll();
-
+    when(carRepository.findAll(companyId)).thenReturn(cars);
+    List<Car> actualCars = carService.findAll(companyId);
     assertThat(actualCars).isEqualTo(cars);
   }
 
@@ -65,14 +67,15 @@ public class CarServiceTest {
 
   @Test
   void findById() {
+    Long companyId = 1L;
     Car car = CarFixture.createCar();
-    when(carRepository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(car));
-
-    carService.findById(Objects.requireNonNull(car).getId());
-
-    verify(carRepository).findByIdAndActiveTrue(longArgumentCaptor.capture());
-    Long id = longArgumentCaptor.getValue();
+    when(carRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(car));
+    carService.findById(Objects.requireNonNull(car).getId(), companyId);
+    verify(carRepository).findById(carIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
+    long id = carIdArgumentCaptor.getValue();
+    long currentCompanyId = companyIdArgumentCaptor.getValue();
     assertThat(id).isEqualTo(car.getId());
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test

@@ -16,6 +16,7 @@ public class UserResponse {
 
   Long id;
   String email;
+  String phone;
   String firstName;
   String lastName;
   String authorities;
@@ -28,6 +29,8 @@ public class UserResponse {
         .email(user.getEmail())
         .firstName(user.getFirstName())
         .lastName(user.getLastName())
+        .phone(user.getPhone())
+        .authorities(user.getAuthoritiesString())
         .build();
   }
 }

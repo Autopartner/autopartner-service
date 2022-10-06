@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface UserService {
 
-  List<User> findAll();
+  List<User> findAll(Long companyId);
 
-  Optional<User> findById(Long id);
+  Optional<User> findById(Long id, Long companyId);
 
   User save(User user);
 
