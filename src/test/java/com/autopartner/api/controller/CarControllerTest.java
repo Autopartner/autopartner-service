@@ -151,7 +151,7 @@ public class CarControllerTest extends AbstractControllerTest {
   void delete_ValidRequest_DeletesCar() throws Exception {
     Car car = CarFixture.createCar();
     long id = 1L;
-    when(carService.findById(eq(car.getId()), any())).thenReturn(Optional.of(car));
+    when(carService.findById(eq(id), any())).thenReturn(Optional.of(car));
     this.mockMvc.perform(auth(delete(URL + "/" + id)))
         .andExpect(status().is2xxSuccessful());
   }

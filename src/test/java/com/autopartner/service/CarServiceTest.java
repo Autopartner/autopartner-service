@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public class CarServiceTest {
   @Test
   void findById() {
     Long companyId = 1L;
-    Car car = CarFixture.createCar();
+    Car car = CarFixture.createCarWithDifferentWinCode();
     when(carRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(car));
     carService.findById(Objects.requireNonNull(car).getId(), companyId);
     verify(carRepository).findById(carIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
@@ -106,7 +107,7 @@ public class CarServiceTest {
 
   private void assertThatCarMappedCorrectly(Car actualCar, CarRequest carRequest) {
     assertThat(actualCar.getPlateNumber()).isEqualTo(carRequest.getPlateNumber());
-    assertThat(actualCar.getManufactureYear()).isEqualTo(carRequest.getManufactureYear());
+    assertThat(actualCar.getManufactureYear()).isEqualTo(Year.parse(carRequest.getManufactureYear()));
     assertThat(actualCar.getVinCode()).isEqualTo(carRequest.getVinCode());
     assertThat(actualCar.getNote()).isEqualTo(carRequest.getNote());
   }
