@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Year;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -107,7 +106,7 @@ public class CarServiceTest {
 
   private void assertThatCarMappedCorrectly(Car actualCar, CarRequest carRequest) {
     assertThat(actualCar.getPlateNumber()).isEqualTo(carRequest.getPlateNumber());
-    assertThat(actualCar.getManufactureYear()).isEqualTo(Year.parse(carRequest.getManufactureYear()));
+    assertThat(actualCar.getManufactureYear()).isEqualTo(carRequest.getManufactureYear());
     assertThat(actualCar.getVinCode()).isEqualTo(carRequest.getVinCode());
     assertThat(actualCar.getNote()).isEqualTo(carRequest.getNote());
   }

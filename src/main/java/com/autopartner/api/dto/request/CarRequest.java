@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import java.time.Year;
+
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
@@ -28,8 +30,7 @@ public class CarRequest {
   String plateNumber;
 
   @NotNull
-  @Pattern(regexp = "^\\d{4}")
-  String manufactureYear;
+  Year manufactureYear;
 
   @Size(max = 256)
   String note;

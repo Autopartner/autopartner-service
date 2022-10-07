@@ -69,7 +69,7 @@ public class Car {
         .plateNumber(request.getPlateNumber())
         .vinCode(request.getVinCode())
         .note(request.getNote())
-        .manufactureYear(Year.parse(request.getManufactureYear()))
+        .manufactureYear(request.getManufactureYear())
         .client(client)
         .carModel(carModel)
         .build();
@@ -79,7 +79,7 @@ public class Car {
     plateNumber = request.getPlateNumber();
     vinCode = request.getVinCode();
     note = request.getNote();
-    manufactureYear = Year.parse(request.getManufactureYear());
+    manufactureYear = request.getManufactureYear();
     this.client = client;
     this.carModel = carModel;
   }
