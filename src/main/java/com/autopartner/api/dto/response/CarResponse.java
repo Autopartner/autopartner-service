@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.Year;
 
 @Data
 @Builder
@@ -16,7 +16,7 @@ public class CarResponse {
   String vinCode;
   String plateNumber;
   String note;
-  LocalDate manufactureYear;
+  Year manufactureYear;
   CarModelResponse carModelResponse;
   ClientResponse clientResponse;
 
