@@ -7,8 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -49,7 +49,7 @@ public class Car {
   String note;
 
   @Column
-  LocalDate manufactureYear;
+  Year manufactureYear;
 
   @Column
   @CreationTimestamp
@@ -69,7 +69,7 @@ public class Car {
         .plateNumber(request.getPlateNumber())
         .vinCode(request.getVinCode())
         .note(request.getNote())
-        .manufactureYear(LocalDate.parse(request.getManufactureYear()))
+        .manufactureYear(request.getManufactureYear())
         .client(client)
         .carModel(carModel)
         .build();
@@ -79,7 +79,7 @@ public class Car {
     plateNumber = request.getPlateNumber();
     vinCode = request.getVinCode();
     note = request.getNote();
-    manufactureYear = LocalDate.parse(request.getManufactureYear());
+    manufactureYear = request.getManufactureYear();
     this.client = client;
     this.carModel = carModel;
   }

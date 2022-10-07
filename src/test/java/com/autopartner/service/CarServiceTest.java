@@ -68,7 +68,7 @@ public class CarServiceTest {
   @Test
   void findById() {
     Long companyId = 1L;
-    Car car = CarFixture.createCar();
+    Car car = CarFixture.createCarWithDifferentWinCode();
     when(carRepository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(car));
     carService.findById(Objects.requireNonNull(car).getId(), companyId);
     verify(carRepository).findById(carIdArgumentCaptor.capture(), companyIdArgumentCaptor.capture());
