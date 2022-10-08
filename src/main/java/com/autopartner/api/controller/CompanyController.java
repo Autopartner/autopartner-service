@@ -30,14 +30,6 @@ public class CompanyController {
   CompanyService companyService;
   UserService userService;
 
-  @Secured("ROLE_ADMIN")
-  @GetMapping()
-  public List<CompanyResponse> getAll() {
-    return companyService.findAll().stream()
-        .map(CompanyResponse::fromEntity)
-        .collect(Collectors.toList());
-  }
-
   @Secured("ROLE_USER")
   @GetMapping(value = "/{id}")
   public CompanyResponse get(@PathVariable Long id) {
@@ -59,7 +51,7 @@ public class CompanyController {
   }
 
   @PutMapping("/{id}")
-  @Secured("ROLE_USER")
+  @Secured("ROLE_ADMIN")
   public CompanyResponse update(@PathVariable Long id, @RequestBody @Valid CompanyRequest companyRequest) {
     Company company = companyService.findById(id)
         .orElseThrow(() -> new NotFoundException("Company", id));

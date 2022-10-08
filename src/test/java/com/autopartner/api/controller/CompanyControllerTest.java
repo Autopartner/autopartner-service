@@ -14,11 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
-import java.util.List;
-import java.util.Objects;
+import java.util. Objects;
 import java.util.Optional;
 
-import static com.autopartner.api.configuration.WebConfiguration.UNAUTHORIZED_RESPONSE;
 import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.createCompanyRegistrationRequest;
 import static com.autopartner.api.dto.request.CompanyRegistrationRequestFixture.createCompanyRegistrationRequestWithoutPassword;
 import static com.autopartner.api.dto.request.CompanyRequestFixture.createCompanyRequest;
@@ -38,23 +36,6 @@ public class CompanyControllerTest extends AbstractControllerTest {
 
   @MockBean
   UserService userService;
-
-  @Test
-  void getAll_NotAuthorized_ReturnsClientError() throws Exception {
-    this.mockMvc.perform(get(URL))
-        .andExpect(status().is4xxClientError())
-        .andExpect(content().string(objectMapper.writeValueAsString(UNAUTHORIZED_RESPONSE)));
-  }
-
-  @Test
-  void getAll_Authorized_ReturnsCompanies() throws Exception {
-    Company company = CompanyFixture.createCompany();
-    List<CompanyResponse> companyResponses = List.of(CompanyResponse.fromEntity(company));
-    when(companyService.findAll()).thenReturn(List.of(company));
-    this.mockMvc.perform(auth(get(URL)))
-        .andExpect(status().is2xxSuccessful())
-        .andExpect(content().string(objectMapper.writeValueAsString(companyResponses)));
-  }
 
   @Test
   void get_ValidCompanyId_ReturnsCompany() throws Exception {
