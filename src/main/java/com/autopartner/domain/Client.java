@@ -69,8 +69,8 @@ public class Client {
   int taskDiscount;
 
   @Column
-  @Builder.Default
-  ClientType clientType = ClientType.PERSON;
+  ClientType clientType;
+
   @Column
   String note;
 

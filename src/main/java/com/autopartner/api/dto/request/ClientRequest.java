@@ -46,6 +46,7 @@ public class ClientRequest {
   @Max(100)
   int taskDiscount;
 
+  @NotNull
   ClientType clientType;
 
   @Size(max = 256)
