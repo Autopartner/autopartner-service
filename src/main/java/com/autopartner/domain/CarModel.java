@@ -41,7 +41,8 @@ public class CarModel {
   @ManyToOne
   CarType carType;
 
-  @OneToMany(mappedBy = "carModel", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  @OneToMany(mappedBy = "carModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Car> cars;
