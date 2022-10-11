@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -69,7 +70,8 @@ public class TaskCategoryController {
     TaskCategory category = taskCategoryService.findById(id, companyId)
             .orElseThrow(() -> new NotFoundException("TaskCategory", id));
     String name = request.getName();
-    if (taskCategoryService.findIdByName(name, companyId).isPresent()) {
+    Optional<Long> foundId = taskCategoryService.findIdByName(name, companyId);
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
     return TaskCategoryResponse.fromEntity(taskCategoryService.update(category, request));

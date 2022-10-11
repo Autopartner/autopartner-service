@@ -10,11 +10,13 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskCategoryResponse {
+  Long id;
   String name;
   Long parentId;
 
   public static TaskCategoryResponse fromEntity(TaskCategory category) {
     return TaskCategoryResponse.builder()
+        .id(category.getId())
         .name(category.getName())
         .parentId(category.getParentId())
         .build();
