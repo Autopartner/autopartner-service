@@ -69,12 +69,13 @@ public class Client {
   int taskDiscount;
 
   @Column
-  ClientType clientType;
+  @Builder.Default
+  ClientType clientType = ClientType.PERSON;
   @Column
   String note;
 
   @ToString.Exclude
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Car> cars;
