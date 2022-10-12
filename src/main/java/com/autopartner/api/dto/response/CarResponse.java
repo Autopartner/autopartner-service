@@ -12,7 +12,7 @@ import java.time.Year;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CarResponse {
-
+  Long id;
   String vinCode;
   String plateNumber;
   String note;
@@ -22,6 +22,7 @@ public class CarResponse {
 
   public static CarResponse fromEntity(Car car) {
     return CarResponse.builder()
+        .id(car.getId())
         .vinCode(car.getVinCode())
         .plateNumber(car.getPlateNumber())
         .note(car.getNote())

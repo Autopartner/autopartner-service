@@ -1,15 +1,10 @@
 package com.autopartner.api.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
 import java.time.Year;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -17,6 +12,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Data
 @FieldDefaults(level = PRIVATE)
 @AllArgsConstructor
+@With
 @Builder
 @NoArgsConstructor
 public class CarRequest {
