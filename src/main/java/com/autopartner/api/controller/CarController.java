@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -74,12 +75,17 @@ public class CarController {
   public CarResponse update(@PathVariable Long id,
                             @RequestBody @Valid CarRequest request, @AuthenticationPrincipal User user) {
     Long companyId = user.getCompanyId();
+    String vinCode = request.getVinCode();
     Car car = carService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("Car", id));
     Client client = clientService.findById(request.getClientId(), companyId)
         .orElseThrow(() -> new NotFoundException("Client", request.getClientId()));
     CarModel carModel = carModelService.findById(request.getCarModelId(), companyId)
         .orElseThrow(() -> new NotFoundException("Car model", request.getCarModelId()));
+    Optional<Long> foundId = carService.findIdByVinCode(vinCode, companyId);
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
+      throw new AlreadyExistsException("Car", vinCode);
+    }
     return CarResponse.fromEntity(carService.update(car, client, carModel, request));
   }
 
