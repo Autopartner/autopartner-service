@@ -10,7 +10,7 @@ public class TaskFixture {
         .id(1L)
         .name("task")
         .category(TaskCategoryFixture.createTaskCategory())
-        .price(BigDecimal.valueOf(100))
+        .price(new BigDecimal("100.0"))
         .active(true)
         .companyId(1L)
         .build();
