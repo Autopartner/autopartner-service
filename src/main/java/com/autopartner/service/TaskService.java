@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface TaskService {
 
-  List<Task> findAll();
+  List<Task> findAll(Long companyId);
 
-  Optional<Task> findById(Long id);
+  Optional<Task> findById(Long id, Long companyId);
 
-  List<Task> findAllByCategory(Long categoryId);
+  List<Task> findAllByCategory(Long categoryId, Long companyId);
 
   Task create(TaskRequest request, TaskCategory category, Long companyId);
 
@@ -22,6 +22,6 @@ public interface TaskService {
 
   void delete(Task task);
 
-  Optional<Task> findByCategoryIdAndName(Long id, String name);
+  Optional<Task> findByCategoryIdAndName(String name, Long categoryId, Long companyId);
 
 }

@@ -42,28 +42,35 @@ public class TaskServiceTest {
   ArgumentCaptor<Task> taskArgumentCaptor;
 
   @Captor
-  ArgumentCaptor<Long> idCaptor;
+  ArgumentCaptor<Long> taskIdCaptor;
+
+  @Captor
+  ArgumentCaptor<Long> companyIdCaptor;
 
   @Captor
   ArgumentCaptor<String> nameCaptor;
 
   @Test
   void findAll() {
+    Long companyId = 1L;
     List<Task> tasks = List.of(TaskFixture.createTask(), TaskFixture.createTask());
-    when(repository.findByActiveTrue()).thenReturn(tasks);
-    List<Task> actualTasks = service.findAll();
+    when(repository.findAll(companyId)).thenReturn(tasks);
+    List<Task> actualTasks = service.findAll(companyId);
     assertThat(actualTasks.size()).isEqualTo(tasks.size());
     assertThat(actualTasks).isEqualTo(tasks);
   }
 
   @Test
   void findById() {
+    Long companyId = 1L;
     Task task = TaskFixture.createTask();
-    when(repository.findByIdAndActiveTrue(anyLong())).thenReturn(Optional.ofNullable(task));
-    service.findById(Objects.requireNonNull(task).getId());
-    verify(repository).findByIdAndActiveTrue(idCaptor.capture());
-    Long id = idCaptor.getValue();
+    when(repository.findById(anyLong(), anyLong())).thenReturn(Optional.ofNullable(task));
+    service.findById(task.getId(), companyId);
+    verify(repository).findById(taskIdCaptor.capture(), companyIdCaptor.capture());
+    Long id = taskIdCaptor.getValue();
+    Long currentCompanyId = companyIdCaptor.getValue();
     assertThat(task.getId()).isEqualTo(id);
+    assertThat(currentCompanyId).isEqualTo(companyId);
   }
 
   @Test
@@ -98,23 +105,40 @@ public class TaskServiceTest {
   }
 
   @Test
-  void findByCategoryIdAndName() {
+  void findAllByCategory() {
+    Long companyId = 1L;
     Task task = TaskFixture.createTask();
-    Long categoryId = Objects.requireNonNull(task).getTaskCategory().getId();
+    Long categoryId = Objects.requireNonNull(task).getCategory().getId();
+    List<Task> tasks = List.of(task, TaskFixture.createTask());
+    when(repository.findAllByCategoryId(eq(categoryId), eq(companyId)))
+        .thenReturn(tasks);
+
+    List<Task> actualTasks = service.findAllByCategory(categoryId, companyId);
+
+    verify(repository).findAllByCategoryId(taskIdCaptor.capture(), companyIdCaptor.capture());
+    assertThat(tasks.size()).isEqualTo(actualTasks.size());
+    assertThat(tasks.get(1).getCategory().getId()).isEqualTo(actualTasks.get(1).getCategory().getId());
+  }
+  @Test
+  void findByCategoryIdAndName() {
+    Long companyId = 1L;
+    Task task = TaskFixture.createTask();
+    Long categoryId = Objects.requireNonNull(task).getCategory().getId();
     String name = task.getName();
-    when(repository.findByTaskCategoryIdAndNameAndActiveTrue(eq(categoryId), eq(name)))
+    when(repository.findByCategoryIdAndNameAndActiveTrue(eq(name), eq(categoryId), eq(companyId)))
         .thenReturn(Optional.of(task));
 
-    service.findByCategoryIdAndName(categoryId, name);
+    service.findByCategoryIdAndName(name, categoryId, companyId);
 
-    verify(repository).findByTaskCategoryIdAndNameAndActiveTrue(idCaptor.capture(), nameCaptor.capture());
-    assertThat(task.getTaskCategory().getId()).isEqualTo(idCaptor.getValue());
+    verify(repository).findByCategoryIdAndNameAndActiveTrue(nameCaptor.capture(), taskIdCaptor.capture(), companyIdCaptor.capture());
+    assertThat(task.getCategory().getId()).isEqualTo(taskIdCaptor.getValue());
     assertThat(task.getName()).isEqualTo(nameCaptor.getValue());
+    assertThat(companyId).isEqualTo(companyIdCaptor.getValue());
   }
 
   private void assertThatTaskMappedCorrectly(Task actualTask, TaskRequest request) {
     assertThat(actualTask.getName()).isEqualTo(request.getName());
-    assertThat(actualTask.getTaskCategory().getId()).isEqualTo(request.getTaskCategoryId());
+    assertThat(actualTask.getCategory().getId()).isEqualTo(request.getCategoryId());
     assertThat(actualTask.getPrice()).isEqualTo(request.getPrice());
   }
 

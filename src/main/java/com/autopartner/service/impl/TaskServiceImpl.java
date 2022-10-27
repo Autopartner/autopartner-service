@@ -21,20 +21,18 @@ public class TaskServiceImpl implements TaskService {
   TaskRepository taskRepository;
 
   @Override
-  public List<Task> findAll() {
-    return taskRepository.findByActiveTrue();
+  public List<Task> findAll(Long companyId) {
+    return taskRepository.findAll(companyId);
   }
 
   @Override
-  public Optional<Task> findById(Long id) {
-    return taskRepository.findByIdAndActiveTrue(id);
+  public Optional<Task> findById(Long id, Long companyId) {
+    return taskRepository.findById(id, companyId);
   }
 
   @Override
-  public List<Task> findAllByCategory(Long categoryId) {
-    return taskRepository.findByActiveTrue().stream()
-        .filter(task -> task.getTaskCategory().getId().equals(categoryId))
-        .toList();
+  public List<Task> findAllByCategory(Long categoryId, Long companyId) {
+    return taskRepository.findAllByCategoryId(categoryId, companyId);
   }
 
   @Override
@@ -60,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Optional<Task> findByCategoryIdAndName(Long categoryId, String name) {
-    return taskRepository.findByTaskCategoryIdAndNameAndActiveTrue(categoryId, name);
+  public Optional<Task> findByCategoryIdAndName(String name, Long categoryId, Long companyId) {
+    return taskRepository.findByCategoryIdAndNameAndActiveTrue(name, categoryId, companyId);
   }
 }

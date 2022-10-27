@@ -1,13 +1,16 @@
 package com.autopartner.domain;
 
+import java.math.BigDecimal;
+
 public class TaskFixture {
 
   public static Task createTask() {
     return Task.builder()
+        .companyId(1L)
         .id(1L)
         .name("task")
-        .taskCategory(TaskCategoryFixture.createTaskCategory())
-        .price(100)
+        .category(TaskCategoryFixture.createTaskCategory())
+        .price(BigDecimal.valueOf(100))
         .active(true)
         .companyId(1L)
         .build();
@@ -15,10 +18,11 @@ public class TaskFixture {
 
   public static Task createTask(TaskCategory taskCategory) {
     return Task.builder()
+        .companyId(1L)
         .id(1L)
         .name("task")
-        .taskCategory(taskCategory)
-        .price(100)
+        .category(taskCategory)
+        .price(BigDecimal.valueOf(100))
         .active(true)
         .companyId(1L)
         .build();

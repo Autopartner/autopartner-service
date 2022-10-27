@@ -10,7 +10,6 @@ import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.TaskCategoryService;
 import com.autopartner.service.TaskService;
 import java.util.List;
-import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,24 +42,24 @@ public class TaskController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
-  public List<TaskResponse> getAll() {
-    return taskService.findAll().stream()
+  public List<TaskResponse> getAll(@AuthenticationPrincipal User user) {
+    return taskService.findAll(user.getCompanyId()).stream()
         .map(TaskResponse::fromEntity)
         .toList();
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "/{id}")
-  public TaskResponse get(@PathVariable Long id) {
-    return taskService.findById(id)
+  public TaskResponse get(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    return taskService.findById(id, user.getCompanyId())
         .map(TaskResponse::fromEntity)
         .orElseThrow(() -> new NotFoundException("Task", id));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping(value = "api/v1/tasks?categoryId=categoryId")
-  public List<TaskResponse> getByCategory(@RequestParam Long categoryId) {
-    return taskService.findAllByCategory(categoryId).stream()
+  public List<TaskResponse> getByCategory(@RequestParam Long categoryId, @AuthenticationPrincipal User user) {
+    return taskService.findAllByCategory(categoryId, user.getCompanyId()).stream()
         .map(TaskResponse::fromEntity)
         .toList();
   }
@@ -73,12 +72,12 @@ public class TaskController {
     Long companyId = user.getCompanyId();
     log.info("CompanyId: {}, received task registration request {}", companyId, request);
 
-    Long taskCategoryId = request.getTaskCategoryId();
-    TaskCategory category = taskCategoryService.findById(taskCategoryId)
-        .orElseThrow(() -> new NotFoundException("TaskCategory", taskCategoryId));
+    Long categoryId = request.getCategoryId();
+    TaskCategory category = taskCategoryService.findById(categoryId, companyId)
+        .orElseThrow(() -> new NotFoundException("TaskCategory", categoryId));
 
     String name = request.getName();
-    if (taskService.findByCategoryIdAndName(taskCategoryId, name).isPresent()) {
+    if (taskService.findByCategoryIdAndName(name, categoryId, companyId).isPresent()) {
       throw new AlreadyExistsException("Task", name);
     }
 
@@ -90,18 +89,28 @@ public class TaskController {
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PutMapping(value = "/{id}")
   public TaskResponse update(@PathVariable Long id,
-      @Valid @RequestBody TaskRequest request) {
-    Task task = taskService.findById(id)
+      @Valid @RequestBody TaskRequest request, @AuthenticationPrincipal User user) {
+
+    Long companyId = user.getCompanyId();
+    Long categoryId = request.getCategoryId();
+
+    Task task = taskService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("Task", id));
-    TaskCategory category = taskCategoryService.findById(request.getTaskCategoryId())
-        .orElseThrow(() -> new NotFoundException("Task category", request.getTaskCategoryId()));
+    TaskCategory category = taskCategoryService.findById(categoryId, companyId)
+        .orElseThrow(() -> new NotFoundException("Task category", request.getCategoryId()));
+
+    String name = request.getName();
+    if (taskService.findByCategoryIdAndName(name, categoryId, companyId).isPresent()) {
+      throw new AlreadyExistsException("Task", name);
+    }
+
     return TaskResponse.fromEntity(taskService.update(task, category, request));
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @DeleteMapping(value = "/{id}")
-  public void delete(@PathVariable Long id) {
-    Task task = taskService.findById(id)
+  public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
+    Task task = taskService.findById(id, user.getCompanyId())
         .orElseThrow(() -> new NotFoundException("Task", id));
     taskService.delete(task);
   }

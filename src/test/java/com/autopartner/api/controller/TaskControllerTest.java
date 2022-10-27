@@ -51,8 +51,19 @@ public class TaskControllerTest extends AbstractControllerTest{
   void getAll_Authorized_ReturnsTasks() throws Exception {
     Task task = TaskFixture.createTask();
     List<TaskResponse> responses = List.of(TaskResponse.fromEntity(task));
-    when(taskService.findAll()).thenReturn(List.of(task));
+    when(taskService.findAll(any())).thenReturn(List.of(task));
     this.mockMvc.perform(auth(get(URL)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(responses)));
+  }
+
+  @Test
+  void getAllByCategoryId_ReturnTasks() throws Exception {
+    Task task = TaskFixture.createTask();
+    List<TaskResponse> responses = List.of(TaskResponse.fromEntity(task));
+    Long categoryId = task.getCategory().getId();
+    when(taskService.findAllByCategory(any(), any())).thenReturn(List.of(task));
+    this.mockMvc.perform(auth(get(URL + "?categoryId=" + categoryId)))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string(objectMapper.writeValueAsString(responses)));
   }
@@ -62,7 +73,7 @@ public class TaskControllerTest extends AbstractControllerTest{
     Task task = TaskFixture.createTask();
     TaskResponse response = TaskResponse.fromEntity(task);
     Long id = 1L;
-    when(taskService.findById(id)).thenReturn(Optional.of(task));
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
     this.mockMvc.perform(auth(get(URL + "/" + id)))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string(objectMapper.writeValueAsString(response)));
@@ -71,7 +82,7 @@ public class TaskControllerTest extends AbstractControllerTest{
   @Test
   void get_InvalidTaskId_ReturnsError() throws Exception {
     long id = 1L;
-    when(taskService.findById(4L)).thenReturn(Optional.empty());
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Task with id=1 is not found");
     this.mockMvc.perform(auth(get(URL + "/" + id)))
         .andExpect(status().is4xxClientError())
@@ -84,9 +95,9 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskCategory category = TaskCategoryFixture.createTaskCategory();
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     TaskResponse response = TaskResponse.fromEntity(task);
-    Long taskCategoryId = request.getTaskCategoryId();
-    when(categoryService.findById(eq(taskCategoryId))).thenReturn(Optional.ofNullable(category));
-    when(taskService.findByCategoryIdAndName(eq(taskCategoryId), eq(request.getName()))).thenReturn(Optional.empty());
+    Long categoryId = request.getCategoryId();
+    when(categoryService.findById(eq(categoryId), any())).thenReturn(Optional.ofNullable(category));
+    when(taskService.findByCategoryIdAndName(eq(request.getName()), eq(categoryId), any())).thenReturn(Optional.empty());
     when(taskService.create(eq(request), eq(category), any())).thenReturn(task);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +110,7 @@ public class TaskControllerTest extends AbstractControllerTest{
   void update_InvalidTaskId_ReturnsError() throws Exception {
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     long id = 1L;
-    when(taskService.findById(id)).thenReturn(Optional.empty());
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Task with id=1 is not found");
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
@@ -116,8 +127,8 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     TaskResponse response = TaskResponse.fromEntity(task);
     long id = 1L;
-    when(categoryService.findById(category.getId())).thenReturn(Optional.of(category));
-    when(taskService.findById(id)).thenReturn(Optional.of(task));
+    when(categoryService.findById(eq(category.getId()), any())).thenReturn(Optional.of(category));
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
     when(taskService.update(task, category, request)).thenReturn(task);
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +142,7 @@ public class TaskControllerTest extends AbstractControllerTest{
   void delete_InvalidTaskId_ReturnsError() throws Exception {
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     long id = 1L;
-    when(taskService.findById(id)).thenReturn(Optional.empty());
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.empty());
     ErrorResponse errorResponse = new ErrorResponse(404, 404, "Task with id=1 is not found");
     this.mockMvc.perform(auth(delete(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +156,7 @@ public class TaskControllerTest extends AbstractControllerTest{
   void delete_ValidRequest_DeletesTask() throws Exception {
     Task task = TaskFixture.createTask();
     long id = 1L;
-    when(taskService.findById(id)).thenReturn(Optional.of(task));
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
     this.mockMvc.perform(auth(delete(URL + "/" + id)))
         .andExpect(status().is2xxSuccessful());
   }

@@ -17,6 +17,7 @@ import com.autopartner.domain.TaskCategoryFixture;
 import com.autopartner.domain.TaskFixture;
 import com.autopartner.repository.TaskCategoryRepository;
 import com.autopartner.repository.TaskRepository;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
@@ -62,7 +63,7 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is(request.getName())))
-        .andExpect(jsonPath("$.price", is(request.getPrice())));
+        .andExpect(jsonPath("$.price", is(request.getPrice()), BigDecimal.class));
   }
 
   @Test
@@ -113,7 +114,7 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is(task.getName())))
-        .andExpect(jsonPath("$.price", is(task.getPrice())));
+        .andExpect(jsonPath("$.price", is(task.getPrice()), BigDecimal.class));
   }
 
   @Test
@@ -133,14 +134,31 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
   }
 
   @Test
+  public void givenCategoryId_whenGetAllTasksByCategory_thenReturnTasks() throws Exception{
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
+    categoryRepository.save(category);
+    List<Task> tasks = new ArrayList<>();
+    tasks.add(TaskFixture.createTask());
+    tasks.add(TaskFixture.createTask());
+    taskRepository.saveAll(tasks);
+
+    ResultActions response = mockMvc.perform(get(TASKS_URL + "?categoryId=" + category.getId())
+        .header(HttpHeaders.AUTHORIZATION, token));
+
+    response.andExpect(status().isOk())
+        .andDo(print())
+        .andExpect(jsonPath("$.size()", is(tasks.size())));
+  }
+
+  @Test
   public void givenUpdatedTakRequest_whenUpdateTask_thenReturnUpdateTaskResponse() throws Exception {
     TaskCategory category = categoryRepository.save(TaskCategoryFixture.createTaskCategory());
     Task task = taskRepository.save(TaskFixture.createTask(category));
 
     TaskRequest taskRequest = TaskRequest.builder()
         .name("New")
-        .price(200)
-        .taskCategoryId(category.getId())
+        .price(BigDecimal.valueOf(200))
+        .categoryId(category.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(TASKS_URL + "/{id}", task.getId())
@@ -152,7 +170,7 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is(taskRequest.getName())))
-        .andExpect(jsonPath("$.price", is(taskRequest.getPrice())));
+        .andExpect(jsonPath("$.price", is(taskRequest.getPrice()), BigDecimal.class));
   }
 
   @Test
@@ -164,8 +182,8 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
 
     TaskRequest taskRequest = TaskRequest.builder()
         .name("New")
-        .price(200)
-        .taskCategoryId(category.getId())
+        .price(BigDecimal.valueOf(200))
+        .categoryId(category.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(TASKS_URL + "/{id}", id)

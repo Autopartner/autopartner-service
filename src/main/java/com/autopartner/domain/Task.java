@@ -2,6 +2,7 @@ package com.autopartner.domain;
 
 
 import com.autopartner.api.dto.request.TaskRequest;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -29,9 +30,9 @@ public class Task {
   @SequenceGenerator(name = "tasks_seq", sequenceName = "tasks_seq", allocationSize = 1)
   Long id;
 
-  @JoinColumn(name = "task_category_id")
+  @JoinColumn(name = "category_id")
   @ManyToOne
-  TaskCategory taskCategory;
+  TaskCategory category;
 
   @Column
   Long companyId;
@@ -40,7 +41,7 @@ public class Task {
   String name;
 
   @Column
-  Integer price;
+  BigDecimal price;
 
   @Column
   @CreationTimestamp
@@ -58,7 +59,7 @@ public class Task {
     return Task.builder()
         .name(request.getName())
         .price(request.getPrice())
-        .taskCategory(taskCategory)
+        .category(taskCategory)
         .companyId(companyId)
         .build();
   }
@@ -66,7 +67,7 @@ public class Task {
   public void update(TaskRequest request, TaskCategory taskCategory) {
     name = request.getName();
     price = request.getPrice();
-    this.taskCategory = taskCategory;
+    this.category = taskCategory;
   }
 
   public void delete() {

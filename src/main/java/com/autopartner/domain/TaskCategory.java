@@ -42,7 +42,7 @@ public class TaskCategory {
   String name;
 
   @ToString.Exclude
-  @OneToMany(mappedBy = "taskCategory", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Task> tasks;

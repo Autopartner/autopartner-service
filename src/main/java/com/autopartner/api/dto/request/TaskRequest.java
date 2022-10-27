@@ -2,6 +2,8 @@ package com.autopartner.api.dto.request;
 
 import static lombok.AccessLevel.PRIVATE;
 
+import java.math.BigDecimal;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -22,8 +24,9 @@ public class TaskRequest {
   String name;
 
   @NotNull
-  Integer price;
+  @Min(value = 1)
+  BigDecimal price;
 
   @NotNull
-  Long taskCategoryId;
+  Long categoryId;
 }
