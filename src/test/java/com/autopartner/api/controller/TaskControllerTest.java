@@ -59,7 +59,8 @@ public class TaskControllerTest extends AbstractControllerTest{
 
   @Test
   void getAllByCategoryId_ReturnTasks() throws Exception {
-    Task task = TaskFixture.createTask();
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
+    Task task = TaskFixture.createTask(category);
     List<TaskResponse> responses = List.of(TaskResponse.fromEntity(task));
     Long categoryId = task.getCategory().getId();
     when(taskService.findAllByCategory(any(), any())).thenReturn(List.of(task));

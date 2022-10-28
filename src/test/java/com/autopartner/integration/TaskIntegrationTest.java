@@ -137,9 +137,7 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
   public void givenCategoryId_whenGetAllTasksByCategory_thenReturnTasks() throws Exception{
     TaskCategory category = TaskCategoryFixture.createTaskCategory();
     categoryRepository.save(category);
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(TaskFixture.createTask());
-    tasks.add(TaskFixture.createTask());
+    List<Task> tasks = List.of(TaskFixture.createTask(category), TaskFixture.createTask(category));
     taskRepository.saveAll(tasks);
 
     ResultActions response = mockMvc.perform(get(TASKS_URL + "?categoryId=" + category.getId())
@@ -147,7 +145,8 @@ public class TaskIntegrationTest extends AbstractIntegrationTest{
 
     response.andExpect(status().isOk())
         .andDo(print())
-        .andExpect(jsonPath("$.size()", is(tasks.size())));
+        .andExpect(jsonPath("$.size()", is(tasks.size())))
+        .andExpect(jsonPath("$.category", is(category)));
   }
 
   @Test
