@@ -9,24 +9,17 @@ import com.autopartner.exception.AlreadyExistsException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.TaskCategoryService;
 import com.autopartner.service.TaskService;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -42,10 +35,13 @@ public class TaskController {
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @GetMapping
-  public List<TaskResponse> getAll(@AuthenticationPrincipal User user) {
-    return taskService.findAll(user.getCompanyId()).stream()
-        .map(TaskResponse::fromEntity)
-        .toList();
+  public List<TaskResponse> getAll(@RequestParam Optional<Long> categoryId, @AuthenticationPrincipal User user) {
+    return categoryId
+        .map(id -> taskService.findAllByCategory(id, user.getCompanyId()).stream()
+            .map(TaskResponse::fromEntity))
+        .orElse(taskService.findAll(user.getCompanyId()).stream()
+            .map(TaskResponse::fromEntity))
+        .collect(Collectors.toList());
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
@@ -67,7 +63,7 @@ public class TaskController {
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PostMapping
   public TaskResponse create(@Valid @RequestBody TaskRequest request,
-      @AuthenticationPrincipal User user) {
+                             @AuthenticationPrincipal User user) {
 
     Long companyId = user.getCompanyId();
     log.info("CompanyId: {}, received task registration request {}", companyId, request);
@@ -89,7 +85,7 @@ public class TaskController {
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PutMapping(value = "/{id}")
   public TaskResponse update(@PathVariable Long id,
-      @Valid @RequestBody TaskRequest request, @AuthenticationPrincipal User user) {
+                             @Valid @RequestBody TaskRequest request, @AuthenticationPrincipal User user) {
 
     Long companyId = user.getCompanyId();
     Long categoryId = request.getCategoryId();
