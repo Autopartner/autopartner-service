@@ -53,14 +53,6 @@ public class TaskController {
   }
 
   @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
-  @GetMapping(value = "api/v1/tasks?categoryId=categoryId")
-  public List<TaskResponse> getByCategory(@RequestParam Long categoryId, @AuthenticationPrincipal User user) {
-    return taskService.findAllByCategory(categoryId, user.getCompanyId()).stream()
-        .map(TaskResponse::fromEntity)
-        .toList();
-  }
-
-  @Secured({"ROLE_ADMIN", "ROLE_ROOT"})
   @PostMapping
   public TaskResponse create(@Valid @RequestBody TaskRequest request,
                              @AuthenticationPrincipal User user) {
