@@ -1,4 +1,6 @@
 # Autopartner
+Java version: 17
+CircleCI: https://app.circleci.com/pipelines/github/Autopartner/autopartner-service
 
 ## Setup
 
