@@ -1,18 +1,18 @@
 package com.autopartner.domain;
 
-import static lombok.AccessLevel.PRIVATE;
-
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.UserRequest;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Date;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -23,7 +23,7 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "users")
 @FieldDefaults(level = PRIVATE)
 @Builder
-public class User {
+public class User implements UserDetails {
 
   @Id
   @Column(name = "id")
@@ -31,13 +31,10 @@ public class User {
   @SequenceGenerator(name = "users_seq", sequenceName = "users_seq", allocationSize = 1)
   Long id;
 
-  @Column(unique = true)
-  String username;
-
-  @Column(name = "first_name")
+  @Column
   String firstName;
 
-  @Column(name = "last_name")
+  @Column
   String lastName;
 
   @Column
@@ -46,15 +43,86 @@ public class User {
   @Column(unique = true)
   String email;
 
-  @Column(name = "last_password_reset")
+  @Column
   Date lastPasswordReset;
 
   @Column
-  String authorities;
+  @Builder.Default
+  String authorities = "ROLE_USER";
 
   @Column
-  Boolean active;
+  @Builder.Default
+  Boolean active = true;
 
-  @Column(name = "company_id")
+  @Column
   Long companyId;
+
+  @Column
+  String phone;
+
+  public static User createWithCompany(CompanyRegistrationRequest request, String password, Long companyId) {
+    return User.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .password(password)
+        .companyId(companyId)
+        .build();
+  }
+
+  public static User create(UserRequest request, String password, Long companyId) {
+    return User.builder()
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .email(request.getEmail())
+        .phone(request.getPhone())
+        .password(password)
+        .companyId(companyId)
+        .build();
+  }
+
+  @Override
+  public String getUsername() {
+    return email;
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return active;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return active;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return active;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return active;
+  }
+
+  public String getAuthoritiesString() {
+    return authorities;
+  }
+
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+  }
+
+  public void update(UserRequest request) {
+    firstName = request.getFirstName();
+    lastName = request.getLastName();
+    email = request.getEmail();
+    phone = request.getPhone();
+  }
+
+  public void delete() {
+    active = false;
+  }
 }

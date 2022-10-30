@@ -1,13 +1,19 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.CarModelRequest;
+import com.autopartner.domain.CarBrand;
 import com.autopartner.domain.CarModel;
-import com.autopartner.service.CarModelService;
+import com.autopartner.domain.CarType;
 import com.autopartner.repository.CarModelRepository;
+import com.autopartner.service.CarModelService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Repository
 @RequiredArgsConstructor
@@ -16,18 +22,40 @@ public class CarModelServiceImpl implements CarModelService {
 
   CarModelRepository carModelRepository;
 
+
   @Override
-  public Iterable<CarModel> getByActiveTrue() {
-    return carModelRepository.findByActiveTrue();
+  public List<CarModel> findAll(Long companyId) {
+    return carModelRepository.findAll(companyId);
   }
 
   @Override
-  public CarModel getCarModelById(Long id) {
-    return carModelRepository.findById(id).get();
+  public Optional<CarModel> findById(Long id, Long companyId) {
+    return carModelRepository.findById(id, companyId);
   }
 
-  @Override
-  public CarModel saveCarModel(CarModel carModel) {
+  private CarModel save(CarModel carModel) {
     return carModelRepository.save(carModel);
+  }
+
+  @Override
+  public CarModel update(CarModel model, CarBrand brand, CarType type, CarModelRequest request) {
+    model.update(request, brand, type);
+    return save(model);
+  }
+
+  @Override
+  public void delete(CarModel carBrand) {
+    carBrand.delete();
+    save(carBrand);
+  }
+
+  @Override
+  public CarModel create(CarModelRequest request, CarBrand brand, CarType type, Long companyId) {
+    return save(CarModel.create(request, brand, type, companyId));
+  }
+
+  @Override
+  public Optional<Long> findIdByName(String name, Long companyId) {
+    return carModelRepository.findIdByName(name, companyId);
   }
 }

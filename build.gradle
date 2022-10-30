@@ -1,13 +1,17 @@
 plugins {
     id 'com.google.cloud.tools.jib' version '3.2.1'
-    id 'org.springframework.boot' version '2.6.3'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version '2.5.14'
+    id 'io.spring.dependency-management' version '1.0.12.RELEASE'
     id 'jacoco'
     id 'java'
 }
 
 group 'com.autopartner'
 version '0.0.2-SNAPSHOT'
+
+ext {
+    set('springCloudGcpVersion', "3.3.0")
+}
 
 repositories {
     mavenCentral()
@@ -20,24 +24,46 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.google.cloud:spring-cloud-gcp-starter-sql-postgresql'
+    implementation 'com.auth0:java-jwt:4.0.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
 
-    runtimeOnly 'org.postgresql:postgresql:42.3.3'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-    implementation 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    runtimeOnly 'org.postgresql:postgresql:42.5.0'
 
-    testImplementation 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+    implementation 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testImplementation 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testImplementation "org.testcontainers:junit-jupiter:1.17.3"
+    testImplementation "org.testcontainers:postgresql:1.17.3"
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
+    }
 }
 
 test {
     useJUnitPlatform()
+    if (System.properties['test.profile'] != 'integration') {
+        exclude '**/*IntegrationTest*'
+    }
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
 }
 
 jib {
     container.mainClass = "com.autopartner.Application"
 }
+
 

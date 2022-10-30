@@ -1,19 +1,20 @@
 package com.autopartner.service.impl;
 
-import com.autopartner.configuration.WebSecurityConfiguration;
-import com.autopartner.controller.dto.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRegistrationRequest;
+import com.autopartner.api.dto.request.CompanyRequest;
 import com.autopartner.domain.Company;
 import com.autopartner.domain.User;
-import com.autopartner.exception.NotActiveException;
-import com.autopartner.service.UserService;
 import com.autopartner.repository.CompanyRepository;
+import com.autopartner.repository.UserRepository;
 import com.autopartner.service.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -23,56 +24,41 @@ import static lombok.AccessLevel.PRIVATE;
 public class CompanyServiceImpl implements CompanyService {
 
   CompanyRepository companyRepository;
-  UserService userService;
-  @Autowired
-  PasswordEncoder encoder = WebSecurityConfiguration.passwordEncoder();
+  UserRepository userRepository;
+  PasswordEncoder passwordEncoder;
 
   @Override
-  public Iterable<Company> listAllCompanies() {
-    return companyRepository.findByActiveTrue();
+  public List<Company> findAll() {
+    return companyRepository.findAllByActiveTrue();
   }
 
   @Override
-  public Company getCompanyById(Long id) {
-    Company company = companyRepository.findCompanyByIdAndActiveTrue(id);
-    if (company == null) {
-      throw new NotActiveException("Company does not active");
-    }
-    return company;
+  public Optional<Company> findById(Long id) {
+    return companyRepository.findByIdAndActiveTrue(id);
   }
 
-  @Override
-  public Company saveCompany(Company company) {
+  private Company save(Company company) {
     return companyRepository.save(company);
   }
 
   @Override
-  public void deleteCompany(Long id) {
-    Company company = companyRepository.findCompanyByIdAndActiveTrue(id);
-    if (company != null) {
-      company.setActive(false);
-      saveCompany(company);
-    }
+  public Company update(Company company, CompanyRequest companyRequest) {
+    company.update(companyRequest);
+    return save(company);
+  }
+
+  @Override
+  public void delete(Company company) {
+    company.delete();
+    save(company);
   }
 
   @Override
   @Transactional
-  public Company createCompany(CompanyRegistrationRequest request) {
-    Company company = Company.builder()
-            .companyName(request.getCompanyName())
-            .country(request.getCountry())
-            .city(request.getCity())
-            .build();
-    saveCompany(company);
-    User user = User.builder()
-            .firstName(request.getFirstName())
-            .lastName(request.getLastName())
-            .username(request.getEmail())
-            .password(encoder.encode(request.getPassword()))
-            .email(request.getEmail())
-            .companyId(company.getId())
-            .build();
-    userService.saveUser(user);
+  public Company create(CompanyRegistrationRequest request) {
+    Company company = save(Company.create(request));
+    User user = User.createWithCompany(request, passwordEncoder.encode(request.getPassword()), company.getId());
+    userRepository.save(user);
     return company;
   }
 }

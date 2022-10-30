@@ -1,7 +1,13 @@
 spring:
+  cloud:
+    gcp:
+      sql:
+        enabled: false
+      core:
+        enabled: false
   datasource:
-    password: ${POSTGRES_PASSWORD}
     url: ${POSTGRES_URL}
+    password: ${POSTGRES_PASSWORD}
     username: ${POSTGRES_USERNAME}
   jpa:
     show-sql: true
@@ -10,17 +16,13 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+      open-in-view: false
   jackson:
     serialization:
       INDENT_OUTPUT: true
 
 server:
   port: 8888
-  contextPath: /
-
-error:
-  whitelabel:
-    enabled: true
 
 logging:
   level:
@@ -32,14 +34,4 @@ logging:
 
 autopartner:
   token:
-    header: X-Auth-Token
     secret: ${AUTH_SECRET}
-    expiration: 604800
-
-  route:
-    authentication: /auth
-    authentication.refresh: /auth/refresh
-    profile: /api/profile
-
-
-

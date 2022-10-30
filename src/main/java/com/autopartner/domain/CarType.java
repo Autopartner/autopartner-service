@@ -1,25 +1,16 @@
 package com.autopartner.domain;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.CarTypeRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -29,23 +20,42 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Table(name = "car_types")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class CarType {
 
   @Id
-  @Column(name = "id")
+  @Column
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_types_seq")
   @SequenceGenerator(name = "car_types_seq", sequenceName = "car_types_seq", allocationSize = 1)
   Long id;
 
-  @Column(name = "name")
-  String name;
+  @Column Long companyId;
 
-  @OneToMany(mappedBy = "carType", cascade = CascadeType.ALL)
+  @Column String name;
+
+  @ToString.Exclude
+  @OneToMany(mappedBy = "carType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
-  List<CarBrand> brands;
+  List<CarModel> models;
 
-  @Column(name = "active")
-  Boolean active;
+  @Column
+  @Builder.Default
+  Boolean active = true;
 
+  @Column
+  @CreationTimestamp
+  LocalDateTime createdAt;
+
+  public static CarType create(CarTypeRequest request, Long companyId) {
+    return CarType.builder().companyId(companyId).name(request.getName()).build();
+  }
+
+  public void update(CarTypeRequest request) {
+    name = request.getName();
+  }
+
+  public void delete() {
+    active = false;
+  }
 }

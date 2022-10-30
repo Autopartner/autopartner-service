@@ -1,27 +1,14 @@
 package com.autopartner.domain;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.CarModelRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import javax.persistence.*;
+import java.util.List;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -31,27 +18,56 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Table(name = "car_models")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class CarModel {
 
   @Id
-  @Column(name = "id")
+  @Column
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "car_models_seq")
   @SequenceGenerator(name = "car_models_seq", sequenceName = "car_models_seq", allocationSize = 1)
   Long id;
+
+  @Column
+  Long companyId;
+
+  @Column
+  String name;
 
   @JoinColumn(name = "car_brand_id")
   @ManyToOne
   CarBrand carBrand;
 
-  @Column(name = "name")
-  String name;
+  @JoinColumn(name = "car_type_id")
+  @ManyToOne
+  CarType carType;
 
-  @OneToMany(mappedBy = "carModel", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  @OneToMany(mappedBy = "carModel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Car> cars;
 
-  @Column(name = "active")
-  Boolean active;
+  @Column
+  @Builder.Default
+  Boolean active = true;
+
+  public static CarModel create(CarModelRequest request, CarBrand brand, CarType type, Long companyId) {
+    return CarModel.builder()
+        .companyId(companyId)
+        .name(request.getName())
+        .carBrand(brand)
+        .carType(type)
+        .build();
+  }
+
+  public void update(CarModelRequest request, CarBrand brand, CarType type) {
+    name = request.getName();
+    carBrand = brand;
+    carType = type;
+  }
+
+  public void delete() {
+    active = false;
+  }
 
 }

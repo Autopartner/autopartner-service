@@ -1,7 +1,5 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
 import com.autopartner.domain.InputMaterial;
 import com.autopartner.domain.Material;
 import com.autopartner.repository.InputMaterialRepository;
@@ -10,6 +8,8 @@ import com.autopartner.service.InputMaterialService;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Repository;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Repository
 @RequiredArgsConstructor

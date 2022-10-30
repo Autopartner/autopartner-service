@@ -1,28 +1,17 @@
 package com.autopartner.domain;
 
-
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.ClientRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
+
+import static lombok.AccessLevel.PRIVATE;
 
 @Entity
 @Getter
@@ -32,49 +21,99 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Table(name = "clients")
 @FieldDefaults(level = PRIVATE)
+@Builder
 public class Client {
 
   @Id
-  @Column(name = "id")
+  @Column
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_seq")
   @SequenceGenerator(name = "clients_seq", sequenceName = "clients_seq", allocationSize = 1)
   Long id;
 
-  @Column(name = "first_name")
+  @Column
+  Long companyId;
+
+  @Column
+  Long userId;
+
+  @Column
   String firstName;
 
-  @Column(name = "last_name")
+  @Column
   String lastName;
 
-  @Column(name = "company_name")
+  @Column
   String companyName;
 
-  @Column(name = "address")
+  @Column
   String address;
 
-  @Column(name = "phone")
+  @Column
   String phone;
 
-  @Column(name = "email")
+  @Column
   String email;
 
-  @Column(name = "created_at")
+  @Column
+  @CreationTimestamp
   LocalDateTime createdAt;
 
-  @Column(name = "note")
+  @Column
+  @UpdateTimestamp
+  LocalDateTime updatedAt;
+
+  @Column
+  int productDiscount;
+
+  @Column
+  int taskDiscount;
+
+  @Column
+  ClientType clientType;
+
+  @Column
   String note;
 
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+  @ToString.Exclude
+  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @OrderBy("id asc")
   @JsonIgnore
   List<Car> cars;
 
-  @Column(name = "active")
-  Boolean active;
+  @Column
+  @Builder.Default
+  Boolean active = true;
 
-  @PrePersist
-  protected void onCreate() {
-    createdAt = LocalDateTime.now();
+  public static Client create(ClientRequest request, Long companyId) {
+    return Client.builder()
+        .companyId(companyId)
+        .firstName(request.getFirstName())
+        .lastName(request.getLastName())
+        .companyName(request.getCompanyName())
+        .address(request.getAddress())
+        .phone(request.getPhone())
+        .email(request.getEmail())
+        .productDiscount(request.getProductDiscount())
+        .taskDiscount(request.getTaskDiscount())
+        .clientType(request.getClientType())
+        .note(request.getNote())
+        .build();
   }
 
+  public void update(ClientRequest request) {
+    firstName = request.getFirstName();
+    lastName = request.getLastName();
+    companyName = request.getCompanyName();
+    address = request.getAddress();
+    phone = request.getPhone();
+    email = request.getEmail();
+    productDiscount = request.getProductDiscount();
+    taskDiscount = request.getTaskDiscount();
+    clientType = request.getClientType();
+    note = request.getNote();
+  }
+
+  public void delete() {
+    active = false;
+  }
 }

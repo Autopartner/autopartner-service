@@ -16,9 +16,13 @@ deploy: &deploy
         docker load --input build/jib-image.tar
         docker tag auto-partner-service ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
         docker push ${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service
+        gcloud run services update auto-partner-service \
+          --image=${LOCATION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${DOCKER_REPOSITORY}/auto-partner-service \
+          --platform managed \
+          --region=${LOCATION} 
 
 jobs:
-  build:
+  build_image:
     docker:
       - image: cimg/openjdk:17.0.2
     working_directory: ~/repo
@@ -38,26 +42,51 @@ jobs:
           root: .
           paths:
             - build/jib-image.tar
+
+  build_test:
+    docker:
+      - image: cimg/openjdk:17.0.2
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          key: jdk-dependencies-{{ checksum "build.gradle" }}
+      - run: ./gradlew test build jacocoTestReport --console plain --info
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: jdk-dependencies-{{ checksum "build.gradle" }}
+      - store_artifacts:
+          path: build/reports/jacoco/test/html
+          destination: code-coverage
+
   deploy_to_dev:
-    <<: *deploy
-  deploy_to_prod:
     <<: *deploy
 
 workflows:
+  build-and-test:
+    jobs:
+      - build_test:
+          filters:
+            branches:
+              ignore:
+                - master
+                - develop
+
   build-and-deploy:
     jobs:
-      - build
+      - build_image:
+          filters:
+            branches:
+              only:
+                - master
+                - develop
       - deploy_to_dev:
           context: "AP Dev"
           requires:
-            - build
-#          filters:
-#            branches:
-#              only: develop
-#      - deploy_to_prod:
-#          context: "AP Prod"
-#          requires:
-#            - build
-#          filters:
-#            branches:
-#              only: master
+            - build_image
+          filters:
+            branches:
+              only:
+                - master
+                - develop

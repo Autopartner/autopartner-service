@@ -1,63 +1,63 @@
 package com.autopartner.service.impl;
 
-import static lombok.AccessLevel.PRIVATE;
-
+import com.autopartner.api.dto.request.UserRequest;
 import com.autopartner.domain.User;
-import com.autopartner.exception.NotActiveException;
 import com.autopartner.repository.UserRepository;
 import com.autopartner.service.UserService;
-
-import java.util.Objects;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-@Repository
+import java.util.List;
+import java.util.Optional;
+
+import static lombok.AccessLevel.PRIVATE;
+
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
 
   UserRepository userRepository;
 
+  PasswordEncoder passwordEncoder;
+
   @Override
-  public Iterable<User> listAllUsers() {
-    return userRepository.findByActiveTrue();
+  public List<User> findAll(Long companyId) {
+    return userRepository.findAll(companyId);
   }
 
   @Override
-  public User getUserById(Long id) {
-    User user = userRepository.findByIdAndActiveTrue(id);
-    if (user == null) {
-      throw new NotActiveException("User does not active");
-    }
-    return user;
+  public Optional<User> findById(Long id, Long companyId) {
+    return userRepository.findById(id, companyId);
   }
 
   @Override
-  public User saveUser(User user) {
+  public User save(User user) {
     return userRepository.save(user);
   }
 
   @Override
-  public void deleteUser(Long id) {
-    User user = userRepository.findByIdAndActiveTrue(id);
-    if (user != null) {
-      user.setActive(false);
-      saveUser(user);
-    }
-  }
-
-  // TODO refactor
-  @Override
-  @Transactional
-  public boolean isUsernameUnique(User user) {
-    User u = userRepository.findOneByUsername(user.getUsername());
-    return Objects.equals(u.getId(), user.getId());
+  public User create(UserRequest request, Long companyId) {
+    return save(User.create(request, passwordEncoder.encode(request.getPassword()), companyId));
   }
 
   @Override
-  public User getUserByUsername(String username) {
-    return userRepository.findOneByUsername(username);
+  public User update(User user, UserRequest request) {
+    user.update(request);
+    return save(user);
   }
+
+  @Override
+  public void delete(User user) {
+    user.delete();
+    save(user);
+  }
+
+  @Override
+  public Optional<Long> findIdByEmail(String email) {
+    return userRepository.findIdByEmail(email);
+  }
+
 }

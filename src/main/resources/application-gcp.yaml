@@ -1,0 +1,39 @@
+database: postgresql
+spring:
+  cloud:
+    gcp:
+      sql:
+        database-name: autopartner_db
+        instance-connection-name: autopartner-1385:us-central1:autopartner-db
+  datasource:
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+  sql:
+    init:
+      mode: always
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+    hibernate: DEBUG
+    autopartner: DEBUG
+
+autopartner:
+  token:
+    secret: ${AUTH_SECRET}
