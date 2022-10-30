@@ -78,7 +78,10 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
 
   @Test
   void create_TaskCategoryAlreadyExists_ReturnsError() throws Exception {
+    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    long id = 1L;
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(taskCategory));
     when(taskCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.of(1L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "TaskCategory with param: TaskCategory already exists");
     this.mockMvc.perform(auth(post(URL))
@@ -89,10 +92,39 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  void create_ValidRequest_CreatesTaskCategory() throws Exception {
+  void create_InvalidParentId_ReturnsError() throws Exception {
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    long id = 1L;
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "TaskCategory with id=1 is not found");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void create_ValidRequestParentIdIsNotNull_CreatesTaskCategory() throws Exception {
     TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
     TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
+    when(taskCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.empty());
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(taskCategory));
+    when(taskCategoryService.create(eq(request), any())).thenReturn(taskCategory);
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void create_ValidRequestParentIdIsNull_CreatesTaskCategory() throws Exception {
+    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
+    request.setParentId(null);
     when(taskCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.empty());
     when(taskCategoryService.create(eq(request), any())).thenReturn(taskCategory);
     this.mockMvc.perform(auth(post(URL))
@@ -104,6 +136,21 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
 
   @Test
   void update_InvalidTaskCategoryId_ReturnsError() throws Exception {
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
+    long id = 1L;
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.ofNullable(taskCategory));
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "TaskCategory with id=1 is not found");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_InvalidParentId_ReturnsError() throws Exception {
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
     long id = 1L;
     when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.empty());
@@ -131,11 +178,28 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  void update_ValidRequest_UpdatesTaskCategory() throws Exception {
+  void update_ValidRequestParentIdIsNotNull_UpdatesTaskCategory() throws Exception {
     TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
     TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
     long id = 1L;
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(taskCategory));
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(taskCategory));
+    when(taskCategoryService.update(taskCategory, request)).thenReturn(taskCategory);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void update_ValidRequestParentIdIsNull_UpdatesTaskCategory() throws Exception {
+    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
+    long id = 1L;
+    request.setParentId(null);
     when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(taskCategory));
     when(taskCategoryService.update(taskCategory, request)).thenReturn(taskCategory);
     this.mockMvc.perform(auth(put(URL + "/" + id))

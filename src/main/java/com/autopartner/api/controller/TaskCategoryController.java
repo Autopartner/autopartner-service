@@ -54,6 +54,11 @@ public class TaskCategoryController {
     log.error("Received task category registration request {}", request);
     String name = request.getName();
     Long companyId = user.getCompanyId();
+    Long parentId = request.getParentId();
+    if (parentId != null){
+      taskCategoryService.findById(parentId, companyId)
+          .orElseThrow(() -> new NotFoundException("TaskCategory", parentId));
+    }
     if (taskCategoryService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("TaskCategory", name);
     }
@@ -67,8 +72,13 @@ public class TaskCategoryController {
   public TaskCategoryResponse update(@PathVariable Long id, @RequestBody @Valid TaskCategoryRequest request,
                                      @AuthenticationPrincipal User user) {
     Long companyId = user.getCompanyId();
+    Long parentId = request.getParentId();
     TaskCategory category = taskCategoryService.findById(id, companyId)
             .orElseThrow(() -> new NotFoundException("TaskCategory", id));
+    if (parentId != null){
+      taskCategoryService.findById(parentId, companyId)
+          .orElseThrow(() -> new NotFoundException("TaskCategory", parentId));
+    }
     String name = request.getName();
     Optional<Long> foundId = taskCategoryService.findIdByName(name, companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
