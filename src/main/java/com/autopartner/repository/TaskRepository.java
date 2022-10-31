@@ -19,5 +19,5 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
   Optional<Task> findById(@Param("id") Long id, @Param("companyId") Long companyId);
 
   @Query(value = "select id from tasks where name= :name and category_id = :categoryId and company_id= :companyId and active=true", nativeQuery = true)
-  Optional<Long> findIdByName(@Param("name") String name, @Param("categoryId") Long categoryId, @Param("companyId") Long companyId);
+  Optional<Long> findIdByCategoryIdAndName(@Param("name") String name, @Param("categoryId") Long categoryId, @Param("companyId") Long companyId);
 }

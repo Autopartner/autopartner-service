@@ -70,7 +70,7 @@ public class TaskControllerTest extends AbstractControllerTest{
   }
 
   @Test
-  void getAllByNotExistedCategoryId_ReturnTasks() throws Exception {
+  void getAll_WhenNotExistedCategoryId_ReturnAllTasks() throws Exception {
     Task task = TaskFixture.createTask();
     List<TaskResponse> responses = List.of(TaskResponse.fromEntity(task));
     when(taskService.findAllByCategory(any(), any())).thenReturn(null);
@@ -109,7 +109,7 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskResponse response = TaskResponse.fromEntity(task);
     Long categoryId = request.getCategoryId();
     when(categoryService.findById(eq(categoryId), any())).thenReturn(Optional.ofNullable(category));
-    when(taskService.findIdByName(eq(request.getName()), eq(categoryId), any())).thenReturn(Optional.empty());
+    when(taskService.findIdByCategoryIdAndName(eq(request.getName()), eq(categoryId), any())).thenReturn(Optional.empty());
     when(taskService.create(eq(request), eq(category), any())).thenReturn(task);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -124,7 +124,7 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskCategory category = TaskCategoryFixture.createTaskCategory();
     TaskRequest request = TaskRequestFixture.createTaskRequest();
     when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.ofNullable(category));
-    when(taskService.findIdByName(eq(request.getName()), any(), any())).thenReturn(Optional.of(task.getId()));
+    when(taskService.findIdByCategoryIdAndName(eq(request.getName()), any(), any())).thenReturn(Optional.of(task.getId()));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "Task with param: task already exists");
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
@@ -179,10 +179,10 @@ public class TaskControllerTest extends AbstractControllerTest{
     Task task = TaskFixture.createTask();
     TaskCategory category = TaskCategoryFixture.createTaskCategory();
     TaskRequest request = TaskRequestFixture.createTaskRequest();
-    long id = 1L;
+    long id = task.getId();
     when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
     when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.of(category));
-    when(taskService.findIdByName(any(), any(), any())).thenReturn(Optional.of(task.getId()));
+    when(taskService.findIdByCategoryIdAndName(any(), any(), any())).thenReturn(Optional.of(100L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "Task with param: task already exists");
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)

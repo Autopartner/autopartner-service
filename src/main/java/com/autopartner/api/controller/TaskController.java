@@ -65,7 +65,7 @@ public class TaskController {
         .orElseThrow(() -> new NotFoundException("TaskCategory", categoryId));
 
     String name = request.getName();
-    if (taskService.findIdByName(name, categoryId, companyId).isPresent()) {
+    if (taskService.findIdByCategoryIdAndName(name, categoryId, companyId).isPresent()) {
       throw new AlreadyExistsException("Task", name);
     }
 
@@ -88,7 +88,8 @@ public class TaskController {
         .orElseThrow(() -> new NotFoundException("TaskCategory", request.getCategoryId()));
 
     String name = request.getName();
-    if (taskService.findIdByName(name, categoryId, companyId).isPresent()) {
+    Optional<Long> foundId = taskService.findIdByCategoryIdAndName(name, categoryId, companyId);
+    if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("Task", name);
     }
 

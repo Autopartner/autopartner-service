@@ -57,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Optional<Long> findIdByName(String name, Long categoryId, Long companyId) {
-    return taskRepository.findIdByName(name, categoryId, companyId);
+  public Optional<Long> findIdByCategoryIdAndName(String name, Long categoryId, Long companyId) {
+    return taskRepository.findIdByCategoryIdAndName(name, categoryId, companyId);
   }
 }

@@ -20,6 +20,6 @@ public interface TaskService {
 
   void delete(Task task);
 
-  Optional<Long> findIdByName(String name, Long categoryId, Long companyId);
+  Optional<Long> findIdByCategoryIdAndName(String name, Long categoryId, Long companyId);
 
 }
