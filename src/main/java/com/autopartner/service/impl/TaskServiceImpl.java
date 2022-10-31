@@ -40,8 +40,7 @@ public class TaskServiceImpl implements TaskService {
     return save(Task.create(request, category, companyId));
   }
 
-  @Override
-  public Task save(Task task) {
+  private Task save(Task task) {
    return taskRepository.save(task);
   }
 
@@ -58,7 +57,7 @@ public class TaskServiceImpl implements TaskService {
   }
 
   @Override
-  public Optional<Task> findByCategoryIdAndName(String name, Long categoryId, Long companyId) {
-    return taskRepository.findByCategoryIdAndNameAndActiveTrue(name, categoryId, companyId);
+  public Optional<Long> findIdByName(String name, Long categoryId, Long companyId) {
+    return taskRepository.findIdByName(name, categoryId, companyId);
   }
 }

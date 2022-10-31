@@ -70,6 +70,17 @@ public class TaskControllerTest extends AbstractControllerTest{
   }
 
   @Test
+  void getAllByNotExistedCategoryId_ReturnTasks() throws Exception {
+    Task task = TaskFixture.createTask();
+    List<TaskResponse> responses = List.of(TaskResponse.fromEntity(task));
+    when(taskService.findAllByCategory(any(), any())).thenReturn(null);
+    when(taskService.findAll(any())).thenReturn(List.of(task));
+    this.mockMvc.perform(auth(get(URL)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(responses)));
+  }
+
+  @Test
   void get_ValidTaskId_ReturnsTask() throws Exception {
     Task task = TaskFixture.createTask();
     TaskResponse response = TaskResponse.fromEntity(task);
@@ -98,13 +109,40 @@ public class TaskControllerTest extends AbstractControllerTest{
     TaskResponse response = TaskResponse.fromEntity(task);
     Long categoryId = request.getCategoryId();
     when(categoryService.findById(eq(categoryId), any())).thenReturn(Optional.ofNullable(category));
-    when(taskService.findByCategoryIdAndName(eq(request.getName()), eq(categoryId), any())).thenReturn(Optional.empty());
+    when(taskService.findIdByName(eq(request.getName()), eq(categoryId), any())).thenReturn(Optional.empty());
     when(taskService.create(eq(request), eq(category), any())).thenReturn(task);
     this.mockMvc.perform(auth(post(URL))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void create_TaskAlreadyExists_ReturnsError() throws Exception {
+    Task task = TaskFixture.createTask();
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
+    TaskRequest request = TaskRequestFixture.createTaskRequest();
+    when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.ofNullable(category));
+    when(taskService.findIdByName(eq(request.getName()), any(), any())).thenReturn(Optional.of(task.getId()));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "Task with param: task already exists");
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void create_TaskCategoryNotExists_ReturnsError() throws Exception {
+    TaskRequest request = TaskRequestFixture.createTaskRequest();
+    when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "TaskCategory with id=2 is not found");
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test
@@ -119,6 +157,38 @@ public class TaskControllerTest extends AbstractControllerTest{
         .andExpect(status().is4xxClientError())
         .andExpect(content()
             .string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_TaskCategoryNotExists_ReturnsError() throws Exception {
+    Task task = TaskFixture.createTask();
+    TaskRequest request = TaskRequestFixture.createTaskRequest();
+    long id = 1L;
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
+    when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "TaskCategory with id=2 is not found");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_TaskAlreadyExists_ReturnsError() throws Exception {
+    Task task = TaskFixture.createTask();
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
+    TaskRequest request = TaskRequestFixture.createTaskRequest();
+    long id = 1L;
+    when(taskService.findById(eq(id), any())).thenReturn(Optional.of(task));
+    when(categoryService.findById(eq(request.getCategoryId()), any())).thenReturn(Optional.of(category));
+    when(taskService.findIdByName(any(), any(), any())).thenReturn(Optional.of(task.getId()));
+    ErrorResponse errorResponse = new ErrorResponse(400, 402, "Task with param: task already exists");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

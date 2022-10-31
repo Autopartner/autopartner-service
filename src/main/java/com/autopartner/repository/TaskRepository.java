@@ -18,6 +18,6 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
   @Query(value = "select * from tasks where id= :id and company_id= :companyId and active=true", nativeQuery = true)
   Optional<Task> findById(@Param("id") Long id, @Param("companyId") Long companyId);
 
-  @Query(value = "select * from tasks where name= :name  and category_id = :categoryId and company_id= :companyId and active=true", nativeQuery = true)
-  Optional<Task> findByCategoryIdAndNameAndActiveTrue(@Param("name") String name, @Param("categoryId") Long categoryId, @Param("companyId") Long companyId);
+  @Query(value = "select id from tasks where name= :name and category_id = :categoryId and company_id= :companyId and active=true", nativeQuery = true)
+  Optional<Long> findIdByName(@Param("name") String name, @Param("categoryId") Long categoryId, @Param("companyId") Long companyId);
 }

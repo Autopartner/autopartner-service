@@ -12,12 +12,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskResponse {
 
+  Long id;
   String name;
   TaskCategoryResponse category;
   BigDecimal price;
 
   public static TaskResponse fromEntity(Task task) {
     return TaskResponse.builder()
+        .id(task.getId())
         .name(task.getName())
         .category(TaskCategoryResponse.fromEntity(task.getCategory()))
         .price(task.getPrice())

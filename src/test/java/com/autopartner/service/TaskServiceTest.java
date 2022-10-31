@@ -125,12 +125,12 @@ public class TaskServiceTest {
     Task task = TaskFixture.createTask();
     Long categoryId = Objects.requireNonNull(task).getCategory().getId();
     String name = task.getName();
-    when(repository.findByCategoryIdAndNameAndActiveTrue(eq(name), eq(categoryId), eq(companyId)))
-        .thenReturn(Optional.of(task));
+    when(repository.findIdByName(eq(name), eq(categoryId), eq(companyId)))
+        .thenReturn(Optional.of(task.getId()));
 
-    service.findByCategoryIdAndName(name, categoryId, companyId);
+    service.findIdByName(name, categoryId, companyId);
 
-    verify(repository).findByCategoryIdAndNameAndActiveTrue(nameCaptor.capture(), taskIdCaptor.capture(), companyIdCaptor.capture());
+    verify(repository).findIdByName(nameCaptor.capture(), taskIdCaptor.capture(), companyIdCaptor.capture());
     assertThat(task.getCategory().getId()).isEqualTo(taskIdCaptor.getValue());
     assertThat(task.getName()).isEqualTo(nameCaptor.getValue());
     assertThat(companyId).isEqualTo(companyIdCaptor.getValue());

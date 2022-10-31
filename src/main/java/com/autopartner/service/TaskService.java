@@ -18,10 +18,8 @@ public interface TaskService {
 
   Task update(Task task, TaskCategory category, TaskRequest request);
 
-  Task save(Task task);
-
   void delete(Task task);
 
-  Optional<Task> findByCategoryIdAndName(String name, Long categoryId, Long companyId);
+  Optional<Long> findIdByName(String name, Long categoryId, Long companyId);
 
 }
