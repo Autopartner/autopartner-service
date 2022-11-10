@@ -91,8 +91,8 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
 
   @Test
   void create_ValidRequest_CreatesProductCategory() throws Exception {
-    ProductCategory category = ProductCategoryFixture.createProductCategory();
-    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategory category = ProductCategoryFixture.createProductCategoryWithoutParent();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent();
     ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
     when(productCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.empty());
     when(productCategoryService.create(eq(request), any())).thenReturn(category);
@@ -104,9 +104,52 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
   }
 
   @Test
-  void update_ValidRequest_UpdatesProductCategory() throws Exception {
+  void create_InvalidParentId_ReturnsError() throws Exception {
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    long id = 1L;
+    when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "ProductCategory with id=1 is not found");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void create_ValidRequestParentIdIsNotNull_CreatesProductCategory() throws Exception {
     ProductCategory category = ProductCategoryFixture.createProductCategory();
     ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
+    when(productCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.empty());
+    when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
+    when(productCategoryService.create(eq(request), any())).thenReturn(category);
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void create_ValidRequestParentIdIsNull_CreatesProductCategory() throws Exception {
+    ProductCategory category = ProductCategoryFixture.createProductCategory();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
+    request.setParentId(null);
+    when(productCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.empty());
+    when(productCategoryService.create(eq(request), any())).thenReturn(category);
+    this.mockMvc.perform(auth(post(URL))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void update_ValidRequest_UpdatesProductCategory() throws Exception {
+    ProductCategory category = ProductCategoryFixture.createProductCategoryWithoutParent();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent();
     ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
     long id = category.getId();
     when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
@@ -145,6 +188,51 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().is4xxClientError())
         .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_InvalidParentId_ReturnsError() throws Exception {
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    long id = 1L;
+    when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.empty());
+    ErrorResponse errorResponse = new ErrorResponse(404, 404, "ProductCategory with id=1 is not found");
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
+  }
+
+  @Test
+  void update_ValidRequestParentIdIsNotNull_UpdatesProductCategory() throws Exception {
+    ProductCategory category = ProductCategoryFixture.createProductCategory();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
+    long id = 1L;
+    when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
+    when(productCategoryService.update(category, request)).thenReturn(category);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void update_ValidRequestParentIdIsNull_UpdatesProductCategory() throws Exception {
+    ProductCategory category = ProductCategoryFixture.createProductCategory();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
+    long id = 1L;
+    request.setParentId(null);
+    when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(productCategoryService.update(category, request)).thenReturn(category);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(content().string(objectMapper.writeValueAsString(response)));
   }
 
   @Test

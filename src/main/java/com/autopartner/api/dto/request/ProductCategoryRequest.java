@@ -23,4 +23,6 @@ public class ProductCategoryRequest {
   @Size(max = 255)
   String name;
 
+  Long parentId;
+
 }

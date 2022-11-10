@@ -39,6 +39,9 @@ public class ProductCategory {
   @Column
   Long companyId;
 
+  @Column
+  Long parentId;
+
   @Exclude
   @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL)
   @OrderBy("id asc")
@@ -57,11 +60,13 @@ public class ProductCategory {
     return ProductCategory.builder()
         .name(request.getName())
         .companyId(companyId)
+        .parentId(request.getParentId())
         .build();
   }
 
   public void update(ProductCategoryRequest request) {
     name = request.getName();
+    parentId = request.getParentId();
   }
 
   public void delete() {

@@ -44,7 +44,7 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
 
   @Test
   void givenProductCategoryRequest_whenCreateProductCategory_thenReturnSavedProductCategory() throws Exception {
-    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent();
 
     ResultActions result = mockMvc.perform(post(PRODUCT_CATEGORY_URL)
         .contentType(MediaType.APPLICATION_JSON)
@@ -53,15 +53,14 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
 
     result
         .andExpect(status().is2xxSuccessful())
-        .andExpect(jsonPath("$.name",
-            is(request.getName())));
+        .andExpect(jsonPath("$.name", is(request.getName())));
   }
 
   @Test
   void givenDuplicatedProductCategoryName_whenCreateProductCategory_thenReturn400() throws Exception {
 
-    productCategoryRepository.save(ProductCategoryFixture.createProductCategory());
-    ProductCategoryRequest category = ProductCategoryRequestFixture.createProductCategoryRequest();
+    productCategoryRepository.save(ProductCategoryFixture.createProductCategoryWithoutParent());
+    ProductCategoryRequest category = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent();
 
     ResultActions result = mockMvc.perform(post(PRODUCT_CATEGORY_URL)
         .contentType(MediaType.APPLICATION_JSON)
@@ -94,6 +93,7 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
   @Test
   public void givenClientId_whenGetProductCategoryById_thenReturnProductCategoryResponse() throws Exception {
 
+    ProductCategory parentCategory = productCategoryRepository.save(ProductCategoryFixture.createParentCategory());
     ProductCategory productCategory = productCategoryRepository.save(ProductCategoryFixture.createProductCategory());
 
     ResultActions response = mockMvc.perform(get(PRODUCT_CATEGORY_URL + "/{id}", productCategory.getId())
@@ -102,7 +102,8 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
     response
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", is(productCategory.getName())));
+        .andExpect(jsonPath("$.name", is(productCategory.getName())))
+        .andExpect(jsonPath("$.parentId", is(productCategory.getParentId()), Long.class));
 
   }
 
@@ -124,11 +125,15 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
   @Test
   public void givenUpdatedProductCategoryRequest_whenUpdateProductCategory_thenReturnUpdatedProductCategoryResponse() throws Exception{
 
-    ProductCategory category = productCategoryRepository.save(ProductCategoryFixture.createProductCategory());
+    ProductCategory parentCategory = productCategoryRepository.save(ProductCategoryFixture.createParentCategory());
+    productCategoryRepository.save(parentCategory);
+
+    ProductCategory category = productCategoryRepository.save(ProductCategoryFixture.createProductCategoryWithoutParent());
     productCategoryRepository.save(category);
 
     ProductCategoryRequest request = ProductCategoryRequest.builder()
         .name("New")
+        .parentId(parentCategory.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(PRODUCT_CATEGORY_URL + "/{id}", category.getId())
@@ -139,7 +144,8 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
     response
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.name", is(request.getName())));
+        .andExpect(jsonPath("$.name", is(request.getName())))
+        .andExpect(jsonPath("$.parentId", is(request.getParentId()), Long.class));
   }
 
   @Test
@@ -163,9 +169,9 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
   @Test
   public void givenDuplicatedProductCategoryName_whenUpdateProductCategory_thenReturn400() throws Exception{
 
-    ProductCategory category1 = productCategoryRepository.save(ProductCategoryFixture.createProductCategory());
+    ProductCategory category1 = productCategoryRepository.save(ProductCategoryFixture.createProductCategoryWithoutParent());
     ProductCategory category2 = productCategoryRepository.save(ProductCategoryFixture.createProductCategoryWithDifferentName());
-    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest().withName(category2.getName());
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent().withName(category2.getName());
 
     ResultActions response = mockMvc.perform(put(PRODUCT_CATEGORY_URL + "/{id}", category1.getId())
         .contentType(MediaType.APPLICATION_JSON)

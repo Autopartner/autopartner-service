@@ -63,6 +63,11 @@ public class ProductCategoryController {
     log.info("CompanyId: {}, received product category registration request {}", companyId, request);
 
     String name = request.getName();
+    Long parentId = request.getParentId();
+    if (parentId != null){
+      productCategoryService.findById(parentId, companyId)
+          .orElseThrow(() -> new NotFoundException("ProductCategory", parentId));
+    }
     if (productCategoryService.findIdByName(name, companyId).isPresent()) {
       throw new AlreadyExistsException("ProductCategory", name);
     }
@@ -79,6 +84,11 @@ public class ProductCategoryController {
     Long companyId = user.getCompanyId();
     ProductCategory category = productCategoryService.findById(id, companyId)
         .orElseThrow(() -> new NotFoundException("ProductCategory", id));
+    Long parentId = request.getParentId();
+    if (parentId != null){
+      productCategoryService.findById(parentId, companyId)
+          .orElseThrow(() -> new NotFoundException("ProductCategory", parentId));
+    }
     String name = request.getName();
     Optional<Long> foundId = productCategoryService.findIdByName(name, companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import static lombok.AccessLevel.PRIVATE;
 
-@Repository
+@Service
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE, makeFinal = true)
 public class ProductCategoryServiceImpl implements ProductCategoryService {
