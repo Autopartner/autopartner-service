@@ -25,9 +25,9 @@ public class Material {
   @SequenceGenerator(name = "materials_seq", sequenceName = "materials_seq", allocationSize = 1)
   Long id;
 
-  @JoinColumn(name = "material_type_id")
+  @JoinColumn(name = "product_category_id")
   @ManyToOne
-  MaterialType materialType;
+  ProductCategory productCategory;
 
   @Column(name = "name")
   String name;
