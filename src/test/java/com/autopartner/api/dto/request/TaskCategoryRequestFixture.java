@@ -7,4 +7,10 @@ public class TaskCategoryRequestFixture {
                 .parentId(1L)
                 .build();
     }
+
+    public static TaskCategoryRequest createTaskCategoryRequestWithoutParent(){
+        return TaskCategoryRequest.builder()
+            .name("TaskCategory")
+            .build();
+    }
 }

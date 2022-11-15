@@ -163,12 +163,12 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  void update_TaskCategoryAlreadyExists_ReturnsError() throws Exception {
-    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
-    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
-    long id = 1L;
-    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(taskCategory));
-    when(taskCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.of(12L));
+  void update_ProductCategoryAlreadyExists_ReturnsError() throws Exception {
+    TaskCategory category = TaskCategoryFixture.createTaskCategoryWithoutParent();
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequestWithoutParent();
+    long id = 2L;
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(taskCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.of(100L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "TaskCategory with param: TaskCategory already exists");
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
@@ -178,14 +178,14 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
   }
 
   @Test
-  void update_ValidRequestParentIdIsNotNull_UpdatesTaskCategory() throws Exception {
-    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategory();
+  void update_ValidRequestParentIdIsNotNull_UpdatesProductCategory() throws Exception {
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest();
-    TaskCategoryResponse response = TaskCategoryResponse.fromEntity(taskCategory);
-    long id = 1L;
-    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(taskCategory));
-    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(taskCategory));
-    when(taskCategoryService.update(taskCategory, request)).thenReturn(taskCategory);
+    TaskCategoryResponse response = TaskCategoryResponse.fromEntity(category);
+    long id = 2L;
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
+    when(taskCategoryService.update(category, request)).thenReturn(category);
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
@@ -207,6 +207,21 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void update_EqualsParentId_ReturnsError() throws Exception {
+    long id = 2L;
+    TaskCategory category = TaskCategoryFixture.createTaskCategory();
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest().withParentId(id);
+    when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
+    ErrorResponse errorResponse = new ErrorResponse(400, 400, "ParentId: " + id + " equals current id: " + id);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

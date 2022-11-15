@@ -185,6 +185,23 @@ public class ProductCategoryIntegrationTest extends AbstractIntegrationTest{
   }
 
   @Test
+  public void givenEqualsId_whenUpdateProductCategory_thenReturn400() throws Exception{
+
+    ProductCategory category = productCategoryRepository.save(ProductCategoryFixture.createProductCategory());
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest().withParentId(category.getId());
+
+    ResultActions response = mockMvc.perform(put(PRODUCT_CATEGORY_URL + "/{id}", category.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(HttpHeaders.AUTHORIZATION, token)
+        .content(objectMapper.writeValueAsString(request)));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("ParentId: " + category.getId() + " equals current id: " + category.getId())));
+  }
+
+  @Test
   void givenProductCategoryId_whenDeleteProductCategory_thenReturn200() throws Exception {
 
     ProductCategory category = productCategoryRepository.save(ProductCategoryFixture.createProductCategory());

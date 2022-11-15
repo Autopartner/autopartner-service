@@ -2,6 +2,7 @@ package com.autopartner.api;
 
 import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.exception.AlreadyExistsException;
+import com.autopartner.exception.ParentIdException;
 import com.autopartner.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,12 @@ public class RestExceptionHandler {
     String error = e.getMessage();
     log.info(error);
     return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, error);
+  }
+  @ExceptionHandler(value = {ParentIdException.class})
+  public ResponseEntity<ErrorResponse> handleException(ParentIdException e) {
+    String error = e.getMessage();
+    log.info(error);
+    return error(BAD_REQUEST, BAD_REQUEST.value(), error);
   }
 
   private ResponseEntity<ErrorResponse> error(HttpStatus status, int code, String message) {
