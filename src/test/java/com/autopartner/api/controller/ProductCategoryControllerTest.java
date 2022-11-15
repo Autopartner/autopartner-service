@@ -242,7 +242,7 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
     ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest().withParentId(id);
     when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
     when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
-    ErrorResponse errorResponse = new ErrorResponse(400, 409, "ParentId: " + id + " equals current id: " + id);
+    ErrorResponse errorResponse = new ErrorResponse(400, 400, "ParentId: " + id + " equals current id: " + id);
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))

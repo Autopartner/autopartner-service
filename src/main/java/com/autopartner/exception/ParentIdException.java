@@ -1,8 +1,8 @@
 package com.autopartner.exception;
 
-public class EqualsIdException extends RuntimeException{
+public class ParentIdException extends RuntimeException{
 
-  public EqualsIdException(Long parentId, Long id) {
+  public ParentIdException(Long parentId, Long id) {
     super("ParentId: " + parentId + " equals current id: " + id);
   }
 

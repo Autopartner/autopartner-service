@@ -216,7 +216,7 @@ public class TaskCategoryControllerTest extends AbstractControllerTest {
     TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest().withParentId(id);
     when(taskCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
     when(taskCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
-    ErrorResponse errorResponse = new ErrorResponse(400, 409, "ParentId: " + id + " equals current id: " + id);
+    ErrorResponse errorResponse = new ErrorResponse(400, 400, "ParentId: " + id + " equals current id: " + id);
     this.mockMvc.perform(auth(put(URL + "/" + id))
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))

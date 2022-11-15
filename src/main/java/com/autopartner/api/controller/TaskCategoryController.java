@@ -5,7 +5,7 @@ import com.autopartner.api.dto.response.TaskCategoryResponse;
 import com.autopartner.domain.TaskCategory;
 import com.autopartner.domain.User;
 import com.autopartner.exception.AlreadyExistsException;
-import com.autopartner.exception.EqualsIdException;
+import com.autopartner.exception.ParentIdException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.TaskCategoryService;
 import java.util.Objects;
@@ -83,7 +83,7 @@ public class TaskCategoryController {
     }
     String name = request.getName();
     if (Objects.equals(parentId, id)) {
-      throw new EqualsIdException(parentId, id);
+      throw new ParentIdException(parentId, id);
     }
     Optional<Long> foundId = taskCategoryService.findIdByName(name, companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
