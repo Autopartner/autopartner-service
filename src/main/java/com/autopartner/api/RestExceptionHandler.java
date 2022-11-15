@@ -2,6 +2,7 @@ package com.autopartner.api;
 
 import com.autopartner.api.dto.response.ErrorResponse;
 import com.autopartner.exception.AlreadyExistsException;
+import com.autopartner.exception.EqualsIdException;
 import com.autopartner.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -41,6 +43,12 @@ public class RestExceptionHandler {
     String error = e.getMessage();
     log.info(error);
     return error(BAD_REQUEST, ERROR_CODE_FIELD_VALIDATION_FAILED, error);
+  }
+  @ExceptionHandler(value = {EqualsIdException.class})
+  public ResponseEntity<ErrorResponse> handleException(EqualsIdException e) {
+    String error = e.getMessage();
+    log.info(error);
+    return error(BAD_REQUEST, CONFLICT.value(), error);
   }
 
   private ResponseEntity<ErrorResponse> error(HttpStatus status, int code, String message) {

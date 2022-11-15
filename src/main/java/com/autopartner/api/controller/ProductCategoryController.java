@@ -5,9 +5,11 @@ import com.autopartner.api.dto.response.ProductCategoryResponse;
 import com.autopartner.domain.ProductCategory;
 import com.autopartner.domain.User;
 import com.autopartner.exception.AlreadyExistsException;
+import com.autopartner.exception.EqualsIdException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.ProductCategoryService;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -88,6 +90,9 @@ public class ProductCategoryController {
     if (parentId != null){
       productCategoryService.findById(parentId, companyId)
           .orElseThrow(() -> new NotFoundException("ProductCategory", parentId));
+    }
+    if (Objects.equals(parentId, id)) {
+      throw new EqualsIdException(parentId, id);
     }
     String name = request.getName();
     Optional<Long> foundId = productCategoryService.findIdByName(name, companyId);

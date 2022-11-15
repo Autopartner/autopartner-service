@@ -5,8 +5,10 @@ import com.autopartner.api.dto.response.TaskCategoryResponse;
 import com.autopartner.domain.TaskCategory;
 import com.autopartner.domain.User;
 import com.autopartner.exception.AlreadyExistsException;
+import com.autopartner.exception.EqualsIdException;
 import com.autopartner.exception.NotFoundException;
 import com.autopartner.service.TaskCategoryService;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +82,9 @@ public class TaskCategoryController {
           .orElseThrow(() -> new NotFoundException("TaskCategory", parentId));
     }
     String name = request.getName();
+    if (Objects.equals(parentId, id)) {
+      throw new EqualsIdException(parentId, id);
+    }
     Optional<Long> foundId = taskCategoryService.findIdByName(name, companyId);
     if (foundId.isPresent() && !foundId.get().equals(id)) {
       throw new AlreadyExistsException("TaskCategory", name);

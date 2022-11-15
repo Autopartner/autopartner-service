@@ -177,9 +177,9 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
 
   @Test
   void update_ProductCategoryAlreadyExists_ReturnsError() throws Exception {
-    ProductCategory category = ProductCategoryFixture.createProductCategory();
-    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
-    long id = 1L;
+    ProductCategory category = ProductCategoryFixture.createProductCategoryWithoutParent();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequestWithoutParent();
+    long id = 2L;
     when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
     when(productCategoryService.findIdByName(eq(request.getName()), any())).thenReturn(Optional.of(100L));
     ErrorResponse errorResponse = new ErrorResponse(400, 402, "ProductCategory with param: ProductCategory already exists");
@@ -208,7 +208,7 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
     ProductCategory category = ProductCategoryFixture.createProductCategory();
     ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest();
     ProductCategoryResponse response = ProductCategoryResponse.fromEntity(category);
-    long id = 1L;
+    long id = 2L;
     when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
     when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
     when(productCategoryService.update(category, request)).thenReturn(category);
@@ -233,6 +233,21 @@ public class ProductCategoryControllerTest extends AbstractControllerTest{
             .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().string(objectMapper.writeValueAsString(response)));
+  }
+
+  @Test
+  void update_EqualsParentId_ReturnsError() throws Exception {
+    long id = 2L;
+    ProductCategory category = ProductCategoryFixture.createProductCategory();
+    ProductCategoryRequest request = ProductCategoryRequestFixture.createProductCategoryRequest().withParentId(id);
+    when(productCategoryService.findById(eq(id), any())).thenReturn(Optional.of(category));
+    when(productCategoryService.findById(eq(request.getParentId()), any())).thenReturn(Optional.of(category));
+    ErrorResponse errorResponse = new ErrorResponse(400, 409, "ParentId: " + id + " equals current id: " + id);
+    this.mockMvc.perform(auth(put(URL + "/" + id))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(objectMapper.writeValueAsString(errorResponse)));
   }
 
   @Test

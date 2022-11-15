@@ -42,7 +42,7 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   void givenTaskCategoryRequest_whenCreateTaskCategory_thenReturnSavedTaskCategory() throws Exception {
-    TaskCategoryRequest taskCategoryRequest = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    TaskCategoryRequest taskCategoryRequest = TaskCategoryRequestFixture.createTaskCategoryRequestWithoutParent();
 
     ResultActions result = mockMvc.perform(post(TASK_CATEGORY_URL)
         .contentType(MediaType.APPLICATION_JSON)
@@ -52,16 +52,14 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
     result
         .andExpect(status().is2xxSuccessful())
         .andExpect(jsonPath("$.name",
-            is(taskCategoryRequest.getName())))
-        .andExpect(jsonPath("$.parentId",
-            is(taskCategoryRequest.getParentId()), Long.class));
+            is(taskCategoryRequest.getName())));
   }
 
   @Test
   void givenDuplicatedTaskCategoryName_whenCreateTaskCategory_thenReturn400() throws Exception {
 
-    taskCategoryRepository.save(TaskCategoryFixture.createTaskCategory());
-    TaskCategoryRequest taskCategoryRequest = TaskCategoryRequestFixture.createTaskCategoryRequest();
+    taskCategoryRepository.save(TaskCategoryFixture.createTaskCategoryWithoutParent());
+    TaskCategoryRequest taskCategoryRequest = TaskCategoryRequestFixture.createTaskCategoryRequestWithoutParent();
 
     ResultActions result = mockMvc.perform(post(TASK_CATEGORY_URL)
         .contentType(MediaType.APPLICATION_JSON)
@@ -125,12 +123,15 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
   @Test
   public void givenUpdatedTaskCategoryRequest_whenUpdateTaskCategory_thenReturnUpdateTaskCategoryResponse() throws Exception{
 
-    TaskCategory taskCategory = TaskCategoryFixture.createTaskCategoryWithDifferentName();
+    TaskCategory parentCategory = taskCategoryRepository.save(TaskCategoryFixture.createParentCategory());
+    taskCategoryRepository.save(parentCategory);
+
+    TaskCategory taskCategory = taskCategoryRepository.save(TaskCategoryFixture.createTaskCategoryWithoutParent());
     taskCategoryRepository.save(taskCategory);
 
     TaskCategoryRequest request = TaskCategoryRequest.builder()
         .name("Re Name")
-        .parentId(3L)
+        .parentId(parentCategory.getId())
         .build();
 
     ResultActions response = mockMvc.perform(put(TASK_CATEGORY_URL + "/{id}", taskCategory.getId())
@@ -166,9 +167,9 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
   @Test
   public void givenDuplicatedTaskCategoryName_whenUpdateTaskCategory_thenReturn400() throws Exception{
 
-    TaskCategory category1 = taskCategoryRepository.save(TaskCategoryFixture.createTaskCategory());
+    TaskCategory category1 = taskCategoryRepository.save(TaskCategoryFixture.createTaskCategoryWithoutParent());
     TaskCategory category2 = taskCategoryRepository.save(TaskCategoryFixture.createTaskCategoryWithDifferentName());
-    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest().withName(category2.getName());
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequestWithoutParent().withName(category2.getName());
 
     ResultActions response = mockMvc.perform(put(TASK_CATEGORY_URL + "/{id}", category1.getId())
         .contentType(MediaType.APPLICATION_JSON)
@@ -179,6 +180,23 @@ public class TaskCategoryIntegrationTest extends AbstractIntegrationTest {
         .andDo(print())
         .andExpect(status().is4xxClientError())
         .andExpect(jsonPath("$.message", startsWith("TaskCategory with param: NewTaskCategory already exists")));
+  }
+
+  @Test
+  public void givenEqualsId_whenUpdateProductCategory_thenReturn400() throws Exception{
+
+    TaskCategory category = taskCategoryRepository.save(TaskCategoryFixture.createTaskCategory());
+    TaskCategoryRequest request = TaskCategoryRequestFixture.createTaskCategoryRequest().withParentId(category.getId());
+
+    ResultActions response = mockMvc.perform(put(TASK_CATEGORY_URL + "/{id}", category.getId())
+        .contentType(MediaType.APPLICATION_JSON)
+        .header(HttpHeaders.AUTHORIZATION, token)
+        .content(objectMapper.writeValueAsString(request)));
+
+    response
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(jsonPath("$.message", startsWith("ParentId: " + category.getId() + " equals current id: " + category.getId())));
   }
 
   @Test
